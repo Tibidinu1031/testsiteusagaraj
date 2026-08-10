@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    base.css — resetare, tipografie, primitive de așezare în pagină.
    ========================================================================== */
 
@@ -45,7 +45,7 @@ body {
       transparent 46rem
     );
   background-repeat: repeat, repeat, no-repeat;
-  background-size: auto, 360px 360px, auto;
+  background-size: auto, 420px 420px, auto;
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans);

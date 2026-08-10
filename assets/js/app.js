@@ -1,4 +1,4 @@
-/**
+﻿/**
  * app.js — punctul de intrare. Randează catalogul, eroul și filtrele,
  * apoi predă interacțiunea principală lui switcher.js.
  *
@@ -231,7 +231,7 @@
           '<div class="card__foot">' +
             '<span>Transport gratuit</span>' +
             '<button type="button" class="btn btn--sm btn--ghost" data-switch-open="' + p.id + '">' +
-              'Comută <kbd>⇧</kbd></button>' +
+              'Răsfoiește <kbd>⇧</kbd></button>' +
           '</div>' +
         '</div>' +
       '</article>';

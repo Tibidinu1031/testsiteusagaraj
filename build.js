@@ -48,7 +48,7 @@ const FIRMA = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=9';
+const VER = 'v=15';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -223,7 +223,7 @@ ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
         <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M22 12h-2.4M4.4 12H2m15.1-7.1-1.7 1.7M8.6 15.4l-1.7 1.7m10.2 0-1.7-1.7M8.6 8.6 6.9 6.9"/></svg>
       </button>
       <button type="button" class="btn btn--primary" data-switch-open="">
-        Comutator
+        Produsele noastre
         <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
       </button>
     </div>
@@ -270,9 +270,9 @@ ${subsol}
 
 <div class="switcher" id="switcher" aria-hidden="true">
   <div class="switcher__scrim"></div>
-  <div class="switcher__panel" role="dialog" aria-modal="true" aria-label="Comutator de produse" tabindex="-1">
+  <div class="switcher__panel" role="dialog" aria-modal="true" aria-label="Produsele noastre" tabindex="-1">
     <p class="switcher__bar">
-      <span><strong>Comutator</strong> · uși de garaj rulou</span>
+      <span><strong>Produsele noastre</strong> · uși de garaj rulou</span>
       <span class="switcher__idx" id="sw-idx"></span>
     </p>
     <div class="switcher__viewport" id="sw-viewport">
@@ -294,7 +294,7 @@ ${subsol}
 </div>
 
 <button type="button" class="switch-fab" data-switch-open="">
-  <kbd>⇧</kbd> Comutator
+  <kbd>⇧</kbd> Produsele noastre
 </button>
 
 <script>window.UG_BASE = ${JSON.stringify(base)};</script>
@@ -345,7 +345,7 @@ function cardHTML(p, base, nivel) {
     </div>
     <div class="card__foot">
       <span>Transport gratuit</span>
-      <button type="button" class="btn btn--sm btn--ghost" data-switch-open="${p.id}">Comută <kbd>⇧</kbd></button>
+      <button type="button" class="btn btn--sm btn--ghost" data-switch-open="${p.id}">Răsfoiește <kbd>⇧</kbd></button>
     </div>
   </div>
 </article>`;

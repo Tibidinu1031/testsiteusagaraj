@@ -190,12 +190,56 @@ trebuie să treacă pragul WCAG AA pe fundalul pe care chiar stă:
 Fundalul paginii are trei straturi, fixate la derulare:
 
 1. **tablier de rulou** — linii orizontale la pasul real al lamelei (55 mm);
-2. **unelte de construcții** — cheie fixă, ruletă, nivelă cu bulă, șurubelniță,
-   cheie imbus și șurub, desenate în contur, ca dală de 360 px;
+2. **unelte de construcții** — dubiță de livrare, bormașină, boloboc și
+   șurubelniță, desenate în contur, ca dală de 560 px;
 3. o aură verde care coboară din antet.
 
-Primele două sunt derivate din culoarea cernelii sau dintr-un gri neutru, deci
-funcționează la fel pe ambele teme.
+Fiecare unealtă pornește dintr-o casetă de 24 × 24 și este mărită de cinci ori,
+deci ocupă circa 110 px — de aproximativ 2,5 ori mai mult decât în varianta
+inițială. Grosimea conturului este dată la 0,4, ca după scalare să rămână în
+jur de 2 px; altfel liniile s-ar fi îngroșat odată cu desenul. Verificat că
+niciuna nu iese din dală, deci nu apar unelte tăiate la îmbinarea dalelor.
+
+Dala a fost strânsă de la 560 la 420 px: uneltele rămân la aceeași mărime, dar
+se repetă mai des, deci acoperirea urcă de la circa 11 % la **17 %**. Cu 560 px
+era mai mult gol decât desen, iar fundalul nu se citea.
+
+| unealtă | mărime în dală |
+|---|---|
+| dubiță | 107 × 68 px |
+| bormașină | 113 × 97 px |
+| boloboc | 109 × 46 px |
+| șurubelniță | 61 × 103 px |
+
+Șurubelnița a fost redesenată de două ori. În prima variantă mânerul era lat și
+tija scurtă, iar desenul ieșea a spatulă; acum tija plus vârful măsoară de 1,38
+ori mânerul, iar silueta este înaltă și îngustă — proporția face diferența, nu
+detaliul. Vârful a trecut prin trei forme greșite — dreptunghi, triunghi care
+se îngusta, triunghi inversat — toate trei fiind forme închise. Greșeala era
+chiar aceasta: sub inelul metalic nu trebuie să existe nicio suprafață.
+
+Acum, ca în fotografia de referință: tija și vârful sunt **două segmente
+verticale în prelungire**, pe aceeași axă (x = 12), vârful pornind exact de unde
+se termină tija. Nu-și schimbă direcția — singura diferență este grosimea
+conturului, 2 px la tijă și 5 px la vârf, cât să se citească lama.
+
+Verificat pe geometrie: dreptunghiul de încadrare are lățimea 0 la ambele, deci
+sunt segmente verticale pure, iar sub inelul metalic nu există niciun segment
+orizontal și nicio formă închisă. Singura suprafață închisă rămâne mânerul, care
+chiar este un corp plin.
+
+Primele două straturi sunt derivate din culoarea cernelii sau dintr-un gri
+neutru, deci funcționează la fel pe ambele teme.
+
+## Denumirea funcției de răsfoire
+
+Peste tot în interfață se numește **„Produsele noastre”**: butonul din antet,
+butonul flotant, titlul secțiunii, bara panoului. Butonul mare din erou este
+„Răsfoiește produsele noastre”, iar cel mic de pe fiecare cartelă, „Răsfoiește”.
+
+În cod, clasele și identificatorii au rămas `switcher` / `switch-*`, fiindcă
+descriu mecanismul, nu eticheta afișată. Schimbarea numelui comercial nu
+trebuie să ceară redenumirea unui modul întreg.
 
 ## Desenele de produs
 

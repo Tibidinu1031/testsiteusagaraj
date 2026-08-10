@@ -117,7 +117,7 @@ const HERO = `<section class="hero">
       </p>
       <div class="hero__cta">
         <button type="button" class="btn btn--primary btn--lg" data-switch-open="">
-          Răsfoiește cu Comutatorul
+          Răsfoiește produsele noastre
           <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
         </button>
         <a class="btn btn--ghost btn--lg" href="magazin.html">Vezi cele ${s.total} de configurații</a>
@@ -157,7 +157,7 @@ const COMUTATOR = `<section class="section" id="comutator">
     <div class="switch-pitch">
       <div class="reveal">
         <p class="eyebrow"><i class="eyebrow__n">01</i>Mod de răsfoire</p>
-        <h2 style="margin-block:var(--s-5) 0">Comutatorul de produse</h2>
+        <h2 style="margin-block:var(--s-5) 0">Produsele noastre</h2>
         <p class="lede" style="margin-block-start:var(--s-5)">
           Douăzeci și una de uși nu se compară derulând o pagină. Țineți apăsată
           tasta <kbd>⇧</kbd> și apăsați <kbd>Tab</kbd>: catalogul se ridică peste
@@ -171,10 +171,10 @@ const COMUTATOR = `<section class="section" id="comutator">
           <li><span class="keys"><kbd>Esc</kbd></span> anulează, fără să schimbe nimic</li>
         </ul>
         <p style="margin-block-start:var(--s-6)">
-          <button type="button" class="btn btn--primary" data-switch-open="">Deschide Comutatorul</button>
+          <button type="button" class="btn btn--primary" data-switch-open="">Deschide produsele noastre</button>
         </p>
       </div>
-      <div class="switch-preview reveal" data-switch-open="" role="button" tabindex="0" aria-label="Deschide Comutatorul de produse">
+      <div class="switch-preview reveal" data-switch-open="" role="button" tabindex="0" aria-label="Deschide produsele noastre">
         <div class="switch-preview__rail" id="preview-rail"></div>
         <p class="switch-preview__cap" id="preview-cap"></p>
       </div>
