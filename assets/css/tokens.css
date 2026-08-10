@@ -1,0 +1,167 @@
+﻿/* ==========================================================================
+   tokens.css — sursa unică de adevăr pentru culoare, tipografie și spațiere.
+   Nicio valoare "magică" nu are voie să apară în restul foilor de stil.
+   ========================================================================== */
+
+:root {
+  /* --- Culori de produs (coduri RAL reale, folosite la desenele tehnice) --- */
+  --ral-7016: #383e42; /* Gri antracit */
+  --ral-8014: #4a3526; /* Maro deschis (sepia) */
+  --ral-8019: #3d3635; /* Maro închis (gri-maro) */
+  --ral-9016: #f1f0ea; /* Alb trafic */
+
+  /* --- Scara neutrelor. Derivată din antracit, nu din gri pur. --- */
+  --n-0:  #0b0d0e;
+  --n-1:  #121517;
+  --n-2:  #181c1f;
+  --n-3:  #1f2427;
+  --n-4:  #2a3033;
+  --n-5:  #3a4145;
+  --n-6:  #5b6367;
+  --n-7:  #8b9296;
+  --n-8:  #b7bcbf;
+  --n-9:  #dfe2e3;
+  --n-10: #f4f2ed;
+
+  /* --- Accent: verde industrial. Semnalizare, nu decor. ---
+     Valorile sunt alese ca textul mic (12 px: supratitluri, etichetele CUI și
+     Nr. Reg. Com.) să treacă pragul WCAG AA pe fundalul pe care chiar stă —
+     de aceea verdele de pe hârtie este mult mai închis decât cel de pe negru. */
+  --green-hi:  #7ed9a6;
+  --green:     #4fb783;
+  --green-dim: #3a9c72;
+  --green-lo:  #1a6b47;
+
+  /* --- Secundar: portocaliu-cărămiziu pentru reduceri ---
+     Închis suficient cât textul alb de 10 px de pe eticheta de reducere să
+     treacă pragul WCAG AA (5,5:1). Nuanța deschisă cădea la 4,1:1. */
+  --rust: #b8401d;
+
+  /* --- Roluri semantice (tema întunecată, implicită) --- */
+  --bg:          var(--n-0);
+  --bg-raised:   var(--n-1);
+  --bg-sunken:   #070809;
+  --surface:     var(--n-2);
+  --surface-hi:  var(--n-3);
+  --line:        #23292c;
+  --line-strong: var(--n-4);
+  --ink:         #eef1f2;
+  --ink-muted:   var(--n-8);
+  --ink-faint:   var(--n-7);
+  --acc:         var(--green);
+  --acc-ink:     #06180f;
+  --sale:        #ef7d55;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-2: 0 4px 16px -4px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-3: 0 24px 60px -20px rgb(0 0 0 / 0.7), 0 4px 12px rgb(0 0 0 / 0.4);
+
+  /* Unelte de construcții, în contur, pentru fundalul paginii: cheie fixă,
+     ruletă, nivelă cu bulă, șurubelniță, cheie imbus și șurub. Sunt desenate
+     o singură dată, ca dală de 360 px, într-un gri neutru care se citește
+     discret și pe negru, și pe hârtie. */
+  --unelte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360' viewBox='0 0 360 360' fill='none' stroke='%237c8590' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' opacity='0.34'%3E%3Cg transform='translate(26 34) rotate(-20) scale(2.05)'%3E%3Cpath d='M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z'/%3E%3C/g%3E%3Cg transform='translate(232 26) rotate(22) scale(1.95)'%3E%3Cpath d='M2 8h20v8H2z'/%3E%3Cpath d='M6 8v3M10 8v4.5M14 8v3M18 8v4.5'/%3E%3C/g%3E%3Cg transform='translate(112 152) rotate(7) scale(2.1)'%3E%3Cpath d='M2 9h20v6H2z'/%3E%3Ccircle cx='12' cy='12' r='2.2'/%3E%3Cpath d='M9.4 10.2v3.6M14.6 10.2v3.6'/%3E%3C/g%3E%3Cg transform='translate(288 178) rotate(-38) scale(1.95)'%3E%3Cpath d='M3.5 20.5l3.5-3.5'/%3E%3Cpath d='M6.5 17.5l-2-2 7.5-7.5 2 2z'/%3E%3Cpath d='M14 8l2.4-2.4a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L17.4 11.4z'/%3E%3C/g%3E%3Cg transform='translate(40 252) rotate(28) scale(2.05)'%3E%3Cpath d='M6.5 4v10.5a4 4 0 0 0 4 4H19'/%3E%3C/g%3E%3Cg transform='translate(214 288) rotate(-14) scale(1.9)'%3E%3Cpath d='M12 3v13.5'/%3E%3Cpath d='M9 18.5l3 3 3-3'/%3E%3Cpath d='M9.2 6.5h5.6M9.2 10h5.6M9.2 13.5h5.6'/%3E%3C/g%3E%3C/svg%3E");
+
+  /* Textura peliculei — sparge planurile plate fără să ceară o imagine. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+
+  /* --- Tipografie --- */
+  --font-sans: "Archivo", ui-sans-serif, system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono", Consolas, monospace;
+
+  /* Scară fluidă, raport 1.22 la mobil → 1.29 la desktop. */
+  --t--2: clamp(0.688rem, 0.66rem + 0.14vw, 0.75rem);
+  --t--1: clamp(0.813rem, 0.78rem + 0.16vw, 0.875rem);
+  --t-0:  clamp(0.938rem, 0.91rem + 0.14vw, 1rem);
+  --t-1:  clamp(1.063rem, 1rem + 0.31vw, 1.188rem);
+  --t-2:  clamp(1.25rem, 1.14rem + 0.55vw, 1.5rem);
+  --t-3:  clamp(1.5rem, 1.31rem + 0.94vw, 2rem);
+  --t-4:  clamp(1.875rem, 1.53rem + 1.72vw, 2.75rem);
+  --t-5:  clamp(2.25rem, 1.66rem + 2.97vw, 3.875rem);
+  /* Plafon deliberat scăzut. La 5,75rem titlul eroului ocupa 620 px pe un
+     ecran de laptop — adică tot primul ecran, iar desenul ușii ajungea sub
+     pliu. Un titlu care nu încape lângă imagine nu e un titlu mare, e o
+     pagină goală. */
+  --t-6:  clamp(2.25rem, 1.15rem + 3.9vw, 4.5rem);
+
+  --lh-tight: 1.04;
+  --lh-snug:  1.22;
+  --lh-base:  1.6;
+
+  /* --- Spațiere: bază de 4px, sărituri armonice --- */
+  --s-1: 0.25rem;  --s-2: 0.5rem;   --s-3: 0.75rem;  --s-4: 1rem;
+  --s-5: 1.5rem;   --s-6: 2rem;     --s-7: 3rem;     --s-8: 4rem;
+  --s-9: 6rem;     --s-10: 8rem;
+
+  /* Ritmul vertical al secțiunilor. Ținut strâns intenționat: pe ecrane late,
+     spațierea generoasă se transformă în pagină goală. */
+  --section-y: clamp(3rem, 1.9rem + 5.2vw, 5.5rem);
+
+  /* --- Geometrie --- */
+  --r-1: 2px;  --r-2: 4px;  --r-3: 8px;  --r-4: 14px;  --r-full: 999px;
+
+  /* Lățimi de coloană */
+  --measure: 68ch;
+  --wrap: 1240px;
+  --wrap-wide: 1480px;
+  --gutter: clamp(1.125rem, 0.7rem + 2.1vw, 2.5rem);
+
+  /* --- Mișcare --- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --d-1: 120ms;  --d-2: 220ms;  --d-3: 380ms;  --d-4: 620ms;
+
+  color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   Tema luminoasă. Hârtie caldă, nu alb clinic — se potrivește cu aluminiul.
+   -------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  --bg:          #f4f2ed;
+  --bg-raised:   #fbfaf7;
+  --bg-sunken:   #e8e5dd;
+  --surface:     #ffffff;
+  --surface-hi:  #fbfaf7;
+  --line:        #dcd8ce;
+  --line-strong: #c3beb1;
+  --ink:         #14171a;
+  --ink-muted:   #4d5458;
+  /* Neutrele stinse și accentul sunt vizibil mai închise decât corespondentele
+     lor de pe fundal întunecat: pe hârtie caldă, aceleași valori cad sub
+     pragul WCAG AA la corpurile mici de literă (12 px) unde chiar sunt
+     folosite — supratitluri, capete de tabel, etichetele codurilor fiscale. */
+  --ink-faint:   #5f6669;
+  --acc:         var(--green-lo);
+  --acc-ink:     #f4fbf6;
+  --sale:        #a83718;
+
+  --shadow-1: 0 1px 2px rgb(20 23 26 / 0.06);
+  --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);
+  --shadow-3: 0 24px 60px -20px rgb(20 23 26 / 0.22), 0 4px 12px rgb(20 23 26 / 0.08);
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg:          #f4f2ed;
+    --bg-raised:   #fbfaf7;
+    --bg-sunken:   #e8e5dd;
+    --surface:     #ffffff;
+    --surface-hi:  #fbfaf7;
+    --line:        #dcd8ce;
+    --line-strong: #c3beb1;
+    --ink:         #14171a;
+    --ink-muted:   #4d5458;
+    --ink-faint:   #5f6669;
+    --acc:         var(--green-lo);
+    --acc-ink:     #f4fbf6;
+    --sale:        #a83718;
+    --shadow-1: 0 1px 2px rgb(20 23 26 / 0.06);
+    --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);
+    --shadow-3: 0 24px 60px -20px rgb(20 23 26 / 0.22), 0 4px 12px rgb(20 23 26 / 0.08);
+    color-scheme: light;
+  }
+}

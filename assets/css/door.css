@@ -1,0 +1,63 @@
+/* ==========================================================================
+   door.css — stilurile desenului tehnic generat de assets/js/door.js.
+   Sistemul de coordonate al desenului este milimetrul, deci orice valoare
+   de aici este exprimată în milimetri de produs, nu în pixeli de ecran.
+   ========================================================================== */
+
+.door { overflow: visible; }
+
+/* Umbra de pe pardoseală e prea grea pe fundal deschis. */
+:root[data-theme="light"] .door__shadow,
+:root:not([data-theme="dark"]) .door__shadow { opacity: 0.14; }
+:root[data-theme="dark"] .door__shadow { opacity: 0.28; }
+
+/* --- Cotele: linii subțiri, chihlimbar, ca pe un plan de execuție --- */
+.door__dims,
+.door__dimtext { color: var(--acc); }
+.door__dims { opacity: 0.85; }
+.door__dimtext { letter-spacing: 0.04em; }
+
+/* --- Ridicarea tablierului -------------------------------------------------
+   Ciclul complet (urcare → stat deschis 7 s → coborâre → stat închis) este
+   condus din `app.js`, prin Web Animations API, ca duratele să aibă o singură
+   sursă de adevăr: aceleași valori alimentează și afișajul de stare de lângă
+   desen. Aici rămâne doar starea de repaus.
+   -------------------------------------------------------------------------- */
+.door--anim .door__curtain { transform: translateY(0); }
+
+/* Fără mișcare: ușa e pur și simplu ridicată, fără ciclu.
+   `app.js` nu pornește animația deloc în acest caz. */
+@media (prefers-reduced-motion: reduce) {
+  .door--anim .door__curtain { transform: translateY(var(--cursa)); }
+}
+
+/* --- Placă de desen: caroiaj fin, ca hârtia milimetrică ------------------- */
+.plate {
+  --plate-line: color-mix(in oklab, var(--ink) 7%, transparent);
+  background-color: var(--bg-sunken);
+  background-image:
+    linear-gradient(var(--plate-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--plate-line) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px;
+  background-position: center;
+}
+
+/* Repere de încadrare în colțuri, ca pe un plan de execuție. */
+.ticks { position: relative; }
+.ticks::before,
+.ticks::after {
+  content: "";
+  position: absolute;
+  inline-size: 10px;
+  block-size: 10px;
+  border: 1px solid color-mix(in oklab, var(--acc) 55%, transparent);
+  pointer-events: none;
+}
+.ticks::before {
+  inset-block-start: 10px; inset-inline-start: 10px;
+  border-inline-end: 0; border-block-end: 0;
+}
+.ticks::after {
+  inset-block-end: 10px; inset-inline-end: 10px;
+  border-inline-start: 0; border-block-start: 0;
+}

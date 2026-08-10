@@ -1,0 +1,266 @@
+/* ==========================================================================
+   base.css — resetare, tipografie, primitive de așezare în pagină.
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+* { margin: 0; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Fundalul are trei straturi, de sus în jos:
+     1. tablier de rulou văzut de aproape — linii orizontale la pasul real al
+        lamelei (55 mm), cu rostul mai închis între ele;
+     2. unelte de construcții, desenate în contur și răsucite diferit, ca o
+        hârtie de ambalaj dintr-un magazin de scule;
+     3. o aură verde care coboară din antet.
+   Primele două sunt derivate din culoarea cernelii sau dintr-un gri neutru,
+   deci funcționează la fel pe temă întunecată și pe cea luminoasă. */
+body {
+  background-color: var(--bg);
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--ink) 6%, transparent) 0 1px,
+      color-mix(in oklab, var(--ink) 2%, transparent) 1px 2px,
+      transparent 2px 55px
+    ),
+    var(--unelte),
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--acc) 6%, transparent),
+      transparent 46rem
+    );
+  background-repeat: repeat, repeat, no-repeat;
+  background-size: auto, 360px 360px, auto;
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--t-0);
+  line-height: var(--lh-base);
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.is-locked { overflow: hidden; }
+
+img, svg, video, canvas { display: block; max-width: 100%; }
+img { height: auto; }
+
+input, button, textarea, select { font: inherit; color: inherit; }
+
+a { color: inherit; text-decoration-color: color-mix(in oklab, currentColor 35%, transparent); text-underline-offset: 0.22em; }
+a:hover { text-decoration-color: currentColor; }
+
+:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 3px;
+  border-radius: var(--r-1);
+}
+:focus:not(:focus-visible) { outline: none; }
+
+::selection { background: var(--acc); color: var(--acc-ink); }
+
+/* --- Tipografie ---------------------------------------------------------- */
+
+h1, h2, h3, h4 {
+  font-weight: 700;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+  /* Titlurile mari conțin cuvinte lungi („dumneavoastră”); fără asta ele
+     ar lăți coloana de grilă pe ecranele înguste. */
+  overflow-wrap: break-word;
+}
+
+/* Implicit, un element de grilă nu se micșorează sub conținutul lui. */
+.hero__grid > *,
+.switch-pitch > *,
+.contact-grid > *,
+.section-head > * { min-inline-size: 0; }
+
+/* Archivo este o variabilă cu axă de lățime. Titlurile mari sunt ușor
+   extinse, textul curent rămâne la lățime normală: contrastul dintre cele
+   două dă paginii un aer de tipar tehnic, nu de șablon. */
+h1 {
+  font-size: var(--t-6);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.038em;
+  font-weight: 800;
+  font-variation-settings: "wdth" 112;
+}
+h2 {
+  font-size: var(--t-4);
+  letter-spacing: -0.032em;
+  font-variation-settings: "wdth" 108;
+}
+h3 { font-size: var(--t-2); }
+h4 { font-size: var(--t-1); }
+
+p { text-wrap: pretty; }
+
+/* Numerele tehnice trebuie să se alinieze pe coloană. Întotdeauna. */
+.mono {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.num { font-variant-numeric: tabular-nums; }
+
+/* Supratitlu: majuscule mici, distanțate, cu un indicator de rubrică. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.eyebrow::before {
+  content: "";
+  inline-size: 1.75rem;
+  block-size: 1px;
+  background: var(--acc);
+  flex: none;
+}
+
+/* Numărul de rubrică: „01 · CATALOG COMPLET”. Numerotarea secțiunilor e ce
+   deosebește un document de o înșiruire de blocuri. Când numărul e prezent,
+   liniuța de dinaintea supratitlului devine redundantă. */
+.eyebrow__n {
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--acc);
+  padding: 0.2em 0.45em;
+  border: 1px solid color-mix(in oklab, var(--acc) 42%, transparent);
+  border-radius: 3px;
+  line-height: 1;
+}
+.eyebrow:has(.eyebrow__n)::before { display: none; }
+/* Numărul de rubrică. Ordinea secțiunilor devine explicită, ca într-un
+   cuprins — pagina se citește ca un document, nu ca un teanc de blocuri. */
+.eyebrow__n {
+  font-style: normal;
+  font-weight: 600;
+  color: var(--acc);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+.lede {
+  font-size: var(--t-1);
+  line-height: 1.55;
+  color: var(--ink-muted);
+  max-inline-size: var(--measure);
+  text-wrap: pretty;
+}
+
+/* --- Așezare în pagină --------------------------------------------------- */
+
+.wrap {
+  inline-size: min(100% - var(--gutter) * 2, var(--wrap));
+  margin-inline: auto;
+}
+.wrap--wide { inline-size: min(100% - var(--gutter) * 2, var(--wrap-wide)); }
+
+.section { padding-block: var(--section-y); position: relative; }
+
+/* Linia subțire de deasupra fiecărei rubrici leagă secțiunile la aceeași
+   grilă verticală. Fără ea, blocurile par doar stivuite unul peste altul. */
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-5) var(--s-7);
+  margin-block-end: var(--s-6);
+  padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--line);
+}
+.section-head__text { max-inline-size: 44ch; display: grid; gap: var(--s-4); }
+
+.stack { display: grid; gap: var(--s-4); }
+.stack-lg { display: grid; gap: var(--s-6); }
+
+/* Linie de regulă orizontală, cu punct de capăt — semnătură de rubrică. */
+.rule {
+  border: 0;
+  block-size: 1px;
+  background: var(--line);
+  position: relative;
+}
+.rule::after {
+  content: "";
+  position: absolute;
+  inset-block-start: -2px;
+  inset-inline-start: 0;
+  inline-size: 5px;
+  block-size: 5px;
+  background: var(--acc);
+  border-radius: 50%;
+}
+
+.sr-only {
+  position: absolute;
+  inline-size: 1px; block-size: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  inset-block-start: var(--s-3);
+  inset-inline-start: var(--s-3);
+  z-index: 200;
+  padding: var(--s-3) var(--s-5);
+  background: var(--acc);
+  color: var(--acc-ink);
+  font-weight: 600;
+  border-radius: var(--r-2);
+  transform: translateY(-160%);
+  transition: transform var(--d-2) var(--ease-out);
+}
+.skip-link:focus-visible { transform: translateY(0); }
+
+/* --- Apariție la derulare ------------------------------------------------ */
+
+/* Ascunderea până la derulare se aplică numai când JavaScript-ul chiar rulează.
+   Fără clasa `js` de pe <html>, `.reveal` nu face nimic — o pagină fără
+   scripturi rămâne lizibilă, în loc să apară goală. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--d-4) var(--ease-out),
+    transform var(--d-4) var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js .reveal.is-in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; }
+}

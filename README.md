@@ -1,0 +1,395 @@
+# Usa-garaj.ro — frontend nou
+
+Reproiectarea interfeței pentru **ABBA CONFORT SOLUTIONS HOMES S.R.L.**
+(CUI 40437439, J15/136/2019).
+
+Site static, fără dependențe și fără pas de compilare: HTML, CSS și JavaScript
+simplu. Se pune pe orice găzduire care servește fișiere.
+
+**Se deschide cu dublu clic pe `index.html`.** Nu are nevoie de server.
+
+Scripturile sunt încărcate ca **scripturi clasice**, nu ca module ES. Modulele
+sunt blocate de browser peste `file://`, iar o primă versiune folosea module:
+deschisă direct de pe disc, pagina se afișa aproape goală, fiindcă niciun
+produs, desen sau buton nu apuca să fie randat. Este exact motivul pentru care
+`index.html` include patru fișiere, în ordine, în loc de un singur `import`.
+
+În plus, conținutul care apare la derulare este ascuns **numai** dacă
+JavaScript-ul chiar rulează (clasa `js` pusă pe `<html>` de un script scurt din
+`<head>`). Fără scripturi, pagina rămâne integral lizibilă, nu goală.
+
+Pentru dezvoltare, dacă se preferă un server:
+
+```bash
+python -m http.server 5173
+```
+
+Adresele fișierelor CSS și JS poartă un `?v=2`. La orice modificare, numărul se
+incrementează, altfel browserul servește versiunea veche din memoria proprie.
+
+---
+
+## Generarea site-ului
+
+```bash
+node build.js
+```
+
+Produce **39 de pagini** HTML plus `sitemap.xml` și `robots.txt`:
+
+| ce | câte |
+|---|---|
+| prima pagină, magazin, tehnic, întrebări, contact, hartă site | 6 |
+| pagini de categorie | 4 |
+| pagini de produs | 21 |
+| pagini de informare și legale | 8 |
+
+`build.js` încarcă `assets/js/catalog.js` și `assets/js/door.js` printr-un shim
+de `window`, deci desenele și prețurile scrise în HTML sunt produse de exact
+același cod care rulează în browser. Nu există două surse de adevăr.
+
+Cartelele de produs sunt **scrise în HTML la generare**, nu construite din
+JavaScript la încărcare: pagina are conținut și fără scripturi, iar motoarele
+de căutare văd cele 21 de produse cu prețuri și date structurate `Product`.
+
+Textul paginilor legale **nu este scris de mine**. Este preluat la generare de
+pe usa-garaj.ro, prin API-ul WordPress. Trei pagini — *metode de plată*,
+*transport și retururi*, *soluționarea litigiilor* — **sunt goale și pe site-ul
+existent**; paginile generate spun deschis acest lucru și trimit la telefon,
+e-mail, ANPC și SOL, în loc să inventeze angajamente comerciale.
+
+## Structura
+
+```
+index.html
+assets/
+  css/
+    tokens.css       variabilele de culoare, tipografie, spațiere, mișcare
+    base.css         resetare, tipografie, primitive de așezare
+    door.css         stilurile desenului tehnic
+    components.css   antet, catalog, fișă tehnică, contact, subsol
+    switcher.css     suprapunerea „Comutator”
+  js/
+    catalog.js       datele celor 21 de produse
+    door.js          generatorul de desene SVG
+    switcher.js      interacțiunea „Comutator”
+    app.js           punctul de intrare
+  img/               fotografiile preluate de pe site-ul existent
+```
+
+Nicio valoare de culoare sau de spațiere nu este scrisă direct în
+`components.css` sau în `switcher.css`; totul trece prin `tokens.css`.
+
+---
+
+## Comutatorul de produse
+
+Interacțiunea principală, calchiată după comutatorul de aplicații al
+sistemului de operare:
+
+| tastă | efect |
+|---|---|
+| `⇧` ținut + `Tab` | deschide panoul și avansează selecția |
+| `⇧` eliberat | confirmă produsul selectat |
+| `←` `→` | navighează în ambele sensuri |
+| `Enter` | confirmă |
+| `Esc` | anulează, fără să schimbe nimic |
+
+Confirmarea închide panoul, aduce cartela produsului în cadru, o pune în
+evidență și mută focalizarea pe titlul ei. Dacă produsul confirmat era ascuns
+de un filtru activ, filtrele se golesc automat.
+
+Pe ecranele tactile: butonul flotant din colț, glisare stânga/dreapta, sau
+rotița mausului.
+
+### De ce nu `Alt+Tab` sau `Cmd+Tab`
+
+Ambele sunt interceptate de sistemul de operare înainte să ajungă la browser.
+O pagină web nu le poate prelua, indiferent de cod. `⇧+Tab` este cea mai
+apropiată combinație pe care browserul chiar o predă paginii — și este exact
+cea cerută.
+
+### Accesibilitatea, tratată explicit
+
+Interceptarea necondiționată a lui `⇧+Tab` ar distruge navigarea inversă cu
+tastatura, adică exact publicul care depinde cel mai mult de ea. De aceea
+scurtătura **se armează doar când focalizarea nu se află deja pe un element
+interactiv**:
+
+- cine parcurge pagina tastă cu tastă (focalizare pe un link, un buton, un
+  câmp) își păstrează comportamentul normal al lui `⇧+Tab`;
+- cine tocmai a deschis pagina (focalizare pe `body`) primește comutatorul;
+- butonul din antet, cel din secțiunea dedicată și cel flotant funcționează
+  întotdeauna, în ambele situații.
+
+Panoul este o fereastră modală reală: `role="dialog"`, `aria-modal`,
+focalizare captivă, `aria-activedescendant` pe șină, anunț `aria-live` la
+fiecare schimbare de selecție, iar `Esc` redă focalizarea de unde a fost luată.
+
+---
+
+## Ciclul ușii din erou
+
+Ușa din panoul eroului nu stă ridicată: rulează un ciclu continuu.
+
+| fază | durată |
+|---|---|
+| urcare | 2,2 s |
+| **stă deschisă** | **7,0 s** |
+| coborâre | 2,2 s |
+| stă închisă | 1,6 s |
+| **ciclu complet** | **13,0 s** |
+
+Duratele sunt declarate o singură dată, în obiectul `CICLU` din `app.js`, și
+alimentează atât mișcarea tablierului, cât și afișajul de stare de lângă desen
+(`Închisă` → `Se ridică` → `Deschisă` → `Se coboară`, plus banda de progres).
+Nu au cum să se desincronizeze, fiindcă starea e recalculată la fiecare cadru
+din `animation.currentTime`, nu numărată separat.
+
+Mișcarea e condusă prin Web Animations API, nu prin `@keyframes`: altfel
+procentele din CSS și duratele din JavaScript ar fi fost două surse de adevăr
+care se contrazic la prima modificare.
+
+Animația și bucla de redesenare se opresc când eroul iese din cadru, prin
+`IntersectionObserver`. La `prefers-reduced-motion`, ciclul nu pornește deloc —
+ușa rămâne ridicată, iar starea afișată este `Deschisă`.
+
+## Ușa din erou — ciclul de 13 secunde
+
+Ciclul e condus din `app.js`, prin Web Animations API, ca duratele să aibă o
+singură sursă de adevăr: aceleași valori alimentează și mișcarea tablierului,
+și afișajul de stare de lângă desen.
+
+| fază | durată |
+|---|---|
+| se ridică | 2,2 s |
+| **stă deschisă** | **7 s** |
+| se coboară | 2,2 s |
+| stă închisă | 1,6 s |
+
+Cursa de ridicare este **58 %**, nu 82 % ca înainte. La 82 % golul rămânea
+aproape complet descoperit cele 7 secunde cât ușa stă sus, iar tablierul cu
+lamele — adică produsul — dispărea din cadru: se citea ca „a dispărut ușa”.
+Interiorul văzut prin deschidere a fost refăcut din maro cald în gri foarte
+închis, ca să arate ca un gol în care privești, nu ca un panou colorat.
+
+Animația și bucla de redesenare se opresc când eroul iese din cadru, iar la
+`prefers-reduced-motion` nu pornesc deloc — ușa rămâne pur și simplu ridicată.
+
+## Culoare și fundal
+
+Accentul este **verde industrial**, nu chihlimbar. Valorile diferă între teme
+pentru că textul mic de 12 px — supratitluri, etichetele CUI și Nr. Reg. Com. —
+trebuie să treacă pragul WCAG AA pe fundalul pe care chiar stă:
+
+| rol | temă întunecată | temă luminoasă |
+|---|---|---|
+| `--acc` | `#4fb783` | `#1a6b47` |
+| `--acc-ink` | `#06180f` | `#f4fbf6` |
+
+Fundalul paginii are trei straturi, fixate la derulare:
+
+1. **tablier de rulou** — linii orizontale la pasul real al lamelei (55 mm);
+2. **unelte de construcții** — cheie fixă, ruletă, nivelă cu bulă, șurubelniță,
+   cheie imbus și șurub, desenate în contur, ca dală de 360 px;
+3. o aură verde care coboară din antet.
+
+Primele două sunt derivate din culoarea cernelii sau dintr-un gri neutru, deci
+funcționează la fel pe ambele teme.
+
+## Desenele de produs
+
+Fotografiile primite au între 255 și 510 px pe latura mare. Mărite la
+dimensiunea unei cartele s-ar fi văzut imediat că sunt întinse — de aceea nu
+sunt folosite ca imagine principală, ci păstrate la mărimea lor reală, în
+galerie.
+
+În locul lor, fiecare ușă este **desenată la scară**. Unitatea sistemului de
+coordonate SVG este milimetrul, deci lățimea, înălțimea, pasul lamelei, caseta
+și ghidajele respectă cotele reale din pagina „Tehnic” a magazinului.
+
+Rezultatul util: două uși cu aceeași dimensiune exterioară, dar cu lamelă
+diferită, arată vizibil diferit, pentru că au numărul real de lamele.
+
+| produs | dimensiune | lamelă | lamele desenate |
+|---|---|---|---|
+| Ușă … L3000 × H2500, gri antracit | 3000 × 2500 | 55 mm | 41 |
+| Ușă … L3000 × H2500, gri antracit | 3000 × 2500 | 77 mm | 29 |
+
+Redarea folosește 8 modele SVG partajate (4 culori × 2 pași), nu câteva sute
+de dreptunghiuri per pagină. Cele 48 de desene din pagină referă aceleași
+definiții.
+
+---
+
+## De unde vin datele — și de ce sunt 21, nu 16
+
+Sursa este WooCommerce Store API de pe chiar site-ul clientului:
+
+```
+/wp-json/wc/store/v1/products?per_page=100   → 21 de produse
+/wp-json/wc/store/v1/products/categories     → 55 MM: 15 · 77 MM: 6 · PROMOȚII: 16 · PRODUSE NOI: 16
+```
+
+Catalogul întreg are **21** de produse: 15 cu lamelă de 55 mm și 6 cu lamelă de
+77 mm. Numărul **16** aparține categoriilor „PROMOȚII” și „PRODUSE NOI”, nu
+magazinului. Ambele cifre sunt raportate de magazin, nu calculate de mine.
+
+Prețul întreg, prețul curent și starea de promoție sunt copiate întocmai.
+Două produse **nu** sunt la promoție și nu au preț tăiat nicăieri în site:
+
+| produs | preț | promoție |
+|---|---|---|
+| ABBA 55MM 2300 × 2200 maro | 3.350,00 lei | nu |
+| ABBA 55MM 3000 × 2500 maro | 3.700,00 lei | nu |
+
+`id` este chiar identificatorul WooCommerce, ca fiecare rând din
+`assets/js/catalog.js` să poată fi verificat direct în magazin.
+
+## Datele produselor
+
+Preluate întocmai de pe usa-garaj.ro: **21 de produse**, cu denumirile,
+dimensiunile, culorile și prețurile din magazin. Sursa este
+`assets/js/catalog.js`.
+
+Două intervenții, ambele deliberate — de verificat și confirmat:
+
+1. **Diacritice în denumiri.** „Usa garaj automata …” → „Ușă garaj automată …”.
+   Codurile, cotele, culorile și sumele sunt neatinse. Cerința de diacritice a
+   fost aplicată și denumirilor comerciale, nu doar textului redacțional.
+
+2. **Prețuri în convenția românească.** `4,050.00 lei` → `4.050,00 lei`.
+   Valoarea este identică; se schimbă doar separatorii. Formatarea se face în
+   `catalog.js`, funcția `lei()` — dacă se preferă forma existentă, se schimbă
+   într-un singur loc.
+
+Câmpul `pasaj` (spațiul util de trecere) este completat **doar** acolo unde
+magazinul îl declară explicit — la 6 din 21 de produse. Nu se calculează
+nicăieri, ca să nu apară cote inventate. Regula generală de scădere este
+prezentată separat, în fișa tehnică.
+
+Cifrele din erou (număr de produse, câte sunt la promoție, prețul minim,
+intervalul de lățimi) sunt calculate din catalog la încărcare, nu scrise de
+mână — nu pot rămâne în urmă față de date.
+
+---
+
+## Datele de identificare
+
+Afișate în trei locuri, la vedere:
+
+- bara de sus, prezentă pe fiecare ecran;
+- „cartea de identitate” din secțiunea de contact, cu CUI și numărul din
+  Registrul Comerțului pe rânduri evidențiate;
+- subsolul.
+
+Sunt incluse și în datele structurate `schema.org` din `<head>`, ca `taxID` și
+ca `PropertyValue`, ceea ce le face citibile de motoarele de căutare.
+
+**Proveniență:** `J15/136/2019` și sediul social apar în pagina „Termeni și
+condiții” a site-ului existent. CUI-ul `40437439` nu este publicat pe site; a
+fost preluat din registrele publice de firme, unde apare asociat aceleiași
+denumiri și aceluiași număr de ordine. **De confirmat de client înainte de
+publicare** — este singurul câmp care nu vine de pe site-ul propriu.
+
+Nu am declarat `vatID` și nici prefix `RO`, pentru că nu am putut confirma
+calitatea de plătitor de TVA. Dacă firma este înregistrată în scopuri de TVA,
+se adaugă în blocul JSON-LD din `index.html`.
+
+---
+
+## Vizibilitate în căutări
+
+- `<html lang="ro">`, titlu și descriere cu cuvintele-cheie reale
+- Open Graph și Twitter Card
+- `<link rel="canonical">`
+- date structurate `schema.org`: `Organization` + `HomeAndConstructionBusiness`,
+  `WebSite`, `FAQPage` cu 6 întrebări
+- un singur `h1`, ierarhie de titluri fără salturi de nivel
+- text alternativ în română pentru toate imaginile și desenele
+
+Conținutul secțiunilor „Servicii”, „Tehnic” și „Întrebări frecvente” provine
+exclusiv din afirmațiile site-ului ABBA. Nu am preluat nimic de la concurență —
+termene de execuție, număr de rate sau zone de montaj — pentru că sunt
+angajamente comerciale pe care doar clientul le poate asuma.
+
+---
+
+## Densitatea paginii
+
+Două lucruri făceau pagina să pară goală și au fost corectate:
+
+- **Titlul eroului** ajungea la 85 px și se rupea pe 7 rânduri, ocupând 620 px
+  — tot primul ecran al unui laptop, cu desenul ușii împins sub pliu. Plafonul
+  scării tipografice a fost coborât la 4,5 rem, iar titlul a fost scurtat: acum
+  are 213 px și desenul încape complet în primul ecran.
+- **Scena eroului** era o cutie în picioare (4 : 4,4) care conținea un desen
+  culcat (≈ 1,24 : 1), deci încadra desenul cu benzi goale. Proporția cutiei o
+  urmează acum pe cea a desenului, care o umple 100 %.
+
+Ritmul vertical al secțiunilor a fost strâns de la maximum 9 rem la 5,5 rem.
+Măsurat pe pagina întreagă, spațiul fără conținut (benzi continue de peste
+160 px) este acum **2,8 %**.
+
+## Limbajul vizual
+
+Ce ține pagina departe de aspectul generat automat nu e un efect, ci coerența
+unui singur motiv: **planșa de desen tehnic**.
+
+- **Caroiaj milimetric** în spatele fiecărui desen — la erou și pe toate cele
+  21 de cartele. Ușa nu plutește pe un chenar gol, stă pe o planșă. La trecerea
+  cursorului, caroiajul cartelei se colorează discret în chihlimbar.
+- **Repere de încadrare** în colțurile planșei eroului, ca semnele de registru
+  de pe un plan de execuție.
+- **Panoul eroului** este o singură piesă: planșa sus, afișajul de stare jos,
+  cu bulină de stare și bandă de progres — un aparat, nu o imagine cu o
+  etichetă lipită peste.
+- **Numerotarea rubricilor** (01 … 07) în supratitluri: pagina se citește ca un
+  document cu cuprins, nu ca un teanc de blocuri identice.
+- **Linie subțire deasupra fiecărei rubrici**, care leagă secțiunile la aceeași
+  grilă verticală.
+- **Axa de lățime a fontului**: Archivo e o variabilă, iar titlurile sunt ușor
+  extinse (`wdth` 108–112) față de textul curent. Contrastul dintre cele două
+  lățimi e ceea ce dă senzația de tipar tehnic; e și motivul pentru care fontul
+  a fost încărcat cu axa `wdth`, nu doar cu greutăți.
+- **Cifrele tehnice** — cote, prețuri, coduri RAL, CUI, J — sunt toate în
+  monospațiat cu cifre tabulare, deci se aliniază pe coloană oriunde apar.
+
+## Verificat
+
+Testat la 404 px, 1280 px și 1440 px lățime:
+
+- pagina randează complet și fără server, deschisă direct de pe disc
+- 21 de cartele, 21 de plăci în comutator, 48 de desene, 8 modele partajate,
+  22 de planșe caroiate, 7 numere de rubrică
+- ciclul ușii măsurat pas cu pas: 0 % la pornire, 100 % la 2,2 s, încă 100 % la
+  9,2 s, 0 % la 11,4 s — adică **exact 7,0 s** de stat deschisă, la nesfârșit
+- toate cele 5 declanșatoare ale comutatorului funcționează: butonul din antet,
+  cel din secțiune, miniatura, butonul flotant și butonul de pe fiecare cartelă
+- centrarea plăcii selectate: eroare 0 px pe toate cele 21 de poziții
+- garda de accesibilitate: `⇧+Tab` nu se activează când focalizarea e pe un
+  link sau pe un buton
+- ciclare corectă la capete, confirmare, anulare, blocarea și deblocarea
+  derulării
+- filtre combinate și golirea lor automată la confirmarea unui produs ascuns
+- fără derulare orizontală a paginii la nicio lățime
+- contrast **WCAG AA** trecut pe 29 de puncte de text, în ambele teme, fiecare
+  temă măsurată pe o pagină încărcată direct în ea (comutarea temei din consolă
+  dă recalculări parțiale de stil și, implicit, cifre false)
+- ierarhie de titluri fără salturi; toate imaginile cu `alt`; toate butoanele
+  cu nume accesibil
+- `prefers-reduced-motion` oprește ridicarea ușii, banda de rulare, apariția la
+  derulare și tranzițiile comutatorului
+- diacritice: 455 de caractere, toate cu virgulă dedesubt (`ș` U+0219,
+  `ț` U+021B), niciunul cu sedilă
+
+## Rămas de făcut la integrare
+
+Pagina este un frontend complet, nu un magazin. Butoanele „Comută” și
+titlurile cartelelor duc la paginile de produs din WooCommerce-ul existent.
+La integrarea în WordPress:
+
+- adresele produselor devin relative (`urlProdus()` din `catalog.js`);
+- catalogul se poate genera din WooCommerce în loc să fie scris în
+  `catalog.js`, păstrând aceleași câmpuri;
+- coșul și finalizarea comenzii rămân cele actuale.

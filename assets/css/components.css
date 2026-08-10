@@ -1,0 +1,1234 @@
+﻿/* ==========================================================================
+   components.css — bara de identificare, antet, erou, catalog, fișă tehnică,
+   galerie, întrebări frecvente, contact, subsol.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. Bara de identificare a firmei — CUI și J, pe fiecare ecran
+   ========================================================================== */
+
+.idbar {
+  background: var(--bg-sunken);
+  border-block-end: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+.idbar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-5);
+  padding-block: 0.45rem;
+}
+.idbar__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+}
+.idbar__legal b {
+  color: var(--ink-muted);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+/* Codurile fiscale sunt evidențiate — cerință explicită a clientului. */
+.idbar__code {
+  color: var(--ink);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.idbar__code span { color: var(--acc); }
+.idbar__sep { color: var(--line-strong); }
+.idbar__tel { color: var(--ink); font-weight: 600; text-decoration: none; white-space: nowrap; }
+.idbar__tel:hover { color: var(--acc); }
+
+@media (max-width: 640px) {
+  .idbar__inner { justify-content: center; text-align: center; }
+}
+
+/* ==========================================================================
+   2. Antet
+   ========================================================================== */
+
+.hdr {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 90;
+  background: color-mix(in oklab, var(--bg) 82%, transparent);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  border-block-end: 1px solid transparent;
+  transition: border-color var(--d-2), background var(--d-2);
+}
+.hdr.is-stuck { border-block-end-color: var(--line); }
+
+.hdr__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--s-5);
+  min-block-size: 4.25rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  text-decoration: none;
+  flex: none;
+  margin-inline-end: auto;
+}
+.brand__mark {
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+  border-radius: var(--r-2);
+  background: var(--surface-hi);
+  border: 1px solid var(--line);
+  object-fit: contain;
+  padding: 2px;
+}
+.brand__name {
+  display: grid;
+  line-height: 1.1;
+}
+.brand__name b {
+  font-size: var(--t-0);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variation-settings: "wdth" 108;
+}
+.brand__name small {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.nav { display: flex; align-items: center; gap: var(--s-1); }
+.nav a {
+  padding: var(--s-2) var(--s-3);
+  font-size: var(--t--1);
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-decoration: none;
+  border-radius: var(--r-2);
+  transition: color var(--d-1), background var(--d-1);
+}
+.nav a:hover { color: var(--ink); background: var(--surface); }
+
+@media (max-width: 1000px) { .nav { display: none; } }
+
+.hdr__actions { display: flex; align-items: center; gap: var(--s-2); flex: none; }
+
+/* ==========================================================================
+   3. Butoane
+   ========================================================================== */
+
+.btn {
+  --btn-bg: var(--surface-hi);
+  --btn-ink: var(--ink);
+  --btn-line: var(--line-strong);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: 0.7rem 1.1rem;
+  background: var(--btn-bg);
+  color: var(--btn-ink);
+  border: 1px solid var(--btn-line);
+  border-radius: var(--r-2);
+  font-size: var(--t--1);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform var(--d-1) var(--ease-out), background var(--d-1), border-color var(--d-1), color var(--d-1);
+}
+.btn:hover { transform: translateY(-1px); background: color-mix(in oklab, var(--btn-bg) 84%, var(--ink)); }
+.btn:active { transform: translateY(0); }
+
+.btn--primary {
+  --btn-bg: var(--acc);
+  --btn-ink: var(--acc-ink);
+  --btn-line: transparent;
+}
+/* Pe întuneric butonul se aprinde la trecerea cursorului, pe lumină se
+   închide — în ambele cazuri se depărtează de fundal, nu se apropie. */
+.btn--primary:hover { background: var(--green-hi); }
+:root[data-theme="light"] .btn--primary:hover { background: #124e34; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .btn--primary:hover { background: #124e34; }
+}
+
+.btn--ghost { --btn-bg: transparent; --btn-line: var(--line-strong); }
+.btn--lg { padding: 0.95rem 1.5rem; font-size: var(--t-0); }
+.btn--sm { padding: 0.45rem 0.7rem; font-size: var(--t--2); }
+
+.btn__kbd {
+  display: inline-flex;
+  gap: 3px;
+  margin-inline-start: var(--s-1);
+}
+
+kbd {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.28em 0.45em;
+  border-radius: 3px;
+  background: color-mix(in oklab, currentColor 12%, transparent);
+  border: 1px solid color-mix(in oklab, currentColor 22%, transparent);
+  white-space: nowrap;
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 2.35rem;
+  block-size: 2.35rem;
+  border-radius: var(--r-2);
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-muted);
+  cursor: pointer;
+  transition: color var(--d-1), border-color var(--d-1), background var(--d-1);
+}
+.icon-btn:hover { color: var(--ink); border-color: var(--line-strong); background: var(--surface); }
+.icon-btn svg { inline-size: 1.05rem; block-size: 1.05rem; }
+
+/* Butonul arată tema activă: lună pe întuneric, soare pe lumină.
+   Implicit e afișată luna; luminozitatea o înlocuiește, fie pentru că a fost
+   aleasă explicit, fie pentru că e moștenită de la sistem. */
+.theme-toggle .i-moon { display: block; }
+.theme-toggle .i-sun  { display: none; }
+
+:root[data-theme="light"] .theme-toggle .i-moon { display: none; }
+:root[data-theme="light"] .theme-toggle .i-sun  { display: block; }
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) .theme-toggle .i-moon { display: none; }
+  :root:not([data-theme]) .theme-toggle .i-sun  { display: block; }
+}
+
+/* ==========================================================================
+   4. Erou
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  padding-block: clamp(1.75rem, 1.1rem + 3.2vw, 3.25rem);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Lumina rece care cade de sus, ca într-un garaj cu ușa ridicată. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset-block-start: -30%;
+  inset-inline-start: 50%;
+  translate: -50% 0;
+  inline-size: min(120%, 1100px);
+  aspect-ratio: 1;
+  background: radial-gradient(circle at 50% 35%,
+    color-mix(in oklab, var(--acc) 16%, transparent) 0%,
+    transparent 62%);
+  z-index: -2;
+  pointer-events: none;
+}
+/* Peliculă de granulație: elimină benzile din degrade. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  z-index: -1;
+  pointer-events: none;
+}
+:root[data-theme="light"] .hero::after { opacity: 0.07; }
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(2rem, 1rem + 5vw, 5rem);
+  align-items: center;
+}
+@media (max-width: 940px) {
+  .hero__grid { grid-template-columns: 1fr; gap: var(--s-8); }
+}
+
+.hero__title { margin-block: var(--s-5) 0; }
+.hero__title em {
+  font-style: normal;
+  color: var(--acc);
+  font-variation-settings: "wdth" 96;
+}
+
+.hero__lede { margin-block-start: var(--s-5); }
+
+.hero__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-block-start: var(--s-6);
+}
+
+/* Barometrul de cifre — mono, aliniat pe coloane, cu linii de separare. */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1px;
+  margin-block-start: var(--s-6);
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  overflow: hidden;
+}
+.stat {
+  position: relative;
+  background: var(--bg-raised);
+  padding: var(--s-3) var(--s-4);
+  transition: background var(--d-2);
+}
+/* Linie de accent care crește din marginea de sus la trecerea cursorului. */
+.stat::before {
+  content: "";
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  block-size: 2px;
+  background: var(--acc);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  transition: transform var(--d-3) var(--ease-out);
+}
+.stat:hover { background: var(--surface); }
+.stat:hover::before { transform: scaleX(1); }
+.stat__v {
+  font-family: var(--font-mono);
+  font-size: var(--t-3);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.stat__v sup { font-size: 0.5em; color: var(--acc); vertical-align: super; }
+.stat__k {
+  display: block;
+  margin-block-start: var(--s-1);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+  letter-spacing: 0.02em;
+}
+
+/* --- Scena eroului: ușa care se ridică ---
+   Proporția cutiei o urmează pe cea a desenului cotat (3660 × 2950 unități de
+   desen ≈ 1,24). Orice altă valoare ar lăsa desenul încadrat cu benzi goale —
+   exact genul de gol care face o pagină să pară nefinisată. */
+.hero__stage {
+  position: relative;
+  aspect-ratio: 3660 / 3080;
+  inline-size: 100%;
+}
+.hero__stage svg { inline-size: 100%; block-size: 100%; overflow: visible; }
+
+/* --- Panoul eroului: placa de desen plus afișajul de stare --------------- */
+
+.hero__panel {
+  margin: 0;
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-4);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  max-inline-size: 40rem;
+  margin-inline: auto;
+  inline-size: 100%;
+}
+
+.hero__stage { border-block-end: 1px solid var(--line); border-radius: 0; }
+.hero__stage > div { block-size: 100%; }
+
+/* Afișaj de aparat: stare, bandă de progres, cote. Toate din același ciclu. */
+.readout {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-5) var(--s-5);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  background: var(--bg-sunken);
+}
+
+.readout__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.readout__head b {
+  font-size: var(--t-0);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+/* Bulina de stare împrumută limbajul unui tablou de comandă. */
+.readout__head b::before {
+  content: "";
+  inline-size: 7px; block-size: 7px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+  transition: background var(--d-2), box-shadow var(--d-2);
+}
+.readout__head b[data-stare="sus"]::before {
+  background: var(--acc);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--acc) 22%, transparent);
+}
+.readout__head b[data-stare="urca"]::before,
+.readout__head b[data-stare="coboara"]::before {
+  background: var(--green-dim);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--green-dim) 20%, transparent);
+}
+
+.readout__bar {
+  display: block;
+  block-size: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.readout__bar i {
+  display: block;
+  block-size: 100%;
+  background: var(--acc);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+}
+
+/* Trei coloane pe lat, două pe telefon: la 85 px, „3000 × 2500 mm” se rupea
+   pe două rânduri în fiecare celulă. */
+.readout__specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+  gap: var(--s-3) var(--s-4);
+  margin: 0;
+}
+.readout__specs div { display: grid; gap: 2px; min-inline-size: 0; }
+.readout__specs dt {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.readout__specs dd {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   5. Banda de rulare — dovezi scurte
+   ========================================================================== */
+
+.ticker {
+  border-block: 1px solid var(--line);
+  background: var(--bg-raised);
+  overflow: hidden;
+  padding-block: var(--s-4);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.ticker__track {
+  display: flex;
+  inline-size: max-content;
+  gap: var(--s-7);
+  animation: ticker 42s linear infinite;
+}
+.ticker:hover .ticker__track { animation-play-state: paused; }
+.ticker__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+  white-space: nowrap;
+}
+.ticker__item::before {
+  content: "";
+  inline-size: 4px; block-size: 4px;
+  border-radius: 50%;
+  background: var(--acc);
+  flex: none;
+}
+@keyframes ticker { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker__track { animation: none; } }
+
+/* ==========================================================================
+   6. Invitația la Comutator
+   ========================================================================== */
+
+.switch-pitch {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 1rem + 5vw, 5rem);
+  align-items: center;
+}
+@media (max-width: 940px) { .switch-pitch { grid-template-columns: 1fr; } }
+
+/* Miniatura statică a comutatorului, care invită la apăsare */
+.switch-preview {
+  position: relative;
+  padding: var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  background:
+    linear-gradient(160deg,
+      color-mix(in oklab, var(--surface-hi) 92%, transparent),
+      color-mix(in oklab, var(--bg-sunken) 92%, transparent));
+  box-shadow: var(--shadow-2);
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color var(--d-2), transform var(--d-2) var(--ease-out);
+}
+.switch-preview:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+.switch-preview::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image: var(--grain);
+  opacity: 0.1; pointer-events: none;
+}
+.switch-preview__rail {
+  display: flex;
+  gap: var(--s-3);
+  align-items: stretch;
+}
+.switch-preview__cell {
+  flex: 1;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--r-3);
+  border: 1px solid var(--line);
+  background: var(--bg-sunken);
+  overflow: hidden;
+  opacity: 0.5;
+  transition: opacity var(--d-2), transform var(--d-2) var(--ease-out);
+}
+.switch-preview__cell svg { inline-size: 100%; block-size: 100%; }
+.switch-preview__cell.is-on {
+  opacity: 1;
+  transform: scale(1.06);
+  border-color: var(--acc);
+  box-shadow: 0 0 0 1px var(--acc), var(--shadow-2);
+}
+.switch-preview__cap {
+  margin-block-start: var(--s-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+.switch-preview__cap b { color: var(--ink); font-weight: 500; }
+
+.hint-list { display: grid; gap: var(--s-3); margin-block-start: var(--s-6); padding: 0; list-style: none; }
+.hint-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding-block: var(--s-3);
+  border-block-start: 1px solid var(--line);
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+}
+.hint-list li:first-child { border-block-start: 0; padding-block-start: 0; }
+.hint-list .keys { display: inline-flex; gap: 3px; flex: none; min-inline-size: 7.5rem; }
+
+/* ==========================================================================
+   7. Catalog
+   ========================================================================== */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-5);
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-block-end: var(--s-5);
+  border-block-end: 1px solid var(--line);
+  margin-block-end: var(--s-6);
+}
+.filter-group { display: grid; gap: var(--s-2); }
+.filter-group__label {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0.42rem 0.8rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-full);
+  background: transparent;
+  color: var(--ink-muted);
+  font-size: var(--t--1);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color var(--d-1), border-color var(--d-1), background var(--d-1);
+}
+.chip:hover { color: var(--ink); border-color: var(--ink-faint); }
+.chip[aria-pressed="true"] {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--acc-ink);
+}
+.chip__swatch {
+  inline-size: 0.7rem; block-size: 0.7rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--ink) 25%, transparent);
+  flex: none;
+}
+.filter-count {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  color: var(--ink-faint);
+}
+.filter-count b { color: var(--ink); font-weight: 600; }
+
+.grid-products {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(clamp(15rem, 24vw, 19rem), 1fr));
+  gap: var(--s-5);
+}
+
+.card {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  background: var(--surface);
+  overflow: hidden;
+  transition: border-color var(--d-2), transform var(--d-2) var(--ease-out), box-shadow var(--d-2);
+}
+.card:hover {
+  border-color: var(--line-strong);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-2);
+}
+.card.is-hidden { display: none; }
+
+/* Proporția e aleasă la mijlocul intervalului real al ușilor (0,97 … 1,24),
+   ca benzile goale din jurul desenului să fie cât mai mici indiferent de
+   produs. Caroiajul o transformă într-o planșă, nu într-un chenar gol. */
+.card__figure {
+  position: relative;
+  aspect-ratio: 8 / 7;
+  display: grid;
+  place-items: center;
+  padding: var(--s-5) var(--s-5) var(--s-2);
+  overflow: hidden;
+  border-block-end: 1px solid var(--line);
+}
+.card__figure svg { inline-size: auto; block-size: 100%; max-inline-size: 100%; }
+
+/* Vignetă discretă: ridică desenul de pe caroiaj. */
+.card__figure::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 90% at 50% 30%,
+    transparent 45%, color-mix(in oklab, var(--bg-sunken) 70%, transparent) 100%);
+  pointer-events: none;
+}
+
+/* La trecerea cursorului, caroiajul se colorează discret în chihlimbar —
+   suficient cât să semnaleze cartela activă, fără să mute nimic. */
+.card:hover .card__figure { --plate-line: color-mix(in oklab, var(--acc) 18%, transparent); }
+
+/* Fotografia reală a magazinului. Stă ascunsă sub desenul la scară și apare
+   la trecerea cursorului: desenul dă cotele, fotografia dă materialul.
+   E mică (255–510 px), deci nu e mărită niciodată peste ce poate duce —
+   `object-fit: cover` o încadrează, nu o întinde. */
+.card__photo {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(1.04);
+  transition: opacity var(--d-3) var(--ease-out), transform var(--d-3) var(--ease-out);
+  z-index: 1;
+}
+.card:hover .card__photo,
+.card:focus-within .card__photo { opacity: 1; transform: none; }
+
+/* Insigna cu lamela rămâne lizibilă peste fotografie. */
+.card__badges { z-index: 2; }
+
+.card__desc {
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Secțiunile alternante lasă textura de tablier să se vadă prin ele. */
+.section--alt {
+  background: color-mix(in oklab, var(--bg-raised) 86%, transparent);
+  border-block: 1px solid var(--line);
+}
+
+.card__badges {
+  position: absolute;
+  inset-block-start: var(--s-3);
+  inset-inline: var(--s-3);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-2);
+  pointer-events: none;
+}
+.badge {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.5rem;
+  border-radius: var(--r-1);
+  background: color-mix(in oklab, var(--bg) 72%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--line);
+  color: var(--ink-muted);
+}
+.badge--sale { background: var(--rust); border-color: transparent; color: #fff; }
+
+.card__body { display: grid; gap: var(--s-3); padding: var(--s-5); align-content: start; }
+.card__title {
+  font-size: var(--t-0);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+.card__title a { text-decoration: none; }
+.card__title a::after { content: ""; position: absolute; inset: 0; }
+
+.spec-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-3);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+.spec-row span { white-space: nowrap; }
+
+.price { display: flex; align-items: baseline; gap: var(--s-3); flex-wrap: wrap; margin-block-start: var(--s-1); }
+.price__now {
+  font-family: var(--font-mono);
+  font-size: var(--t-2);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.price__was {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  color: var(--ink-faint);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.price__off { font-family: var(--font-mono); font-size: var(--t--2); font-weight: 600; color: var(--sale); }
+
+.card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+/* Titlul acoperă toată cartela cu un ::after, deci butonul trebuie ridicat
+   peste el ca să rămână apăsabil. */
+.card__foot button { position: relative; z-index: 1; }
+
+/* Confirmarea din comutator aduce cartela în cadru și o pune în evidență. */
+.card.is-flash { animation: card-flash 1500ms var(--ease-out); }
+@keyframes card-flash {
+  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--acc) 85%, transparent); border-color: var(--acc); }
+  55%  { box-shadow: 0 0 0 7px color-mix(in oklab, var(--acc) 0%, transparent); border-color: var(--acc); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .card.is-flash { animation: none; border-color: var(--acc); }
+}
+
+.empty-state {
+  padding: var(--s-9) var(--s-5);
+  text-align: center;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-4);
+  color: var(--ink-faint);
+}
+
+/* ==========================================================================
+   8. Fișa tehnică
+   ========================================================================== */
+
+.spec-panel {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  background: var(--surface);
+  overflow: hidden;
+}
+/* Reper de încadrare în colțul din dreapta-jos, ca pe o planșă de execuție.
+   Același limbaj ca desenele produselor — de aceea panourile de date arată ca
+   parte din același document, nu ca niște casete adunate de aiurea. */
+.spec-panel::after {
+  content: "";
+  position: absolute;
+  inset-block-end: 10px;
+  inset-inline-end: 10px;
+  inline-size: 10px;
+  block-size: 10px;
+  border-inline-end: 1px solid color-mix(in oklab, var(--acc) 55%, transparent);
+  border-block-end: 1px solid color-mix(in oklab, var(--acc) 55%, transparent);
+  pointer-events: none;
+}
+.table-scroll { overflow-x: auto; }
+
+table.spec {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: var(--t--1);
+  min-inline-size: 34rem;
+}
+table.spec caption {
+  text-align: start;
+  padding: var(--s-5);
+  border-block-end: 1px solid var(--line);
+  font-weight: 600;
+  font-size: var(--t-0);
+  color: var(--ink);
+}
+table.spec th, table.spec td {
+  padding: 0.8rem var(--s-5);
+  text-align: start;
+  border-block-end: 1px solid var(--line);
+  vertical-align: baseline;
+}
+table.spec thead th {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  font-weight: 500;
+  background: var(--bg-sunken);
+}
+table.spec tbody th { font-weight: 500; color: var(--ink-muted); inline-size: 40%; }
+table.spec td {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+table.spec tbody tr:last-child th, table.spec tbody tr:last-child td { border-block-end: 0; }
+table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, transparent); }
+
+.note {
+  display: flex;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  border-inline-start: 2px solid var(--acc);
+  background: color-mix(in oklab, var(--acc) 6%, transparent);
+  border-radius: 0 var(--r-3) var(--r-3) 0;
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+}
+.note b { color: var(--ink); }
+
+/* ==========================================================================
+   9. Servicii
+   ========================================================================== */
+
+/* Exact trei coloane: cele șase servicii cad în două rânduri egale, 3 și 3.
+   Cu `auto-fit` ecranele late produceau patru pe primul rând și două pe al
+   doilea — un rând ciuntit, care se vede imediat. */
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  overflow: hidden;
+}
+@media (max-width: 900px) { .svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 580px) { .svc-grid { grid-template-columns: 1fr; } }
+
+.svc {
+  position: relative;
+  background: var(--bg-raised);
+  padding: var(--s-6) var(--s-5) var(--s-6);
+  display: grid;
+  gap: var(--s-3);
+  align-content: start;
+  transition: background var(--d-2);
+}
+.svc:hover { background: var(--surface); }
+
+/* Numărul stă pe muchia de sus, călare pe chenar, ca o etichetă de reper. */
+.svc__n {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  font-weight: 600;
+  color: var(--acc);
+  letter-spacing: 0.12em;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+}
+.svc__n::after {
+  content: "";
+  block-size: 1px;
+  inline-size: 1.5rem;
+  background: color-mix(in oklab, var(--acc) 45%, transparent);
+}
+.svc h3 { font-size: var(--t-1); letter-spacing: -0.02em; }
+.svc p { font-size: var(--t--1); color: var(--ink-muted); }
+
+/* ==========================================================================
+   10. Galerie
+   ========================================================================== */
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--s-4);
+}
+.gallery figure {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  overflow: hidden;
+  background: var(--bg-sunken);
+}
+.gallery img {
+  inline-size: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  filter: saturate(0.9) contrast(1.04);
+  transition: filter var(--d-3), transform var(--d-3) var(--ease-out);
+}
+.gallery figure:hover img { filter: none; transform: scale(1.03); }
+.gallery figcaption {
+  padding: var(--s-3) var(--s-4);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+  border-block-start: 1px solid var(--line);
+}
+
+/* ==========================================================================
+   11. Întrebări frecvente
+   ========================================================================== */
+
+.faq { display: grid; gap: 0; border-block-start: 1px solid var(--line); }
+.faq details { border-block-end: 1px solid var(--line); }
+.faq summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-5) 0;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--t-1);
+  font-weight: 600;
+  letter-spacing: -0.018em;
+  transition: color var(--d-1);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary:hover { color: var(--acc); }
+.faq summary::after {
+  content: "";
+  margin-inline-start: auto;
+  flex: none;
+  inline-size: 0.75rem; block-size: 0.75rem;
+  border-inline-end: 1.5px solid currentColor;
+  border-block-end: 1.5px solid currentColor;
+  rotate: 45deg;
+  transition: rotate var(--d-2) var(--ease-out);
+}
+.faq details[open] summary::after { rotate: -135deg; }
+.faq details > div {
+  padding-block-end: var(--s-5);
+  color: var(--ink-muted);
+  max-inline-size: var(--measure);
+  font-size: var(--t-0);
+}
+
+/* ==========================================================================
+   12. Contact și date de identificare
+   ========================================================================== */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 1rem + 3vw, 3rem);
+}
+@media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
+
+/* Cartea de identitate a firmei — accentul cerut pe CUI și J. */
+.idcard {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-4);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-2);
+}
+.idcard__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  background: var(--bg-sunken);
+  border-block-end: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.idcard__head span { color: var(--acc); }
+.idcard__body { display: grid; }
+.idrow {
+  display: grid;
+  grid-template-columns: minmax(8rem, 30%) 1fr;
+  gap: var(--s-4);
+  padding: 0.85rem var(--s-5);
+  border-block-end: 1px solid var(--line);
+  align-items: baseline;
+}
+.idrow:last-child { border-block-end: 0; }
+.idrow dt {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.idrow dd { margin: 0; font-size: var(--t--1); color: var(--ink); }
+.idrow dd a { text-decoration: none; }
+.idrow dd a:hover { color: var(--acc); }
+
+/* Rândurile fiscale sunt vizual ridicate — cerință a clientului. */
+.idrow--key { background: color-mix(in oklab, var(--acc) 7%, transparent); }
+.idrow--key dd {
+  font-family: var(--font-mono);
+  font-size: var(--t-1);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.idrow--key dt { color: var(--acc); }
+
+.contact-cta { display: grid; gap: var(--s-5); align-content: start; }
+.contact-lines { display: grid; gap: var(--s-3); }
+.contact-line {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-4) var(--s-5);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  background: var(--surface);
+  text-decoration: none;
+  transition: border-color var(--d-2), transform var(--d-2) var(--ease-out);
+}
+.contact-line:hover { border-color: var(--acc); transform: translateX(3px); }
+.contact-line svg { inline-size: 1.1rem; block-size: 1.1rem; color: var(--acc); flex: none; }
+.contact-line div { display: grid; }
+.contact-line small {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.contact-line b { font-size: var(--t-1); font-weight: 600; letter-spacing: -0.02em; }
+
+/* ==========================================================================
+   12b. Firimituri, pagina de produs, proză
+   ========================================================================== */
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-block-end: var(--s-5);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+.crumbs a { color: var(--ink-muted); text-decoration: none; }
+.crumbs a:hover { color: var(--acc); }
+.crumbs i { color: var(--line-strong); font-style: normal; }
+.crumbs span { color: var(--ink); }
+
+.produs {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+  align-items: start;
+}
+@media (max-width: 900px) { .produs { grid-template-columns: 1fr; } }
+
+.produs__media { display: grid; gap: var(--s-4); position: sticky; top: 6rem; }
+@media (max-width: 900px) { .produs__media { position: static; } }
+
+.produs__plansa {
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-4);
+  padding: var(--s-4);
+  box-shadow: var(--shadow-2);
+}
+.produs__plansa svg { inline-size: 100%; block-size: auto; }
+
+.produs__foto {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  overflow: hidden;
+  background: var(--bg-sunken);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--s-4);
+  padding: var(--s-3);
+}
+/* Fotografia rămâne la mărimea ei reală — nu are rezoluție de mărit. */
+.produs__foto img {
+  inline-size: 96px;
+  block-size: 96px;
+  object-fit: cover;
+  border-radius: var(--r-2);
+}
+.produs__foto figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+
+.produs__info { display: grid; gap: var(--s-4); align-content: start; }
+.produs__titlu { font-size: var(--t-3); letter-spacing: -0.03em; font-variation-settings: "wdth" 106; }
+.produs__pret { margin-block: var(--s-2) 0; }
+.produs__pret .price__now { font-size: var(--t-4); }
+
+.produs__stoc {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-muted);
+}
+.produs__stoc i {
+  inline-size: 7px; block-size: 7px; border-radius: 50%;
+  background: var(--acc);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--acc) 22%, transparent);
+}
+
+.produs__desc { display: grid; gap: var(--s-3); color: var(--ink-muted); max-inline-size: var(--measure); }
+.produs__spec { border: 1px solid var(--line); border-radius: var(--r-3); background: var(--surface); }
+.produs__cta { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-block-start: var(--s-2); }
+.produs__nota { font-size: var(--t--2); color: var(--ink-faint); }
+
+/* Proză: paginile legale și de informare. */
+.proza {
+  max-inline-size: 74ch;
+  display: grid;
+  gap: var(--s-4);
+  color: var(--ink-muted);
+  font-size: var(--t-0);
+}
+.proza h2, .proza h3, .proza h4 { color: var(--ink); margin-block-start: var(--s-5); }
+.proza h3 { font-size: var(--t-2); }
+.proza ul, .proza ol { padding-inline-start: 1.25em; display: grid; gap: var(--s-2); }
+.proza a { color: var(--acc); }
+.proza strong, .proza b { color: var(--ink); }
+.proza + .idcard { margin-block-start: var(--s-8); max-inline-size: 40rem; }
+
+/* ==========================================================================
+   13. Subsol
+   ========================================================================== */
+
+.ftr {
+  border-block-start: 1px solid var(--line);
+  background: var(--bg-sunken);
+  padding-block: var(--s-7) var(--s-6);
+}
+.ftr__cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--s-7) var(--s-5);
+}
+.ftr h2 {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-block-end: var(--s-4);
+}
+.ftr ul { list-style: none; padding: 0; display: grid; gap: var(--s-2); }
+.ftr a { font-size: var(--t--1); color: var(--ink-muted); text-decoration: none; }
+.ftr a:hover { color: var(--acc); }
+
+.ftr__legal {
+  margin-block-start: var(--s-8);
+  padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3) var(--s-5);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+.ftr__legal strong { color: var(--ink-muted); font-weight: 500; }
+.ftr__legal .idbar__code { font-size: var(--t--2); }

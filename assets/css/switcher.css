@@ -1,0 +1,283 @@
+/* ==========================================================================
+   switcher.css — „Comutatorul de produse”.
+   Suprapunere de tip comutator de aplicații: ține apăsat ⇧ și apasă Tab.
+   Panoul este o fereastră modală reală: focalizarea rămâne captivă înăuntru,
+   iar Esc anulează fără să schimbe selecția.
+   ========================================================================== */
+
+.switcher {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--d-2) var(--ease-out),
+    visibility 0s linear var(--d-2);
+}
+.switcher.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.switcher__scrim {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in oklab, var(--bg-sunken) 62%, transparent);
+  backdrop-filter: blur(26px) saturate(140%) brightness(0.72);
+  -webkit-backdrop-filter: blur(26px) saturate(140%) brightness(0.72);
+}
+:root[data-theme="light"] .switcher__scrim {
+  background: color-mix(in oklab, #6b6559 42%, transparent);
+  backdrop-filter: blur(26px) saturate(130%);
+  -webkit-backdrop-filter: blur(26px) saturate(130%);
+}
+
+/* --- Panoul ---------------------------------------------------------- */
+
+.switcher__panel {
+  position: relative;
+  inline-size: min(100%, 74rem);
+  padding: clamp(1rem, 0.6rem + 1.6vw, 1.75rem);
+  border-radius: clamp(14px, 1.4vw, 22px);
+  border: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+  background:
+    linear-gradient(155deg,
+      color-mix(in oklab, var(--surface-hi) 78%, transparent),
+      color-mix(in oklab, var(--bg-raised) 88%, transparent));
+  backdrop-filter: blur(30px) saturate(160%);
+  -webkit-backdrop-filter: blur(30px) saturate(160%);
+  box-shadow:
+    var(--shadow-3),
+    inset 0 1px 0 color-mix(in oklab, #fff 12%, transparent);
+  transform: scale(0.955) translateY(10px);
+  transition: transform var(--d-3) var(--ease-spring);
+  overflow: hidden;
+}
+.switcher.is-open .switcher__panel { transform: none; }
+
+.switcher__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--grain);
+  opacity: 0.09;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* --- Antetul panoului ------------------------------------------------ */
+
+.switcher__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding-block-end: var(--s-4);
+  margin-block-end: var(--s-4);
+  border-block-end: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.switcher__bar strong { color: var(--ink); font-weight: 600; }
+.switcher__idx {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--ink-muted);
+}
+.switcher__idx b { color: var(--acc); font-weight: 600; }
+
+/* --- Șina cu plăci --------------------------------------------------- */
+
+/* Fără spațiere pe orizontală: șina trebuie să pornească exact din originea
+   casetei de conținut, altfel centrarea calculată în switcher.js capătă un
+   decalaj constant. Spațierea pe verticală rămâne, ca inelul de selecție al
+   plăcii active să nu fie tăiat. */
+.switcher__viewport {
+  overflow: hidden;
+  padding-inline: 0;
+  padding-block: var(--s-3);
+}
+/* `position: relative` nu e decorativ: garantează că șina este `offsetParent`
+   pentru plăci, deci `tile.offsetLeft` e raportat la șină. Fără el, reperul ar
+   depinde de faptul că `transform` creează un bloc conținător — un amănunt prea
+   subtil pe care să se sprijine centrarea. */
+.switcher__rail {
+  position: relative;
+  display: flex;
+  gap: clamp(0.5rem, 0.3rem + 0.8vw, 0.9rem);
+  inline-size: max-content;
+  will-change: transform;
+  transition: transform var(--d-3) var(--ease-out);
+}
+
+.tile {
+  --tile-w: clamp(5.5rem, 4.2rem + 5.2vw, 9.5rem);
+  position: relative;
+  inline-size: var(--tile-w);
+  flex: none;
+  padding: 0;
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  border-radius: clamp(8px, 0.8vw, 12px);
+  background: color-mix(in oklab, var(--bg-sunken) 55%, transparent);
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.4;
+  filter: saturate(0.5);
+  transform: scale(0.9);
+  transition:
+    opacity var(--d-2) var(--ease-out),
+    transform var(--d-2) var(--ease-spring),
+    filter var(--d-2),
+    border-color var(--d-2),
+    box-shadow var(--d-2);
+}
+.tile:hover { opacity: 0.78; transform: scale(0.95); }
+
+.tile[aria-selected="true"] {
+  opacity: 1;
+  filter: none;
+  transform: scale(1);
+  border-color: var(--acc);
+  box-shadow:
+    0 0 0 2px var(--acc),
+    0 18px 40px -14px rgb(0 0 0 / 0.6);
+}
+
+.tile__art {
+  aspect-ratio: 3 / 3.6;
+  display: grid;
+  place-items: center;
+  padding: 10% 12% 0;
+  background: linear-gradient(180deg,
+    color-mix(in oklab, var(--bg) 30%, transparent),
+    color-mix(in oklab, var(--bg-sunken) 70%, transparent));
+}
+.tile__art svg { inline-size: auto; block-size: 100%; max-inline-size: 100%; }
+
+.tile__tag {
+  position: absolute;
+  inset-block-start: 5px;
+  inset-inline-start: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  padding: 0.15rem 0.3rem;
+  border-radius: 3px;
+  background: color-mix(in oklab, var(--bg) 70%, transparent);
+  color: var(--ink-muted);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.tile[aria-selected="true"] .tile__tag { background: var(--acc); color: var(--acc-ink); }
+
+/* --- Legenda: numele și prețul produsului selectat ------------------- */
+
+.switcher__caption {
+  margin-block-start: var(--s-5);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  display: grid;
+  gap: var(--s-3);
+  justify-items: center;
+  text-align: center;
+  min-block-size: 6.5rem;
+  align-content: start;
+}
+.switcher__name {
+  font-size: var(--t-2);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.25;
+  max-inline-size: 46ch;
+  text-wrap: balance;
+}
+.switcher__specs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-2) var(--s-5);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+.switcher__specs span { display: inline-flex; align-items: center; gap: var(--s-2); }
+.switcher__swatch {
+  inline-size: 0.7rem; block-size: 0.7rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--ink) 30%, transparent);
+}
+.switcher__price {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.switcher__price b {
+  font-size: var(--t-2);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+}
+.switcher__price s { font-size: var(--t--1); color: var(--ink-faint); }
+.switcher__price em { font-style: normal; font-size: var(--t--1); font-weight: 600; color: var(--sale); }
+
+/* --- Subsolul cu indicații ------------------------------------------- */
+
+.switcher__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3) var(--s-6);
+  margin-block-start: var(--s-5);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+.switcher__foot span { display: inline-flex; align-items: center; gap: var(--s-2); }
+
+/* Butonul de deschidere, fixat pe margine la ecrane mici */
+.switch-fab {
+  position: fixed;
+  inset-block-end: max(var(--s-5), env(safe-area-inset-bottom));
+  inset-inline-end: var(--s-5);
+  z-index: 80;
+  display: none;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0.8rem 1.15rem;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line-strong);
+  background: color-mix(in oklab, var(--surface-hi) 92%, transparent);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-2);
+  color: var(--ink);
+  font-size: var(--t--1);
+  font-weight: 600;
+  cursor: pointer;
+}
+@media (max-width: 1000px) { .switch-fab { display: inline-flex; } }
+
+@media (max-width: 640px) {
+  .switcher__bar { font-size: 0.625rem; letter-spacing: 0.1em; }
+  .switcher__foot { display: none; }
+  .switcher__caption { min-block-size: 7.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switcher__panel { transform: none; }
+  .switcher__rail { transition: none; }
+  .tile { transform: none; }
+  .tile[aria-selected="true"] { transform: none; }
+}
