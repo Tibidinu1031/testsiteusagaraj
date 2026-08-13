@@ -104,6 +104,18 @@
   overflow: hidden;
   padding-inline: 0;
   padding-block: var(--s-3);
+
+  /* Fără asta, glisarea nu funcționează pe telefon — și era exact simptomul
+     raportat: pe desktop mergea, pe mobil nu.
+
+     Motivul e că browserul mobil decide singur, la primele câteva pixele de
+     mișcare, cine primește gestul. Implicit îl ia el, pentru derulare, și
+     trimite paginii un `pointercancel`. `pointerup` nu mai ajunge niciodată,
+     deci codul care măsura distanța glisării nu se executa.
+
+     `pan-y` împarte explicit: verticala rămâne a browserului, ca pagina să
+     poată fi derulată normal, iar orizontala vine la noi. */
+  touch-action: pan-y;
 }
 /* `position: relative` nu e decorativ: garantează că șina este `offsetParent`
    pentru plăci, deci `tile.offsetLeft` e raportat la șină. Fără el, reperul ar

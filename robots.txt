@@ -1,3 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /cos.html
+Disallow: /finalizare.html
+Disallow: /comanda-confirmata.html
+Disallow: /plata-esuata.html
 Sitemap: https://usa-garaj.ro/sitemap.xml

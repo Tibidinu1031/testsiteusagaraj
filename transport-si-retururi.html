@@ -23,11 +23,11 @@
 
 <script>document.documentElement.classList.add('js');</script>
 
-<link rel="stylesheet" href="assets/css/tokens.css?v=15">
-<link rel="stylesheet" href="assets/css/base.css?v=15">
-<link rel="stylesheet" href="assets/css/door.css?v=15">
-<link rel="stylesheet" href="assets/css/components.css?v=15">
-<link rel="stylesheet" href="assets/css/switcher.css?v=15">
+<link rel="stylesheet" href="assets/css/tokens.css?v=21">
+<link rel="stylesheet" href="assets/css/base.css?v=21">
+<link rel="stylesheet" href="assets/css/door.css?v=21">
+<link rel="stylesheet" href="assets/css/components.css?v=21">
+<link rel="stylesheet" href="assets/css/switcher.css?v=21">
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","HomeAndConstructionBusiness"],"@id":"https://usa-garaj.ro/#firma","name":"Usa-garaj.ro","legalName":"ABBA CONFORT SOLUTIONS HOMES S.R.L.","url":"https://usa-garaj.ro/","taxID":"40437439","identifier":[{"@type":"PropertyValue","name":"CUI","value":"40437439"},{"@type":"PropertyValue","name":"Nr. Registrul Comerțului","value":"J15/136/2019"}],"telephone":"+40731366613","email":"contact@usa-garaj.ro","address":{"@type":"PostalAddress","streetAddress":"Str. Principală, Nr. 146","addressLocality":"Sat Voinești, Com. Voinești","addressRegion":"Dâmbovița","addressCountry":"RO"},"areaServed":"RO"}</script>
 
@@ -75,6 +75,10 @@
         <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
         <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M22 12h-2.4M4.4 12H2m15.1-7.1-1.7 1.7M8.6 15.4l-1.7 1.7m10.2 0-1.7-1.7M8.6 8.6 6.9 6.9"/></svg>
       </button>
+      <a class="icon-btn cos-buton" href="cos.html" aria-label="Coșul de cumpărături">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 4h2.2l2 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.55L20.6 8H6.4"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
+        <span class="cos-buton__n" data-cos-numar hidden>0</span>
+      </a>
       <button type="button" class="btn btn--primary" data-switch-open="">
         Produsele noastre
         <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
@@ -105,7 +109,6 @@
       <ul>
         <li>telefon <a href="tel:+40731366613">0731 366 613</a></li>
         <li>e-mail <a href="mailto:contact@usa-garaj.ro">contact@usa-garaj.ro</a></li>
-        <li><a href="https://usa-garaj.ro/transport-si-retururi/" rel="noopener">Versiunea de pe usa-garaj.ro</a></li>
       </ul>
       <p>Pentru reclamații și soluționarea alternativă a litigiilor puteți folosi
       <a href="https://anpc.ro/" rel="noopener nofollow">ANPC</a> și platforma europeană
@@ -120,7 +123,7 @@
     <div class="idrow"><dt>Sediu social</dt><dd>Sat Voinești, Com. Voinești, Str. Principală, Nr. 146, jud. Dâmbovița</dd></div>
     <div class="idrow"><dt>Telefon</dt><dd><a href="tel:+40731366613">0731 366 613</a></dd></div>
     <div class="idrow"><dt>E-mail</dt><dd><a href="mailto:contact@usa-garaj.ro">contact@usa-garaj.ro</a></dd></div>
-    <div class="idrow"><dt>Magazin</dt><dd><a href="https://usa-garaj.ro/" rel="noopener">usa-garaj.ro</a></dd></div>
+    <div class="idrow"><dt>Magazin</dt><dd><a href="magazin.html">Catalogul nostru</a></dd></div>
   </dl>
 </div>
   </div>
@@ -169,7 +172,7 @@
             <li><a href="cum-cumpar.html">Cum cumpăr</a></li>
             <li><a href="metode-de-plata.html">Metode de plată</a></li>
             <li><a href="transport-si-retururi.html">Transport și retururi</a></li>
-            <li><a href="https://usa-garaj.ro/cos/" rel="noopener nofollow">Coșul meu</a></li>
+            <li><a href="cos.html">Coșul meu</a></li>
           </ul>
         </div>
         <div>
@@ -227,10 +230,14 @@
   <kbd>⇧</kbd> Produsele noastre
 </button>
 
-<script>window.UG_BASE = "";</script>
-<script src="assets/js/catalog.js?v=15"></script>
-<script src="assets/js/door.js?v=15"></script>
-<script src="assets/js/switcher.js?v=15"></script>
-<script src="assets/js/app.js?v=15"></script>
+<script>window.UG_BASE = "";
+window.UG_MAGAZIN = {"store":"https://usa-garaj.ro/wp-json/wc/store/v1","activ":true,"card":true};</script>
+<script src="assets/js/catalog.js?v=21"></script>
+<script src="assets/js/door.js?v=21"></script>
+<script src="assets/js/switcher.js?v=21"></script>
+<script src="assets/js/cos.js?v=21"></script>
+<script src="assets/js/cos-ui.js?v=21"></script>
+
+<script src="assets/js/app.js?v=21"></script>
 </body>
 </html>

@@ -46,9 +46,103 @@ const FIRMA = {
   site: 'https://usa-garaj.ro'
 };
 
+/* --- Domeniile ----------------------------------------------------------- */
+
+/**
+ * Cele două adrese ale magazinului, într-un singur loc.
+ *
+ * `sit` este domeniul pe care îl vede clientul — vitrina, coșul, finalizarea,
+ * confirmarea. `api` este WordPress-ul care ține stocul, comenzile și
+ * facturile; clientul nu ajunge niciodată pe el, nici măcar pentru o clipă.
+ *
+ * De ce sunt separate: cerința e ca vechiul domeniu să nu apară nicăieri în
+ * bara de adrese. WordPress-ul rămâne fizic pe aceeași găzduire, dar răspunde
+ * pe un subdomeniu al domeniului NOU, deci brandul e același tot parcursul.
+ *
+ * Singurul domeniu străin din tot fluxul este pagina NETOPIA, unde se introduc
+ * datele cardului. Acolo redirectarea nu e un neajuns, ci cerința PCI-DSS care
+ * ține numărul de card departe de serverele noastre.
+ *
+ * DE COMPLETAT după cumpărarea domeniului. Cât timp `api` e gol, coșul și
+ * finalizarea nu se generează — site-ul rămâne catalogul de acum, fără să
+ * promită un magazin care nu funcționează.
+ */
+const MAGAZIN = {
+  /**
+   * Domeniul vitrinei. Se schimbă cu cel nou după cumpărare.
+   * Folosit doar la `sitemap.xml` și la adresele de retur din mu-plugin.
+   */
+  sit: 'https://usa-garaj.ro',
+
+  /**
+   * Backendul WooCommerce.
+   *
+   * IMPORTANT, ca să nu se piardă ideea: aici clientul NU ajunge niciodată.
+   * Coșul vorbește cu adresa asta prin `fetch()`, adică cereri de fundal —
+   * bara de adrese nu se schimbă, nu există redirect, nu se vede nimic. Numai
+   * navigările sunt vizibile, iar singura navigare externă din tot fluxul este
+   * pagina NETOPIA, unde se introduce cardul.
+   *
+   * De aceea coșul poate funcționa de azi, cu WordPress-ul actual, iar la
+   * mutarea pe domeniul nou se schimbă un singur rând.
+   */
+  api: 'https://usa-garaj.ro',
+
+  /** Adresa Store API, derivată. */
+  get store() { return this.api ? `${this.api}/wp-json/wc/store/v1` : ''; },
+
+  /** Coșul are nevoie doar de un backend care să-l servească. */
+  get activ() { return Boolean(this.api); }
+};
+
+/* --- Metodele de plată --------------------------------------------------- */
+
+/**
+ * Sursa unică pentru tot ce spune site-ul despre plată.
+ *
+ * `card` este un COMUTATOR DE ADEVĂR, nu o preferință de design. Magazinul are
+ * astăzi un singur gateway activ — `cod`, adică ramburs; verificat la
+ * `/wp-json/wc/store/v1/cart`, câmpul `payment_methods`. Cât timp e `false`,
+ * site-ul nu promite plata cu cardul nicăieri.
+ *
+ * Se trece pe `true` DOAR după ce plata cu cardul chiar funcționează în
+ * producție — pașii sunt în NETOPIA.md. Verificarea de încheiere:
+ *
+ *   curl -s https://SUBDOMENIU/wp-json/wc/store/v1/cart | grep payment_methods
+ *
+ * Când răspunsul conține „netopiapayments”, comutatorul poate trece pe `true`
+ * și se rulează din nou `node build.js`.
+ */
+const PLATI = {
+  card: true,
+  procesator: 'NETOPIA Payments',
+  procesatorUrl: 'https://netopia-payments.com',
+  carduri: ['Visa', 'Visa Electron', 'Mastercard', 'Maestro'],
+  metode: [
+    {
+      cod: 'cod',
+      nume: 'Ramburs la livrare',
+      text: 'Plătiți curierului, în numerar, în momentul livrării. Metodă disponibilă pentru toate produsele din catalog.',
+      activ: true
+    },
+    {
+      cod: 'card',
+      nume: 'Card bancar, online',
+      text: 'Plată cu cardul în pagina securizată a procesatorului. Datele cardului se introduc pe serverele procesatorului, nu pe site-ul nostru, iar magazinul nu le stochează.',
+      activ: true
+    },
+    {
+      cod: 'transfer',
+      nume: 'Transfer bancar (ordin de plată)',
+      text: 'Pentru persoane juridice și comenzi pe bază de factură proformă. Detaliile de cont se transmit la confirmarea comenzii.',
+      activ: true
+    }
+  ]
+};
+
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=15';
+const VER = 'v=21';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -95,7 +189,9 @@ const SUBSOL = {
     ['cum-cumpar.html', 'Cum cumpăr'],
     ['metode-de-plata.html', 'Metode de plată'],
     ['transport-si-retururi.html', 'Transport și retururi'],
-    [ORIGINE + '/cos/', 'Coșul meu']
+    /* Coșul este AICI, nu în alt magazin. Cât timp acest link ducea în afară,
+       tot restul integrării nu conta: un singur clic scotea clientul din site. */
+    ['cos.html', 'Coșul meu']
   ],
   'Asistență': [
     ['contact.html', 'Contactează-ne'],
@@ -164,7 +260,8 @@ function pagina(o) {
 <meta name="theme-color" content="#0b0d0e" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#f4f2ed" media="(prefers-color-scheme: light)">
 
-<meta property="og:type" content="${o.ogType || 'website'}">
+${o.noindex ? `<meta name="robots" content="noindex, nofollow">
+` : ''}<meta property="og:type" content="${o.ogType || 'website'}">
 <meta property="og:locale" content="ro_RO">
 <meta property="og:site_name" content="${FIRMA.marca}">
 <meta property="og:title" content="${esc(o.titlu)}">
@@ -222,7 +319,11 @@ ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
         <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
         <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M22 12h-2.4M4.4 12H2m15.1-7.1-1.7 1.7M8.6 15.4l-1.7 1.7m10.2 0-1.7-1.7M8.6 8.6 6.9 6.9"/></svg>
       </button>
-      <button type="button" class="btn btn--primary" data-switch-open="">
+      ${MAGAZIN.activ ? `<a class="icon-btn cos-buton" href="${base}cos.html" aria-label="Coșul de cumpărături">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 4h2.2l2 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.55L20.6 8H6.4"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
+        <span class="cos-buton__n" data-cos-numar hidden>0</span>
+      </a>
+      ` : ''}<button type="button" class="btn btn--primary" data-switch-open="">
         Produsele noastre
         <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
       </button>
@@ -297,10 +398,14 @@ ${subsol}
   <kbd>⇧</kbd> Produsele noastre
 </button>
 
-<script>window.UG_BASE = ${JSON.stringify(base)};</script>
+<script>window.UG_BASE = ${JSON.stringify(base)};
+window.UG_MAGAZIN = ${JSON.stringify({ store: MAGAZIN.store, activ: MAGAZIN.activ, card: PLATI.card })};</script>
 <script src="${base}assets/js/catalog.js?${VER}"></script>
 <script src="${base}assets/js/door.js?${VER}"></script>
 <script src="${base}assets/js/switcher.js?${VER}"></script>
+${MAGAZIN.activ ? `<script src="${base}assets/js/cos.js?${VER}"></script>
+<script src="${base}assets/js/cos-ui.js?${VER}"></script>
+` : ''}${(o.scripturi || []).map((s) => `<script src="${base}assets/js/${s}?${VER}"></script>`).join('\n')}
 <script src="${base}assets/js/app.js?${VER}"></script>
 </body>
 </html>
@@ -317,9 +422,9 @@ ${subsol}
  */
 function cardHTML(p, base, nivel) {
   const H = 'h' + (nivel || 3);
-  const c = RAL[UG.ralProdus(p)];
+  const c = RAL[UG.ralDesen(p)];
   const red = UG.reducere(p);
-  const raluri = p.raluri.length ? p.raluri.map((r) => RAL[r].ral).join(' / ') : c.nume;
+  const raluri = UG.culoriProdus(p);
   const rez = UG.rezumat(p);
 
   return `<article class="card reveal" id="card-${p.id}" data-lamela="${p.lamela}" data-familie="${p.familie}" data-promo="${p.laPromotie ? 1 : 0}">
@@ -347,6 +452,7 @@ function cardHTML(p, base, nivel) {
       <span>Transport gratuit</span>
       <button type="button" class="btn btn--sm btn--ghost" data-switch-open="${p.id}">Răsfoiește <kbd>⇧</kbd></button>
     </div>
+    ${MAGAZIN.activ ? `<button type="button" class="btn btn--primary btn--sm card__cos" data-cos-adauga="${p.id}">Adaugă în coș</button>` : ''}
   </div>
 </article>`;
 }
@@ -379,7 +485,7 @@ const FILTRE = `<div class="filters reveal">
   </div>
 </div>`;
 
-module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, esc, scrie, UG, NAV };
+module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV };
 
 /* Restul generatorului este în build-pagini.js, încărcat mai jos, ca fișierul
    acesta să rămână la o dimensiune citibilă. */

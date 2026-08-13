@@ -10,7 +10,7 @@
   'use strict';
 
   var PRODUSE = UG.PRODUSE, RAL = UG.RAL, LAMELA = UG.LAMELA;
-  var lei = UG.lei, reducere = UG.reducere, ralProdus = UG.ralProdus, urlProdus = UG.urlProdus;
+  var lei = UG.lei, reducere = UG.reducere, ralDesen = UG.ralDesen, urlProdus = UG.urlProdus;
 
   /* ==========================================================================
      Definițiile SVG partajate — o singură dată, pentru toată pagina
@@ -115,7 +115,7 @@
     var elPret  = document.getElementById('ro-pret');
 
     if (elCota) elCota.textContent = p.l + ' × ' + p.h + ' mm';
-    if (elLam)  elLam.textContent  = p.lamela + ' mm · ' + RAL[ralProdus(p)].ral;
+    if (elLam)  elLam.textContent  = p.lamela + ' mm · ' + UG.culoriProdus(p);
     if (elPret) elPret.textContent = lei(p.pret);
 
     var ultimulCod = null;
@@ -194,11 +194,9 @@
      dacă pagina a fost servită fără pasul de generare. */
   if (grila && !grila.querySelector('.card')) {
     grila.innerHTML = PRODUSE.map(function (p) {
-      var c = RAL[ralProdus(p)];
+      var c = RAL[ralDesen(p)];
       var red = reducere(p);
-      var raluri = p.raluri.length
-        ? p.raluri.map(function (r) { return RAL[r].ral; }).join(' / ')
-        : c.nume;
+      var raluri = UG.culoriProdus(p);
 
       var rez = UG.rezumat(p);
 

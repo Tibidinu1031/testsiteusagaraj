@@ -102,6 +102,29 @@ de un filtru activ, filtrele se golesc automat.
 Pe ecranele tactile: butonul flotant din colț, glisare stânga/dreapta, sau
 rotița mausului.
 
+### De ce glisarea nu mergea pe telefon
+
+Simptomul era exact invers decât te-ai aștepta: pe desktop, cu mausul,
+funcționa; pe telefon, niciodată. Două cauze suprapuse, amândouă tăcute:
+
+1. **Lipsea `touch-action` pe viewport.** Browserul mobil decide la primele
+   pixele de mișcare cine primește gestul. Implicit îl ia el, pentru derulare,
+   și trimite paginii un `pointercancel`. `pointerup` nu mai ajungea niciodată,
+   deci codul care măsura distanța glisării nu se executa. Acum viewportul
+   declară `touch-action: pan-y`: verticala rămâne a browserului, ca pagina să
+   se deruleze normal, orizontala vine la noi.
+2. **Degetul se ridică des în afara elementului pe care a început.** Fără
+   `setPointerCapture`, `pointerup` se livrează altcuiva. Acum indicatorul e
+   captat până la final.
+
+Pe deasupra, o glisare se încheie și cu un `click` pe placa de sub deget — care
+ar fi confirmat produsul, adică exact ce nu voiai când ai glisat. Clicul de după
+o glisare este acum ignorat, iar selecția care urmărește cursorul rămâne doar
+pentru maus (`pointerType === 'mouse'`); la atingere degetul ar fi schimbat
+selecția la fiecare pixel al glisării.
+
+Un gest predominant vertical este tratat ca derulare de pagină și ignorat.
+
 ### De ce nu `Alt+Tab` sau `Cmd+Tab`
 
 Ambele sunt interceptate de sistemul de operare înainte să ajungă la browser.
@@ -167,9 +190,16 @@ singură sursă de adevăr: aceleași valori alimentează și mișcarea tablieru
 | se coboară | 2,2 s |
 | stă închisă | 1,6 s |
 
-Cursa de ridicare este **58 %**, nu 82 % ca înainte. La 82 % golul rămânea
-aproape complet descoperit cele 7 secunde cât ușa stă sus, iar tablierul cu
-lamele — adică produsul — dispărea din cadru: se citea ca „a dispărut ușa”.
+Cursa de ridicare este **100 %**: tablierul se strânge complet în casetă, ca la
+o ușă rulou adevărată.
+
+A trecut prin trei valori. La 82 % arăta aproape complet deschisă. A fost
+coborâtă apoi la 58 %, ca tablierul cu lamele — adică produsul vândut — să
+rămână vizibil cele 7 secunde cât ușa stă sus. Argumentul era comercial, dar
+rezultatul arăta ca o ușă blocată la jumătate, iar o ușă de garaj care nu se
+deschide complet ridică exact întrebarea greșită. Ciclul revine oricum la închis
+după 7 secunde, deci lamelele se văd la loc; nu se pierde nimic din prezentare.
+
 Interiorul văzut prin deschidere a fost refăcut din maro cald în gri foarte
 închis, ca să arate ca un gol în care privești, nu ca un panou colorat.
 
@@ -264,6 +294,27 @@ Redarea folosește 8 modele SVG partajate (4 culori × 2 pași), nu câteva sute
 de dreptunghiuri per pagină. Cele 48 de desene din pagină referă aceleași
 definiții.
 
+### Desenul trebuie să dea cu fotografia
+
+La trecerea cursorului, cartela înlocuiește desenul cu fotografia reală. Dacă
+cele două nu au aceeași culoare, schimbul se citește ca „nu ăsta e produsul”.
+
+Culoarea desenului se lua din `raluri[0]`, adică din **ordinea în care
+magazinul enumeră codurile în denumire** — iar ordinea diferă de la un produs
+la altul: „maro inchis 8019, maro deschis 8014” la 401/400/399, „maro 8014,
+maro 8019” la 387/386. Aceleași uși, aceeași fotografie, două culori desenate.
+
+Mai rău, RAL 8019 este `#3d3635`: măsurat, un gri. Fotografia ușilor maro are
+media `#4a3b33`, un maro cald. Cele trei uși de 77 mm se desenau practic gri și
+deveneau maro la hover.
+
+Culoarea desenului vine acum din **familie**, nu din ordinea codurilor:
+`UG.ralDesen()` dă `8014` pentru maro și `7016` pentru antracit. Codurile RAL
+declarate rămân afișate toate, în ordinea din magazin — se schimbă ce se
+desenează, nu ce se declară.
+
+Verificat pe cele 82 de perechi desen/fotografie din site: 0 nepotriviri.
+
 ---
 
 ## De unde vin datele — și de ce sunt 21, nu 16
@@ -308,13 +359,51 @@ Două intervenții, ambele deliberate — de verificat și confirmat:
    într-un singur loc.
 
 Câmpul `pasaj` (spațiul util de trecere) este completat **doar** acolo unde
-magazinul îl declară explicit — la 6 din 21 de produse. Nu se calculează
+magazinul îl declară explicit — la 12 din 21 de produse. Nu se calculează
 nicăieri, ca să nu apară cote inventate. Regula generală de scădere este
 prezentată separat, în fișa tehnică.
 
 Cifrele din erou (număr de produse, câte sunt la promoție, prețul minim,
 intervalul de lățimi) sunt calculate din catalog la încărcare, nu scrise de
 mână — nu pot rămâne în urmă față de date.
+
+### Fișa fiecărui produs, nu a familiei
+
+Prima versiune completa tabelul de specificații din constantele familiei de
+55/77 mm. Arăta plauzibil și era greșit: magazinul declară cote **pe produs**,
+iar ele diferă în interiorul aceleiași familii.
+
+| produs | ghidaje | timp | grosime lamelă |
+|---|---|---|---|
+| 401 — 77 mm, 3000 × 2500 | 90 × 35 mm | 25 s | 19 mm |
+| 400 — 77 mm, 3200 × 2500 | 75 × 30 mm | 25 s | 19 mm |
+| 399 — 77 mm, 3000 × 3000 | nedeclarate | 10 s | 19 mm |
+
+Tabelul generic dădea, pentru toate trei, „90 × 35 mm · circa 10 secunde ·
+18,5 mm”. Acum fiecare pagină afișează rândurile declarate de magazin pentru
+acel produs, în câmpul `spec` din `catalog.js`, plus blocul „Conținut colet”.
+
+La **387** magazinul nu publică nicio specificație. Pagina spune asta pe față
+și trimite la fișa tehnică, în loc să treacă cotele familiei drept cote de
+produs.
+
+Cele 5 produse cărora magazinul le lasă `short_description` gol — 393, 391,
+387, 386, 374 — nu mai apar cu cartelă fără text: rezumatul coboară pe primul
+paragraf al descrierii lungi și, în ultimă instanță, pe spațiul util de
+trecere. Tot valori ale magazinului.
+
+### Corecturi față de textul magazinului
+
+Niciuna nu atinge vreo valoare. **De confirmat de client:**
+
+| unde | în magazin | pe site | de ce |
+|---|---|---|---|
+| 393, 391, 396, 394 | `Culoare: maro` | `Gri Antracit` | produsele se numesc GRI ANTRACIT și au fotografia antracit; rândul contrazicea propria denumire |
+| 180, 181, 179, 396, 374 | `2200 x 2100 cm` | `2200 × 2100 mm` | cotele sunt în milimetri peste tot în magazin; `cm` ar da o ușă de 22 de metri |
+| 394 | `Dimensiune: L300 H3000` | `L3000 H3000` | lipsea o cifră față de denumire și de preț |
+| 161 | `lamele de 5 mm` | `lamele de 55 mm` | produsul e din familia de 55 mm |
+| 397 | `Spatiu uti de trecere` | `Spațiu util de trecere` | literă lipsă |
+| 386, 388 | `sant`, `industrial`, `commercial` | `sunt`, `industrială`, `comercial` | ortografie |
 
 ---
 
@@ -426,6 +515,87 @@ Testat la 404 px, 1280 px și 1440 px lățime:
   derulare și tranzițiile comutatorului
 - diacritice: 455 de caractere, toate cu virgulă dedesubt (`ș` U+0219,
   `ț` U+021B), niciunul cu sedilă
+
+## Magazin propriu și plata cu cardul
+
+Procedura completă este în **[NETOPIA.md](NETOPIA.md)**.
+
+Site-ul nu mai trimite clientul în altă parte ca să cumpere. Coșul, finalizarea
+și plata se petrec pe domeniul propriu; WooCommerce rămâne motorul — stoc,
+comenzi, facturi, e-Factura — dar pe un subdomeniu, fără pagini publice.
+Clientul nu-l vede niciodată.
+
+```
+domeniulnou.ro/magazin      răsfoire, „Adaugă în coș”
+domeniulnou.ro/cos.html     coș, cantități
+domeniulnou.ro/finalizare   date de facturare și livrare
+        ↓  Store API, în fundal
+secure.mobilpay.ro          plata — singurul domeniu extern, cerut de PCI-DSS
+        ↓
+domeniulnou.ro/comanda-confirmata.html
+```
+
+Piesele: [cos.js](assets/js/cos.js), [cos-ui.js](assets/js/cos-ui.js),
+[checkout.js](assets/js/checkout.js) și
+[wordpress/netopia-direct-redirect.php](wordpress/netopia-direct-redirect.php),
+care elimină pagina WordPress intermediară dintre finalizare și NETOPIA.
+
+### Coșul este local
+
+Adăugarea, cantitățile și totalurile se fac **în browser**, din `catalog.js`,
+fără nicio cerere de rețea. Prima variantă mergea prin Store API la fiecare
+clic; a fost o greșeală, din trei motive:
+
+1. Site-ul se deschide și direct de pe disc, prin `file://`. De acolo browserul
+   blochează orice `fetch()` extern — originea este `null` și niciun server nu o
+   poate accepta. Coșul murea cu „NetworkError” înainte să afișeze ceva.
+2. Chiar servit prin HTTP, fiecare adăugare depindea de un WordPress cu CORS
+   configurat. Un catalog perfect funcțional devenea inutilizabil din cauza unui
+   backend încă nepregătit.
+3. Nici nu era nevoie: prețurile și cotele sunt deja în pagină, generate din
+   același `catalog.js`.
+
+Serverul intră în joc **într-un singur moment**: la „Plasează comanda”, unde
+`checkout.js` urcă coșul local în magazin și cere totalul oficial. Până atunci,
+totul merge fără rețea.
+
+Totalul afișat în coș este informativ; suma finală o confirmă magazinul la
+finalizare, iar pagina spune asta explicit.
+
+### De ce coșul se scrie în două locuri
+
+Firefox dă fiecărui fișier deschis prin `file://` **o origine proprie**
+(`privacy.file_unique_origin`, activ implicit). Consecința arată exact ca un coș
+stricat: adaugi un produs din `produs/x.html`, insigna din antet urcă, dar
+`cos.html` — altă origine, alt sertar — raportează sincer că nu are nimic. Două
+adevăruri, două `localStorage`-uri.
+
+De aceea coșul se scrie și în `window.name`, care supraviețuiește navigării în
+aceeași filă indiferent de origine. Pe `http://` și `https://` localStorage
+rămâne sursa principală; `window.name` e doar plasa de dedesubt. Se păstrează
+doar identificatori de produs și cantități, nimic personal.
+
+Golirea coșului șterge ambele locuri, deci un coș golit nu poate reînvia.
+
+Plata cu cardul: magazinul are azi un singur gateway activ, `cod` — ramburs.
+Cardul se activează prin pluginul oficial NETOPIA pentru WooCommerce, nu prin
+cod scris de la zero: API-ul v2 cere un server care ține cheia și primește
+IPN-ul, iar WooCommerce are deja și una și alta.
+
+Ce spune site-ul despre plată vine dintr-un singur loc, obiectul `PLATI` din
+`build.js`. Comutatorul `card` este o **declarație de adevăr**, nu o opțiune de
+aspect:
+
+| `PLATI.card` | „Metode de plată” | Întrebări frecvente |
+|---|---|---|
+| `false` (acum) | ramburs și transfer bancar; spune deschis că plata cu cardul nu e activă | idem |
+| `true` | procesator, carduri acceptate, 3-D Secure, restituire pe același card | răspuns complet despre plată |
+
+Se trece pe `true` **numai după** ce plata live funcționează în magazin —
+verificabil cu `curl -s https://usa-garaj.ro/wp-json/wc/store/v1/cart`, care
+trebuie să conțină `netopiapayments` în `payment_methods`. Un site care promite
+o metodă de plată inexistentă este o problemă de protecția consumatorului, nu o
+inexactitate de text.
 
 ## Rămas de făcut la integrare
 

@@ -1174,6 +1174,37 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 .produs__spec { border: 1px solid var(--line); border-radius: var(--r-3); background: var(--surface); }
 .produs__cta { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-block-start: var(--s-2); }
 .produs__nota { font-size: var(--t--2); color: var(--ink-faint); }
+.produs__nota a { color: var(--acc); }
+
+/* Conținutul coletului — o listă de bifat la recepție, nu un paragraf. */
+.produs__colet-titlu {
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-block-end: var(--s-3);
+}
+.colet {
+  display: grid;
+  gap: var(--s-2);
+  list-style: none;
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+}
+.colet li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-3);
+}
+.colet li::before {
+  content: "";
+  flex: none;
+  inline-size: 6px; block-size: 6px;
+  border: 1px solid var(--acc);
+  transform: translateY(-1px) rotate(45deg);
+}
 
 /* Proză: paginile legale și de informare. */
 .proza {
@@ -1232,3 +1263,232 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 }
 .ftr__legal strong { color: var(--ink-muted); font-weight: 500; }
 .ftr__legal .idbar__code { font-size: var(--t--2); }
+
+/* ==========================================================================
+   Coșul de cumpărături
+   ========================================================================== */
+
+/* Butonul din antet. Numărul stă peste iconiță, nu lângă ea: pe telefon bara
+   de sus e strâmtă, iar o pastilă alăturată împinge navigarea pe rândul doi. */
+.cos-buton { position: relative; }
+.cos-buton svg { inline-size: 1.15rem; block-size: 1.15rem; }
+.cos-buton__n {
+  position: absolute;
+  inset-block-start: -4px;
+  inset-inline-end: -4px;
+  min-inline-size: 1.05rem;
+  padding: 0 0.22rem;
+  border-radius: 999px;
+  background: var(--acc);
+  color: var(--acc-ink);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  line-height: 1.05rem;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Butonul de pe cartelă stă pe toată lățimea, sub rândul de subsol: e acțiunea
+   principală a cartelei, iar o țintă lată se nimerește ușor cu degetul. */
+.card__cos { margin: 0 var(--s-4) var(--s-4); }
+
+/* Răspunsul butonului după apăsare. Culoarea nu e singurul semnal — textul se
+   schimbă odată cu ea, pentru cine nu distinge verdele de roșu. */
+.btn--ok  { background: var(--acc); color: var(--acc-ink); }
+.btn--rau { background: #7f1d1d; color: #fff; }
+
+.cantitate {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  padding: 0.15rem;
+}
+.cantitate button {
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
+  border: 0;
+  border-radius: var(--r-1);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: var(--t-0);
+  cursor: pointer;
+}
+.cantitate button:hover:not(:disabled) { background: var(--line); }
+.cantitate button:disabled { opacity: 0.4; cursor: not-allowed; }
+.cantitate output {
+  min-inline-size: 2ch;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+.cantitate input {
+  inline-size: 3.5rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--t-0);
+  text-align: center;
+}
+.cantitate--mare { padding: 0.4rem 0.5rem; }
+
+.cos-tabel { inline-size: 100%; border-collapse: collapse; }
+.cos-tabel th, .cos-tabel td {
+  padding: var(--s-3);
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+  vertical-align: middle;
+}
+.cos-tabel thead th {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-faint);
+  font-weight: 500;
+}
+.cos-tabel tbody th { font-weight: 500; max-inline-size: 34ch; }
+.cos-tabel td:nth-child(2), .cos-tabel td:nth-child(4) {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.cos-scoate {
+  border: 0;
+  background: none;
+  color: var(--ink-faint);
+  font-size: var(--t--2);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.cos-scoate:hover { color: var(--ink); }
+
+.cos-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--s-4);
+  margin-block-start: var(--s-4);
+  padding-block: var(--s-4);
+  border-block-start: 2px solid var(--line-strong);
+  font-size: var(--t-1);
+}
+.cos-total b {
+  font-family: var(--font-mono);
+  font-size: var(--t-3);
+  font-variant-numeric: tabular-nums;
+}
+.cos-nota { font-size: var(--t--2); color: var(--ink-faint); }
+.cos-gol { color: var(--ink-muted); margin-block-end: var(--s-4); }
+.cos-actiuni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-block-start: var(--s-5);
+}
+
+/* --- Formularul de finalizare -------------------------------------------- */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--s-4);
+}
+.camp { display: grid; gap: var(--s-2); }
+.camp--lat { grid-column: 1 / -1; }
+.camp label { font-size: var(--t--1); color: var(--ink-muted); }
+.camp input, .camp select, .camp textarea {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--t--1);
+}
+.camp input:focus-visible, .camp select:focus-visible, .camp textarea:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 1px;
+}
+.camp[data-eroare] input, .camp[data-eroare] select { border-color: #b91c1c; }
+.camp__eroare { font-size: var(--t--2); color: #f87171; }
+:root[data-theme="light"] .camp__eroare { color: #b91c1c; }
+
+.plata-optiuni { display: grid; gap: var(--s-3); }
+.plata-optiune {
+  display: flex;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  cursor: pointer;
+}
+.plata-optiune:has(input:checked) {
+  border-color: var(--acc);
+  background: color-mix(in oklab, var(--acc) 7%, transparent);
+}
+.plata-optiune input { margin-block-start: 0.25rem; }
+.plata-optiune b { display: block; }
+.plata-optiune span { font-size: var(--t--2); color: var(--ink-muted); }
+
+.rezumat {
+  border: 1px solid var(--line);
+  border-radius: var(--r-3);
+  background: var(--surface);
+  padding: var(--s-4);
+}
+.rezumat__rand {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-block: var(--s-2);
+  font-size: var(--t--1);
+}
+.rezumat__rand--total {
+  border-block-start: 1px solid var(--line);
+  margin-block-start: var(--s-2);
+  padding-block-start: var(--s-3);
+  font-size: var(--t-0);
+}
+.rezumat__rand--total b {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Rezultatul comenzii -------------------------------------------------- */
+
+.rezultat { text-align: center; max-inline-size: 48rem; margin-inline: auto; }
+.rezultat__semn {
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  margin-inline: auto;
+  margin-block-end: var(--s-4);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 2px solid var(--acc);
+  color: var(--acc);
+  font-size: var(--t-2);
+}
+.rezultat__semn--rau { border-color: #b91c1c; color: #f87171; }
+.rezultat__cod {
+  font-family: var(--font-mono);
+  font-size: var(--t-2);
+  margin-block: var(--s-3);
+}
+
+/* Rândul din coș: denumirea e link spre produs, cu cotele dedesubt — omul
+   verifică dimensiunea înainte de a plăti, nu după livrare. */
+.cos-tabel tbody th a { color: var(--ink); text-decoration: none; }
+.cos-tabel tbody th a:hover { color: var(--acc); text-decoration: underline; }
+.cos-detaliu {
+  display: block;
+  margin-block-start: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  font-weight: 400;
+  color: var(--ink-faint);
+}

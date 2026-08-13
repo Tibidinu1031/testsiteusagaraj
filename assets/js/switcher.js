@@ -43,7 +43,7 @@ window.UG = window.UG || {};
     /* --- Construcția plăcilor, o singură dată ---------------------------- */
 
     rail.innerHTML = PRODUSE.map(function (p, i) {
-      var c = RAL[UG.ralProdus(p)];
+      var c = RAL[UG.ralDesen(p)];
       return '<button type="button" class="tile" role="option" id="sw-tile-' + i + '" ' +
         'aria-selected="' + (i === 0) + '" data-i="' + i + '" tabindex="-1" ' +
         'title="' + p.nume + '">' +
@@ -74,7 +74,7 @@ window.UG = window.UG || {};
 
     function deseneaza() {
       var p = PRODUSE[index];
-      var c = RAL[UG.ralProdus(p)];
+      var c = RAL[UG.ralDesen(p)];
       var red = UG.reducere(p);
 
       tiles.forEach(function (t, i) { t.setAttribute('aria-selected', String(i === index)); });
@@ -216,7 +216,13 @@ window.UG = window.UG || {};
 
     /* --- Mausul și atingerea --------------------------------------------- */
 
+    /* O glisare se încheie și cu un `click` pe placa de sub deget. Fără steagul
+       de mai jos, răsfoirea prin glisare ar confirma din greșeală produsul —
+       adică exact ce nu voia utilizatorul când a glisat. */
+    var tocmaiAmGlisat = false;
+
     rail.addEventListener('click', function (e) {
+      if (tocmaiAmGlisat) { tocmaiAmGlisat = false; return; }
       var t = e.target.closest('.tile');
       if (!t) return;
       index = Number(t.dataset.i);
@@ -224,8 +230,11 @@ window.UG = window.UG || {};
       inchide(true);
     });
 
+    /* Selecția care urmărește cursorul are sens doar pentru maus. La atingere,
+       degetul „trece” peste plăci în timpul glisării și ar schimba selecția la
+       fiecare pixel. */
     rail.addEventListener('pointermove', function (e) {
-      if (mod !== 'fix') return;
+      if (mod !== 'fix' || e.pointerType !== 'mouse') return;
       var t = e.target.closest('.tile');
       if (!t || Number(t.dataset.i) === index) return;
       index = Number(t.dataset.i);
@@ -235,15 +244,59 @@ window.UG = window.UG || {};
     root.querySelector('.switcher__scrim')
         .addEventListener('click', function () { inchide(false); });
 
-    // Glisare pe ecranele tactile.
-    var x0 = null;
-    viewport.addEventListener('pointerdown', function (e) { x0 = e.clientX; });
-    viewport.addEventListener('pointerup', function (e) {
-      if (x0 === null) return;
+    /* --- Glisarea pe ecranele tactile ------------------------------------ */
+
+    /**
+     * Prima variantă asculta doar `pointerdown` și `pointerup`. Pe desktop
+     * mergea; pe telefon, niciodată. Două motive, amândouă tăcute:
+     *
+     *   1. Browserul mobil decide la primele pixele cine primește gestul.
+     *      Fără `touch-action: pan-y` pe viewport îl lua el, pentru derulare,
+     *      și trimitea `pointercancel` — `pointerup` nu mai venea deloc.
+     *   2. Chiar cu gestul primit, degetul se ridică des în afara elementului
+     *      pe care a început. Fără captarea indicatorului, `pointerup` se
+     *      livrează altcuiva.
+     *
+     * Se rezolvă amândouă: `setPointerCapture` ține evenimentele legate de
+     * viewport până la final, iar `pointercancel` curăță starea, ca o glisare
+     * întreruptă să nu lase un început agățat care apoi se combină cu
+     * următoarea atingere și dă un salt neașteptat.
+     *
+     * Decizia se ia și pe verticală: o mișcare mai degrabă verticală este o
+     * încercare de derulare a paginii, nu o răsfoire, și se ignoră.
+     */
+    var x0 = null, y0 = null, idIndicator = null;
+
+    function incepe(e) {
+      x0 = e.clientX;
+      y0 = e.clientY;
+      idIndicator = e.pointerId;
+      try { viewport.setPointerCapture(e.pointerId); } catch (err) { /* nu e obligatoriu */ }
+    }
+
+    function termina(e) {
+      if (x0 === null || e.pointerId !== idIndicator) return;
+
       var dx = e.clientX - x0;
-      x0 = null;
-      if (Math.abs(dx) > 40) muta(dx < 0 ? 1 : -1);
-    });
+      var dy = e.clientY - y0;
+      x0 = y0 = idIndicator = null;
+      try { viewport.releasePointerCapture(e.pointerId); } catch (err) { /* deja eliberat */ }
+
+      /* Prag de 36 px, dar numai dacă gestul e mai lat decât înalt. */
+      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
+        tocmaiAmGlisat = true;
+        muta(dx < 0 ? 1 : -1);
+      }
+    }
+
+    function renunta(e) {
+      if (e.pointerId !== idIndicator) return;
+      x0 = y0 = idIndicator = null;
+    }
+
+    viewport.addEventListener('pointerdown', incepe);
+    viewport.addEventListener('pointerup', termina);
+    viewport.addEventListener('pointercancel', renunta);
 
     viewport.addEventListener('wheel', function (e) {
       var d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;

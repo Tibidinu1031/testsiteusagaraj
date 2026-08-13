@@ -19,7 +19,10 @@ window.UG = window.UG || {};
 (function (UG) {
   'use strict';
 
-  var RAL = UG.RAL, LAMELA = UG.LAMELA, ralProdus = UG.ralProdus;
+  /* Culoarea desenului vine din `ralDesen`, nu din `ralProdus`: una singură pe
+     familie, aleasă ca să semene cu fotografia dezvăluită la hover. Vezi nota
+     din catalog.js. */
+  var RAL = UG.RAL, LAMELA = UG.LAMELA, ralDesen = UG.ralDesen;
 
   /* --- Unelte de culoare -------------------------------------------------- */
 
@@ -149,7 +152,7 @@ window.UG = window.UG || {};
   UG.doorSVG = function (p, opt) {
     opt = opt || {};
     var anim = !!opt.anim, cote = !!opt.cote;
-    var cod = ralProdus(p);
+    var cod = ralDesen(p);
     var geo = LAMELA[p.lamela];
 
     var l = p.l, h = p.h;
@@ -165,11 +168,16 @@ window.UG = window.UG || {};
     var pad = cote ? { t: 280, r: 330, b: 300, l: 330 } : { t: 8, r: 8, b: 90, l: 8 };
     var vb = [-pad.l, -pad.t, l + pad.l + pad.r, h + pad.t + pad.b].join(' ');
 
-    /* Cursa de ridicare: tablierul urcă în spatele casetei.
-       Deliberat sub două treimi. La 82% golul rămânea aproape complet
-       descoperit cele 7 secunde cât ușa stă sus, iar produsul — adică tocmai
-       tablierul cu lamele — dispărea din cadru. */
-    var cursa = Math.round(apH * 0.58);
+    /* Cursa de ridicare: tablierul urcă până se strânge complet în casetă,
+       exact ca o ușă rulou adevărată.
+
+       O variantă anterioară o oprea la 58 %, ca tablierul cu lamele — adică
+       produsul vândut — să rămână vizibil cât ușa stă sus. Argumentul era
+       comercial, dar rezultatul arăta ca o ușă blocată la jumătate, iar o ușă
+       de garaj care nu se deschide complet ridică exact întrebarea greșită.
+       Ciclul revine oricum la închis după 7 secunde, deci lamelele se văd la
+       loc; nu se pierde nimic din prezentarea produsului. */
+    var cursa = apH;
     var eticheta = opt.titlu || (p.nume + '. Desen la scară, ' + l + ' × ' + h + ' mm.');
 
     return '<svg viewBox="' + vb + '" role="img" aria-label="' + esc(eticheta) + '" ' +
