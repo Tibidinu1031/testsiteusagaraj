@@ -135,7 +135,7 @@ window.UG = window.UG || {};
            Cu `lazy` într-un container care până acum era `hidden`, browserul
            nu le consideră niciodată intrate în cadru și rămân nedecodate. */
         return '<img src="' + (window.UG_BASE || '') + g.src + '" width="' + g.l +
-          '" height="' + g.h + '" loading="eager" decoding="async" alt="' +
+          '" height="' + g.h + '" loading="eager" decoding="async" tabindex="0" role="button" alt="' +
           (i === 0 ? p.nume : 'Detaliu ' + i + ' — ' + p.nume) + '">';
       }).join('');
 

@@ -37,10 +37,51 @@ window.UG = window.UG || {};
     }).join('');
   }
 
-  /** Amestecă spre alb (t > 0) sau spre negru (t < 0). */
+  function rgb2hsl(r, g, b) {
+    r /= 255; g /= 255; b /= 255;
+    var mx = Math.max(r, g, b), mn = Math.min(r, g, b), l = (mx + mn) / 2, h = 0, s = 0;
+    if (mx !== mn) {
+      var d = mx - mn;
+      s = l > 0.5 ? d / (2 - mx - mn) : d / (mx + mn);
+      if (mx === r) h = (g - b) / d + (g < b ? 6 : 0);
+      else if (mx === g) h = (b - r) / d + 2;
+      else h = (r - g) / d + 4;
+      h /= 6;
+    }
+    return [h, s, l];
+  }
+
+  function hsl2rgb(h, s, l) {
+    if (s === 0) { var v = l * 255; return [v, v, v]; }
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s, p = 2 * l - q;
+    var f = function (t) {
+      if (t < 0) t += 1; if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
+    return [f(h + 1 / 3) * 255, f(h) * 255, f(h - 1 / 3) * 255];
+  }
+
+  /**
+   * Schimbă luminozitatea păstrând nuanța și saturația.
+   *
+   * Varianta dinainte amesteca liniar spre alb sau negru, în sRGB. Pe culori
+   * neutre mergea, dar pe cele colorate spăla nuanța: bleumarinul produsului,
+   * `#252c3f`, are 24% saturație, iar vârful de lumină al lamelei — amestecat
+   * 34% spre alb — ajungea la 7%, adică gri. De aceea desenele arătau gri lângă
+   * fotografia care e clar bleumarin, la toate produsele antracit.
+   *
+   * Lucrând pe canalul de luminozitate, saturația rămâne cea a produsului, deci
+   * și lumina, și umbra rămân în aceeași familie de culoare.
+   */
   function tone(hex, t) {
-    var c = hex2rgb(hex), target = t >= 0 ? 255 : 0, k = Math.abs(t);
-    return rgb2hex(c[0] + (target - c[0]) * k, c[1] + (target - c[1]) * k, c[2] + (target - c[2]) * k);
+    var c = hex2rgb(hex);
+    var hsl = rgb2hsl(c[0], c[1], c[2]);
+    var l = t >= 0 ? hsl[2] + (1 - hsl[2]) * t : hsl[2] * (1 + t);
+    var out = hsl2rgb(hsl[0], hsl[1], Math.min(1, Math.max(0, l)));
+    return rgb2hex(out[0], out[1], out[2]);
   }
 
   function esc(s) {

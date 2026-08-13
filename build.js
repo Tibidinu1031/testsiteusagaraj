@@ -142,7 +142,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=28';
+const VER = 'v=30';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -393,7 +393,7 @@ ${subsol}
     <!-- Vizualizarea rapidă: fotografiile reale, cotele și adăugarea în coș,
          fără să părăsești răsfoirea. Se completează din switcher.js. -->
     <div class="qv" id="sw-qv" hidden>
-      <div class="qv__galerie" id="sw-qv-galerie"></div>
+      <div class="qv__galerie" id="sw-qv-galerie" data-galerie></div>
       <div class="qv__date">
         <dl class="qv__spec" id="sw-qv-spec"></dl>
         <div class="qv__actiuni">
@@ -424,6 +424,7 @@ window.UG_MAGAZIN = ${JSON.stringify({ store: MAGAZIN.store, activ: MAGAZIN.acti
 <script src="${base}assets/js/catalog.js?${VER}"></script>
 <script src="${base}assets/js/door.js?${VER}"></script>
 <script src="${base}assets/js/switcher.js?${VER}"></script>
+<script src="${base}assets/js/lupa.js?${VER}"></script>
 ${MAGAZIN.activ ? `<script src="${base}assets/js/cos.js?${VER}"></script>
 <script src="${base}assets/js/cos-ui.js?${VER}"></script>
 ` : ''}${(o.scripturi || []).map((s) => `<script src="${base}assets/js/${s}?${VER}"></script>`).join('\n')}
