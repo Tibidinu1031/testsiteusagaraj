@@ -19,10 +19,11 @@ window.UG = window.UG || {};
 (function (UG) {
   'use strict';
 
-  /* Culoarea desenului vine din `ralDesen`, nu din `ralProdus`: una singură pe
-     familie, aleasă ca să semene cu fotografia dezvăluită la hover. Vezi nota
-     din catalog.js. */
-  var RAL = UG.RAL, LAMELA = UG.LAMELA, ralDesen = UG.ralDesen;
+  /* Culorile desenului sunt MĂSURATE DIN FOTOGRAFII, nu luate din paletarul
+     RAL: la hover cartela înlocuiește desenul cu poza reală, iar dacă cele două
+     nu au aceeași culoare schimbul se citește ca „nu ăsta e produsul”. Nota
+     lungă, cu măsurătorile, e în catalog.js. */
+  var CULOARE_FOTO = UG.CULOARE_FOTO, LAMELA = UG.LAMELA, ralDesen = UG.ralDesen;
 
   /* --- Unelte de culoare -------------------------------------------------- */
 
@@ -59,8 +60,8 @@ window.UG = window.UG || {};
   UG.defsSprite = function () {
     var out = '';
 
-    Object.keys(RAL).forEach(function (cod) {
-      var c = RAL[cod];
+    Object.keys(CULOARE_FOTO).forEach(function (cod) {
+      var c = CULOARE_FOTO[cod];
       var seam = tone(c.hex, -0.55);
       var lo   = tone(c.hex, -0.28);
       var hi   = tone(c.hex, 0.34);

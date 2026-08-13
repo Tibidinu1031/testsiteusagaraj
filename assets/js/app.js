@@ -194,7 +194,7 @@
      dacă pagina a fost servită fără pasul de generare. */
   if (grila && !grila.querySelector('.card')) {
     grila.innerHTML = PRODUSE.map(function (p) {
-      var c = RAL[ralDesen(p)];
+      var c = UG.culoareDesen(p);
       var red = reducere(p);
       var raluri = UG.culoriProdus(p);
 
@@ -279,16 +279,10 @@
       });
     });
 
-    // Comutatorul cere golirea filtrelor când produsul confirmat e ascuns.
-    document.addEventListener('catalog:reset', function () {
-      stare.lamela = 'toate';
-      stare.familie = 'toate';
-      stare.promo = false;
-      Array.prototype.forEach.call(document.querySelectorAll('.chip[data-filtru]'), function (c) {
-        c.setAttribute('aria-pressed', String(c.dataset.valoare === 'toate'));
-      });
-      aplica();
-    });
+    /* Aici a stat un ascultător `catalog:reset`, care golea filtrele când
+       comutatorul confirma un produs ascuns de ele. Nu mai are cine să-l
+       declanșeze: confirmarea deschide acum pagina produsului, deci filtrele
+       catalogului nu mai contează în acel moment. */
 
     aplica();
   })();

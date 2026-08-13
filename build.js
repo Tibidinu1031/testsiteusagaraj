@@ -142,7 +142,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=21';
+const VER = 'v=26';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -323,8 +323,9 @@ ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M3 4h2.2l2 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.55L20.6 8H6.4"/><circle cx="10" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
         <span class="cos-buton__n" data-cos-numar hidden>0</span>
       </a>
-      ` : ''}<button type="button" class="btn btn--primary" data-switch-open="">
-        Produsele noastre
+      ` : ''}<button type="button" class="btn btn--primary hdr__cta" data-switch-open="">
+        <span class="hdr__cta-lung">Produsele noastre</span>
+        <span class="hdr__cta-scurt">Produse</span>
         <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
       </button>
     </div>
@@ -422,7 +423,7 @@ ${MAGAZIN.activ ? `<script src="${base}assets/js/cos.js?${VER}"></script>
  */
 function cardHTML(p, base, nivel) {
   const H = 'h' + (nivel || 3);
-  const c = RAL[UG.ralDesen(p)];
+  const c = UG.culoareDesen(p);
   const red = UG.reducere(p);
   const raluri = UG.culoriProdus(p);
   const rez = UG.rezumat(p);

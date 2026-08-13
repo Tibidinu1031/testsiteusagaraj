@@ -391,7 +391,7 @@ for (const c of CATEGORII_PAGINI) {
 /* --- Paginile de produs -------------------------------------------------- */
 
 for (const p of PRODUSE) {
-  const c = RAL[UG.ralDesen(p)];
+  const c = UG.culoareDesen(p);
   const red = UG.reducere(p);
   const raluri = UG.culoriProdus(p);
   const paragrafe = UG.paragrafe(p);

@@ -46,20 +46,34 @@ window.UG = window.UG || {};
   };
 
   /**
-   * Culoarea cu care se DESENEAZĂ ușa, una singură pe familie.
+   * Culoarea cu care se DESENEAZĂ ușa — măsurată din fotografia produsului,
+   * nu preluată din paletarul RAL.
    *
-   * Nu se mai ia `raluri[0]`. Ușile maro sunt oferite în două nuanțe — 8014
-   * „maro deschis” și 8019 „maro închis” — iar ordinea în care magazinul le
-   * enumeră diferă de la un produs la altul: „maro inchis 8019, maro deschis
-   * 8014” la 401/400/399, „maro 8014, maro 8019” la 387/386. Cu `raluri[0]`,
-   * aceleași uși ieșeau desenate în două culori diferite, iar cele desenate în
-   * 8019 (#3d3635, practic gri) nu semănau deloc cu fotografia care apare la
-   * trecerea cursorului — un maro cald, măsurat #4a3b33.
+   * Distincția e esențială și a fost greșită de două ori la rând:
    *
-   * Desenul urmează acum fotografia: 8014 pentru maro, 7016 pentru antracit.
-   * Codurile RAL declarate rămân afișate toate, în ordinea din magazin.
+   *   1. Prima dată, desenul lua `raluri[0]` — adică ordinea în care magazinul
+   *      enumeră codurile în denumire. Ordinea diferă de la un produs la altul,
+   *      deci aceleași uși ieșeau în două culori.
+   *   2. A doua oară, desenul a trecut pe codul RAL oficial al familiei. Mai
+   *      consistent, dar tot greșit la privire: RAL 7016 „antracit” este
+   *      #383e42, un gri aproape neutru, în timp ce ușa din fotografie este
+   *      #252c3f — albastru marin, cu albastrul cu 26 de trepte peste roșu.
+   *      Desenul arăta gri, fotografia de la hover arăta bleumarin, iar
+   *      cumpărătorul vedea două produse diferite.
+   *
+   * Valorile de mai jos sunt tonul mediu măsurat pe zona tablierului din
+   * fotografiile chiar ale magazinului. Desenul are propriul model de lumină
+   * (teșitură luminoasă sus, umbră la îmbinare), iar media lui ponderată revine
+   * la exact culoarea de bază — deci potrivirea se face pe aceste valori.
+   *
+   * ATENȚIE la întreținere: dacă se schimbă fotografiile produselor, aceste
+   * culori trebuie remăsurate. Nu sunt coduri RAL și nu trebuie „corectate”
+   * după paletar.
    */
-  var RAL_FAMILIE = { maro: '8014', antracit: '7016' };
+  var CULOARE_FOTO = {
+    maro:     { hex: '#4a3b33', nume: 'Maro' },
+    antracit: { hex: '#252c3f', nume: 'Gri antracit' }
+  };
 
   /** Cote constructive din pagina „Tehnic”. */
   var LAMELA = {
@@ -586,6 +600,7 @@ window.UG = window.UG || {};
   });
 
   UG.RAL = RAL;
+  UG.CULOARE_FOTO = CULOARE_FOTO;
   UG.LAMELA = LAMELA;
   UG.FOTO = FOTO;
   UG.PRODUSE = PRODUSE;
@@ -605,8 +620,18 @@ window.UG = window.UG || {};
     return p.slug.replace(/%[0-9a-f]{2}/gi, '').replace(/^-+|-+$/g, '');
   };
 
-  /** Codul RAL folosit la DESEN — unul pe familie, ca desenul să dea cu poza. */
-  UG.ralDesen = function (p) { return RAL_FAMILIE[p.familie] || 'maro'; };
+  /**
+   * Cheia culorii de desen: chiar familia produsului.
+   *
+   * Se întoarce `familie`, nu un cod RAL, tocmai ca să nu se mai strecoare
+   * confuzia dintre „ce scrie în paletar” și „cum arată ușa în fotografie”.
+   */
+  UG.ralDesen = function (p) {
+    return CULOARE_FOTO[p.familie] ? p.familie : 'maro';
+  };
+
+  /** Culoarea măsurată din fotografie, pentru desen și pentru etichete. */
+  UG.culoareDesen = function (p) { return CULOARE_FOTO[UG.ralDesen(p)]; };
 
   /** Codul RAL folosit ca etichetă, când e nevoie de unul singur. */
   UG.ralProdus = function (p) { return p.raluri[0] || 'maro'; };

@@ -781,17 +781,6 @@ kbd {
    peste el ca să rămână apăsabil. */
 .card__foot button { position: relative; z-index: 1; }
 
-/* Confirmarea din comutator aduce cartela în cadru și o pune în evidență. */
-.card.is-flash { animation: card-flash 1500ms var(--ease-out); }
-@keyframes card-flash {
-  0%   { box-shadow: 0 0 0 0 color-mix(in oklab, var(--acc) 85%, transparent); border-color: var(--acc); }
-  55%  { box-shadow: 0 0 0 7px color-mix(in oklab, var(--acc) 0%, transparent); border-color: var(--acc); }
-  100% { box-shadow: 0 0 0 0 transparent; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .card.is-flash { animation: none; border-color: var(--acc); }
-}
-
 .empty-state {
   padding: var(--s-9) var(--s-5);
   text-align: center;
@@ -1491,4 +1480,39 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   font-size: var(--t--2);
   font-weight: 400;
   color: var(--ink-faint);
+}
+
+/* ==========================================================================
+   Antetul pe ecrane înguste
+   ========================================================================== */
+
+/* Eticheta scurtă apare doar sub 560 px; implicit se vede cea lungă. */
+.hdr__cta-scurt { display: none; }
+
+/**
+ * La 375 px antetul cerea 476 px de spațiu într-unul de 337: butonul
+ * „Produsele noastre” împreună cu perechea de taste ieșea din ecran și trăgea
+ * după el o bară de derulare orizontală pe toată pagina.
+ *
+ * Se recuperează pe trei căi, în ordinea în care se pierde cel mai puțin:
+ *   1. perechea de taste dispare — o scurtătură de tastatură nu spune nimic
+ *      pe un telefon;
+ *   2. eticheta se scurtează la „Produse”, restul se înțelege din context;
+ *   3. spațierile se strâng, iar butonul primește un chenar mai mic.
+ */
+@media (max-width: 560px) {
+  .hdr__inner { gap: var(--s-2); }
+  .hdr__actions { gap: var(--s-1); }
+
+  .hdr__cta { padding: 0.55rem 0.85rem; }
+  .hdr__cta .btn__kbd { display: none; }
+  .hdr__cta-lung { display: none; }
+  .hdr__cta-scurt { display: inline; }
+
+  .icon-btn { inline-size: 2.15rem; block-size: 2.15rem; }
+}
+
+/* Sub 380 px rămâne doar marca și acțiunile, fără subtitlu. */
+@media (max-width: 380px) {
+  .brand__name small { display: none; }
 }

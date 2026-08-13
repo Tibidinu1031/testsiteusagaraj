@@ -95,12 +95,42 @@ sistemului de operare:
 | `Enter` | confirmă |
 | `Esc` | anulează, fără să schimbe nimic |
 
-Confirmarea închide panoul, aduce cartela produsului în cadru, o pune în
-evidență și mută focalizarea pe titlul ei. Dacă produsul confirmat era ascuns
-de un filtru activ, filtrele se golesc automat.
+**Confirmarea deschide pagina produsului** — la fel pentru tap, clic, `Enter`
+sau eliberarea lui `⇧`.
+
+Înainte, confirmarea doar închidea panoul și aducea cartela din catalog în
+cadru, cu o clipire. Pe pagina de magazin avea o logică; pe orice altă pagină
+cartela nu există, deci un tap pe produs nu făcea nimic vizibil. Pentru cine
+răsfoiește, „am ales ăsta” înseamnă „arată-mi-l”, nu „derulează undeva”.
 
 Pe ecranele tactile: butonul flotant din colț, glisare stânga/dreapta, sau
 rotița mausului.
+
+### Cât avansează o glisare
+
+Prima variantă avansa exact un produs, oricât de lung sau de rapid ar fi fost
+gestul — la 21 de produse însemna 20 de glisări până la capăt. Acum contează și
+distanța, și viteza:
+
+```
+pași = distanță / lățimea unei plăci  +  bonus din viteză
+```
+
+Lățimea plăcii se citește din pagină, nu e o constantă: `--tile-w` e declarat cu
+`clamp()` și diferă între telefon și desktop. Un gest care mătură trei plăci
+avansează trei produse. Peste ~1,2 px/ms se adaugă până la 6 pași, ca la o listă
+cu inerție, cu plafon de 12 — o smucitură accidentală nu trebuie să sară
+jumătate de catalog, de unde omul nu mai știe unde a ajuns.
+
+Măsurat: glisare de 60 px → 1 produs, de 260 px → 3, aruncare de 300 px în
+60 ms → 9.
+
+**Garda de după glisare expiră singură.** O glisare se încheie și cu un `click`
+sintetic pe placa de sub deget, care altfel ar deschide produsul. Prima variantă
+ținea un steag consumat de următorul clic, indiferent când venea — deci după
+orice glisare, următorul tap deliberat era înghițit. Acum garda e o fereastră de
+300 ms: clicul sintetic vine în câteva zeci de milisecunde, unul deliberat vine
+mai târziu.
 
 ### De ce glisarea nu mergea pe telefon
 
@@ -299,21 +329,38 @@ definiții.
 La trecerea cursorului, cartela înlocuiește desenul cu fotografia reală. Dacă
 cele două nu au aceeași culoare, schimbul se citește ca „nu ăsta e produsul”.
 
-Culoarea desenului se lua din `raluri[0]`, adică din **ordinea în care
-magazinul enumeră codurile în denumire** — iar ordinea diferă de la un produs
-la altul: „maro inchis 8019, maro deschis 8014” la 401/400/399, „maro 8014,
-maro 8019” la 387/386. Aceleași uși, aceeași fotografie, două culori desenate.
+A fost greșit de două ori, din același motiv de fond: culoarea desenului era
+luată dintr-un cod, nu din produs.
 
-Mai rău, RAL 8019 este `#3d3635`: măsurat, un gri. Fotografia ușilor maro are
-media `#4a3b33`, un maro cald. Cele trei uși de 77 mm se desenau practic gri și
-deveneau maro la hover.
+**Întâi**, se lua `raluri[0]` — ordinea în care magazinul enumeră codurile în
+denumire. Ordinea diferă de la un produs la altul: „maro inchis 8019, maro
+deschis 8014” la 401/400/399, „maro 8014, maro 8019” la 387/386. Aceleași uși,
+aceeași fotografie, două culori desenate.
 
-Culoarea desenului vine acum din **familie**, nu din ordinea codurilor:
-`UG.ralDesen()` dă `8014` pentru maro și `7016` pentru antracit. Codurile RAL
-declarate rămân afișate toate, în ordinea din magazin — se schimbă ce se
-desenează, nu ce se declară.
+**Apoi**, s-a trecut pe codul RAL oficial al familiei. Mai consistent, dar tot
+greșit la privire — și exact asta s-a și reclamat: RAL 7016 „antracit” este
+`#383e42`, un gri aproape neutru, în timp ce ușa din fotografie măsoară
+`#252c3f`, albastru marin, cu albastrul la 26 de trepte peste roșu. Desenul
+arăta gri, fotografia de la hover arăta bleumarin.
 
-Verificat pe cele 82 de perechi desen/fotografie din site: 0 nepotriviri.
+**Acum culorile sunt măsurate din fotografii**, în `CULOARE_FOTO` din
+`catalog.js`:
+
+| familie | desen | fotografie | distanță |
+|---|---|---|---|
+| antracit | `#252c3f` | `#252c3f` | **0** (era 26) |
+| maro | `#4a3b33` | `#4a3b33` | **0** (era 14) |
+
+Desenul are propriul model de lumină — teșitură luminoasă sus, umbră la
+îmbinare — iar media lui ponderată revine exact la culoarea de bază, deci
+potrivirea se face pe aceste valori.
+
+Codurile RAL rămân afișate ca etichete și ca pastile de culoare în comutator,
+unde sunt însoțite de codul lor: acolo valoarea oficială este cea corectă. Se
+schimbă doar ce se desenează.
+
+> **La întreținere:** dacă se schimbă fotografiile produselor, aceste culori
+> trebuie remăsurate. Nu sunt coduri RAL și nu trebuie „corectate” după paletar.
 
 ---
 

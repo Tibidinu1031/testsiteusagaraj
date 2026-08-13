@@ -43,7 +43,7 @@ window.UG = window.UG || {};
     /* --- Construcția plăcilor, o singură dată ---------------------------- */
 
     rail.innerHTML = PRODUSE.map(function (p, i) {
-      var c = RAL[UG.ralDesen(p)];
+      var c = UG.culoareDesen(p);
       return '<button type="button" class="tile" role="option" id="sw-tile-' + i + '" ' +
         'aria-selected="' + (i === 0) + '" data-i="' + i + '" tabindex="-1" ' +
         'title="' + p.nume + '">' +
@@ -74,7 +74,7 @@ window.UG = window.UG || {};
 
     function deseneaza() {
       var p = PRODUSE[index];
-      var c = RAL[UG.ralDesen(p)];
+      var c = UG.culoareDesen(p);
       var red = UG.reducere(p);
 
       tiles.forEach(function (t, i) { t.setAttribute('aria-selected', String(i === index)); });
@@ -109,10 +109,6 @@ window.UG = window.UG || {};
       deseneaza();
     }
 
-    function prefersReduced() {
-      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }
-
     /* --- Deschidere / închidere ------------------------------------------ */
 
     function deschide(modul, pornireLa) {
@@ -132,23 +128,31 @@ window.UG = window.UG || {};
       root.querySelector('.switcher__panel').focus({ preventScroll: true });
     }
 
-    /** Confirmarea duce la cartela produsului din catalog și o pune în evidență. */
-    function evidentiazaCartela(p) {
-      var card = document.getElementById('card-' + p.id);
-      if (!card) return;
+    /**
+     * Confirmarea DESCHIDE pagina produsului.
+     *
+     * Varianta dinainte doar închidea panoul și aducea cartela din catalog în
+     * cadru, cu o clipire. Pe pagina de magazin avea o logică, dar pe orice
+     * altă pagină cartela nu există, deci un tap pe produs nu făcea absolut
+     * nimic vizibil — panoul se închidea și atât. Pentru cine răsfoiește,
+     * „am ales ăsta” înseamnă „arată-mi-l”, nu „derulează undeva”.
+     *
+     * Aceeași rută pentru toate confirmările — tap, clic, Enter, eliberarea lui
+     * ⇧ — ca răsfoirea să aibă un singur rezultat previzibil.
+     */
+    function deschideProdus(p) {
+      var baza = window.UG_BASE || '';
+      var url = baza + 'produs/' + UG.fisierProdus(p) + '.html';
 
-      // Dacă filtrele active ascund produsul, le golim ca să fie vizibil.
-      // Evenimentul e tratat sincron, deci cartela e deja vizibilă mai jos.
-      if (card.classList.contains('is-hidden')) {
-        document.dispatchEvent(new CustomEvent('catalog:reset'));
+      /* Peste `file://` fiecare fișier are origine proprie, deci coșul se
+         transportă prin adresă. O navigare din JavaScript ocolește rescrierea
+         legăturilor din cos-ui.js, așa că se adaugă aici. */
+      if (location.protocol === 'file:' && UG.cosCodat) {
+        var cod = UG.cosCodat();
+        if (cod) url += '?c=' + encodeURIComponent(cod);
       }
 
-      card.scrollIntoView({ block: 'center', behavior: prefersReduced() ? 'auto' : 'smooth' });
-      card.classList.remove('is-flash');
-      void card.offsetWidth;             // repornește animația de la capăt
-      card.classList.add('is-flash');
-      var link = card.querySelector('.card__title a');
-      if (link) link.focus({ preventScroll: true });
+      window.location.assign(url);
     }
 
     function inchide(confirma) {
@@ -162,7 +166,7 @@ window.UG = window.UG || {};
       document.body.classList.remove('is-locked');
 
       if (confirma) {
-        evidentiazaCartela(p);
+        deschideProdus(p);
       } else if (focalizareAnterioara && focalizareAnterioara.focus) {
         focalizareAnterioara.focus({ preventScroll: true });
       }
@@ -216,13 +220,22 @@ window.UG = window.UG || {};
 
     /* --- Mausul și atingerea --------------------------------------------- */
 
-    /* O glisare se încheie și cu un `click` pe placa de sub deget. Fără steagul
-       de mai jos, răsfoirea prin glisare ar confirma din greșeală produsul —
-       adică exact ce nu voia utilizatorul când a glisat. */
-    var tocmaiAmGlisat = false;
+    /**
+     * O glisare se încheie și cu un `click` sintetic pe placa de sub deget.
+     * Fără garda de mai jos, răsfoirea prin glisare ar deschide din greșeală
+     * produsul — adică exact ce nu voia utilizatorul când a glisat.
+     *
+     * Garda expiră singură. O primă variantă folosea un steag pe care îl
+     * consuma următorul clic, indiferent când venea: după orice glisare,
+     * URMĂTORUL tap era înghițit, chiar dacă utilizatorul chiar voia să
+     * deschidă produsul. Clicul sintetic vine în câteva zeci de milisecunde
+     * după `pointerup`; unul deliberat vine mult mai târziu. Fereastra de
+     * 300 ms le separă fără să înghită nimic real.
+     */
+    var glisatLa = 0;
 
     rail.addEventListener('click', function (e) {
-      if (tocmaiAmGlisat) { tocmaiAmGlisat = false; return; }
+      if (Date.now() - glisatLa < 300) return;
       var t = e.target.closest('.tile');
       if (!t) return;
       index = Number(t.dataset.i);
@@ -264,12 +277,47 @@ window.UG = window.UG || {};
      *
      * Decizia se ia și pe verticală: o mișcare mai degrabă verticală este o
      * încercare de derulare a paginii, nu o răsfoire, și se ignoră.
+     *
+     * CÂTE PRODUSE PARCURGE O GLISARE
+     * Prima variantă avansa exact unul, oricât de lung sau de rapid ar fi fost
+     * gestul — la 21 de produse însemna 20 de glisări ca să ajungi la capăt.
+     * Acum contează și distanța, și viteza, ca la o listă care se rostogolește:
+     *
+     *   pași = distanță / lățimea unei plăci  +  bonus din viteză
+     *
+     * Lățimea plăcii se citește din pagină, nu e o constantă: `--tile-w` este
+     * declarat cu `clamp()` și diferă între telefon și desktop. Împărțind la
+     * lățimea reală, un gest care mătură trei plăci avansează trei produse —
+     * adică exact ce arată degetul că vrea.
+     *
+     * Bonusul de viteză folosește pixeli pe milisecundă. O aruncare rapidă
+     * (peste ~1,2 px/ms) adaugă până la 6 pași, ca la o listă cu inerție.
+     * Plafonul de 12 există ca o smucitură accidentală să nu sară jumătate de
+     * catalog, de unde omul nu mai știe unde a ajuns.
      */
-    var x0 = null, y0 = null, idIndicator = null;
+    var x0 = null, y0 = null, t0 = 0, idIndicator = null;
+
+    function latimePlaca() {
+      var t = tiles[0];
+      if (!t) return 120;
+      var gap = parseFloat(getComputedStyle(rail).gap) || 0;
+      return t.offsetWidth + gap;
+    }
+
+    function pasiDinGest(dx, durata) {
+      var distanta = Math.abs(dx);
+      var pasi = Math.round(distanta / latimePlaca());
+
+      var viteza = durata > 0 ? distanta / durata : 0;   // px/ms
+      if (viteza > 1.2) pasi += Math.min(6, Math.round((viteza - 1.2) * 4));
+
+      return Math.max(1, Math.min(12, pasi));
+    }
 
     function incepe(e) {
       x0 = e.clientX;
       y0 = e.clientY;
+      t0 = e.timeStamp || Date.now();
       idIndicator = e.pointerId;
       try { viewport.setPointerCapture(e.pointerId); } catch (err) { /* nu e obligatoriu */ }
     }
@@ -279,14 +327,46 @@ window.UG = window.UG || {};
 
       var dx = e.clientX - x0;
       var dy = e.clientY - y0;
+      var durata = (e.timeStamp || Date.now()) - t0;
       x0 = y0 = idIndicator = null;
       try { viewport.releasePointerCapture(e.pointerId); } catch (err) { /* deja eliberat */ }
 
       /* Prag de 36 px, dar numai dacă gestul e mai lat decât înalt. */
       if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
-        tocmaiAmGlisat = true;
-        muta(dx < 0 ? 1 : -1);
+        glisatLa = Date.now();
+        muta((dx < 0 ? 1 : -1) * pasiDinGest(dx, durata));
+        return;
       }
+
+      /* Un tap înseamnă că degetul a stat pe loc. Fără pragul ăsta, o mișcare
+         mai degrabă verticală — adică o încercare de derulare a paginii, care
+         nu trece de pragul de glisare — ar fi confirmată ca tap și ar deschide
+         un produs pe care nimeni nu l-a ales. Zece pixeli acoperă tremurul
+         normal al degetului, fără să înghită un tap adevărat. */
+      if (Math.abs(dx) > 10 || Math.abs(dy) > 10) return;
+
+      /* A stat pe loc, deci a fost un tap — și tapul deschide produsul.
+       *
+       * Confirmarea NU se poate lăsa pe seama evenimentului `click`: `incepe`
+       * cere `setPointerCapture` pe fereastră, iar cât ține captarea browserul
+       * retintește `click` către elementul care a captat. Ascultătorul de clic
+       * stă pe șină, adică pe copilul ferestrei, așa că evenimentul nu mai
+       * trece niciodată prin el. Răsfoirea mergea — săgeți, glisare, tastatură
+       * — dar tapul pe un produs nu făcea nimic.
+       *
+       * Placa se ia de sub punctul unde s-a ridicat degetul, nu din `e.target`,
+       * tocmai fiindcă `e.target` este deja fereastra din cauza captării.
+       * Captarea a fost eliberată mai sus, deci citirea e corectă. */
+      var sub = document.elementFromPoint(e.clientX, e.clientY);
+      var placa = sub && sub.closest ? sub.closest('.tile') : null;
+      if (!placa) return;
+
+      /* Marchează momentul ca ascultătorul de `click` de pe șină să nu confirme
+         a doua oară, dacă browserul îl livrează totuși. */
+      glisatLa = Date.now();
+      index = Number(placa.dataset.i);
+      deseneaza();
+      inchide(true);
     }
 
     function renunta(e) {
