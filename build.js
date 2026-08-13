@@ -142,7 +142,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=26';
+const VER = 'v=28';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -384,10 +384,30 @@ ${subsol}
       <p class="switcher__name" id="sw-name"></p>
       <p class="switcher__specs" id="sw-specs"></p>
       <p class="switcher__price" id="sw-price"></p>
+      <button type="button" class="btn btn--sm btn--ghost qv__toggle" id="sw-qv-toggle"
+              aria-expanded="false" aria-controls="sw-qv">
+        Vizualizare rapidă <kbd>V</kbd>
+      </button>
     </div>
+
+    <!-- Vizualizarea rapidă: fotografiile reale, cotele și adăugarea în coș,
+         fără să părăsești răsfoirea. Se completează din switcher.js. -->
+    <div class="qv" id="sw-qv" hidden>
+      <div class="qv__galerie" id="sw-qv-galerie"></div>
+      <div class="qv__date">
+        <dl class="qv__spec" id="sw-qv-spec"></dl>
+        <div class="qv__actiuni">
+          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
+          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
+        </div>
+        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+
     <p class="switcher__foot">
       <span><kbd>⇧</kbd><kbd>Tab</kbd> înainte</span>
       <span><kbd>←</kbd><kbd>→</kbd> navighezi</span>
+      <span><kbd>V</kbd> vizualizare rapidă</span>
       <span><kbd>Enter</kbd> confirmi</span>
       <span><kbd>Esc</kbd> anulezi</span>
     </p>

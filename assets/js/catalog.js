@@ -84,7 +84,61 @@ window.UG = window.UG || {};
   /** Fotografiile magazinului, descărcate local. */
   var FOTO = {
     maro:     'assets/img/usa-maro-8014-8019.jpeg',
-    antracit: 'assets/img/usa-gri-antracit.jpg'
+    antracit: 'assets/img/usa-gri-antracit.jpg',
+    det01:    'assets/img/usa-detaliu-01.jpeg',
+    det02:    'assets/img/usa-detaliu-02.jpeg',
+    det03:    'assets/img/usa-detaliu-03.jpeg',
+    det04:    'assets/img/usa-detaliu-04.jpeg'
+  };
+
+  /**
+   * Galeriile reale, produs cu produs, în ordinea declarată de magazin.
+   *
+   * Preluate din `/wp-json/wc/store/v1/products`, câmpul `images`. Fiecare
+   * produs are între 3 și 6 imagini, nu una singură cum importasem întâi.
+   *
+   * Două lucruri de știut, ca să nu pară că lipsesc poze:
+   *
+   * 1. Tot magazinul are DOAR 7 fișiere distincte, refolosite între cele 21 de
+   *    produse. Nu există 21 de fotografii unice de importat — clientul nu le
+   *    are. Un produs cu lamelă de 55 mm și unul de 77 mm arată în poză la fel.
+   * 2. Din galerii lipsește intenționat `Copie-a-Copie-a-Fara-titlu.png`, care
+   *    este logo-ul firmei, nu o fotografie de produs. Magazinul îl adaugă la
+   *    coada galeriilor ca filigran; într-un carusel ar apărea drept „poza 4”
+   *    și ar arăta a greșeală. Duplicatele din magazin sunt și ele scoase.
+   */
+  var GALERII = {
+    401: ['maro', 'det01', 'det02'],
+    400: ['maro', 'det01', 'det02'],
+    399: ['maro', 'det01', 'det02'],
+    398: ['antracit', 'det01', 'det02'],
+    397: ['antracit', 'det01', 'det02'],
+    396: ['antracit', 'det01', 'det02'],
+    394: ['antracit', 'det02', 'det01'],
+    393: ['antracit', 'det02', 'det01'],
+    391: ['antracit', 'det01', 'det02'],
+    388: ['antracit', 'det02', 'det01'],
+    387: ['maro', 'det02', 'det03', 'det04'],
+    386: ['maro', 'det02', 'det04', 'det03'],
+    374: ['maro', 'det02', 'det04', 'det03'],
+    184: ['maro', 'det02', 'det03', 'det04', 'det01'],
+    183: ['maro', 'det02', 'det03', 'det04', 'det01'],
+    182: ['maro', 'det02', 'det03', 'det04', 'det01'],
+    181: ['maro', 'det02', 'det03', 'det04', 'det01'],
+    180: ['maro', 'det02', 'det03', 'det04', 'det01'],
+    179: ['maro', 'det02', 'det03', 'det04', 'det01'],
+    178: ['maro', 'det02', 'det03', 'det04', 'det01'],
+    161: ['maro', 'det02', 'det03', 'det04', 'det01']
+  };
+
+  /** Dimensiunile reale ale fișierelor, ca `<img>` să rezerve spațiul corect. */
+  var MASURI = {
+    maro:     [255, 255],
+    antracit: [510, 495],
+    det01:    [275, 183],
+    det02:    [300, 300],
+    det03:    [255, 255],
+    det04:    [450, 450]
   };
 
   var BASE = 'https://usa-garaj.ro/produs/';
@@ -643,6 +697,18 @@ window.UG = window.UG || {};
   };
 
   UG.fotoProdus = function (p) { return FOTO[p.foto]; };
+
+  /**
+   * Galeria produsului: adrese locale, în ordinea din magazin.
+   * Dacă un produs nu are galerie declarată, rămâne fotografia lui principală —
+   * catalogul nu are voie să afișeze zero imagini.
+   */
+  UG.galerieProdus = function (p) {
+    var chei = GALERII[p.id] || [p.foto];
+    return chei.map(function (k) {
+      return { src: FOTO[k], l: MASURI[k][0], h: MASURI[k][1] };
+    });
+  };
 
   /** Reducerea procentuală — `null` dacă produsul nu e la promoție. */
   UG.reducere = function (p) {

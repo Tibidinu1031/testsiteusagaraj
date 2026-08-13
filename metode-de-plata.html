@@ -23,11 +23,11 @@
 
 <script>document.documentElement.classList.add('js');</script>
 
-<link rel="stylesheet" href="assets/css/tokens.css?v=26">
-<link rel="stylesheet" href="assets/css/base.css?v=26">
-<link rel="stylesheet" href="assets/css/door.css?v=26">
-<link rel="stylesheet" href="assets/css/components.css?v=26">
-<link rel="stylesheet" href="assets/css/switcher.css?v=26">
+<link rel="stylesheet" href="assets/css/tokens.css?v=28">
+<link rel="stylesheet" href="assets/css/base.css?v=28">
+<link rel="stylesheet" href="assets/css/door.css?v=28">
+<link rel="stylesheet" href="assets/css/components.css?v=28">
+<link rel="stylesheet" href="assets/css/switcher.css?v=28">
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","HomeAndConstructionBusiness"],"@id":"https://usa-garaj.ro/#firma","name":"Usa-garaj.ro","legalName":"ABBA CONFORT SOLUTIONS HOMES S.R.L.","url":"https://usa-garaj.ro/","taxID":"40437439","identifier":[{"@type":"PropertyValue","name":"CUI","value":"40437439"},{"@type":"PropertyValue","name":"Nr. Registrul Comerțului","value":"J15/136/2019"}],"telephone":"+40731366613","email":"contact@usa-garaj.ro","address":{"@type":"PostalAddress","streetAddress":"Str. Principală, Nr. 146","addressLocality":"Sat Voinești, Com. Voinești","addressRegion":"Dâmbovița","addressCountry":"RO"},"areaServed":"RO"}</script>
 
@@ -249,10 +249,30 @@
       <p class="switcher__name" id="sw-name"></p>
       <p class="switcher__specs" id="sw-specs"></p>
       <p class="switcher__price" id="sw-price"></p>
+      <button type="button" class="btn btn--sm btn--ghost qv__toggle" id="sw-qv-toggle"
+              aria-expanded="false" aria-controls="sw-qv">
+        Vizualizare rapidă <kbd>V</kbd>
+      </button>
     </div>
+
+    <!-- Vizualizarea rapidă: fotografiile reale, cotele și adăugarea în coș,
+         fără să părăsești răsfoirea. Se completează din switcher.js. -->
+    <div class="qv" id="sw-qv" hidden>
+      <div class="qv__galerie" id="sw-qv-galerie"></div>
+      <div class="qv__date">
+        <dl class="qv__spec" id="sw-qv-spec"></dl>
+        <div class="qv__actiuni">
+          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
+          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
+        </div>
+        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
+      </div>
+    </div>
+
     <p class="switcher__foot">
       <span><kbd>⇧</kbd><kbd>Tab</kbd> înainte</span>
       <span><kbd>←</kbd><kbd>→</kbd> navighezi</span>
+      <span><kbd>V</kbd> vizualizare rapidă</span>
       <span><kbd>Enter</kbd> confirmi</span>
       <span><kbd>Esc</kbd> anulezi</span>
     </p>
@@ -266,12 +286,12 @@
 
 <script>window.UG_BASE = "";
 window.UG_MAGAZIN = {"store":"https://usa-garaj.ro/wp-json/wc/store/v1","activ":true,"card":true};</script>
-<script src="assets/js/catalog.js?v=26"></script>
-<script src="assets/js/door.js?v=26"></script>
-<script src="assets/js/switcher.js?v=26"></script>
-<script src="assets/js/cos.js?v=26"></script>
-<script src="assets/js/cos-ui.js?v=26"></script>
+<script src="assets/js/catalog.js?v=28"></script>
+<script src="assets/js/door.js?v=28"></script>
+<script src="assets/js/switcher.js?v=28"></script>
+<script src="assets/js/cos.js?v=28"></script>
+<script src="assets/js/cos-ui.js?v=28"></script>
 
-<script src="assets/js/app.js?v=26"></script>
+<script src="assets/js/app.js?v=28"></script>
 </body>
 </html>

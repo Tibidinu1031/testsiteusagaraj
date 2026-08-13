@@ -1128,10 +1128,23 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   padding: var(--s-3);
 }
 /* Fotografia rămâne la mărimea ei reală — nu are rezoluție de mărit. */
+/* Banda de fotografii: toate pozele declarate de magazin pentru produs, la
+   mărimea lor reală. Fișierele au între 255 și 510 px pe latura mare, deci
+   `contain` pe o înălțime fixă le încadrează fără să le întindă. */
+.produs__foto-banda {
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  padding-block-end: var(--s-2);
+  scrollbar-width: thin;
+}
 .produs__foto img {
-  inline-size: 96px;
   block-size: 96px;
-  object-fit: cover;
+  inline-size: auto;
+  flex: none;
+  object-fit: contain;
+  background: var(--bg-sunken);
+  border: 1px solid var(--line);
   border-radius: var(--r-2);
 }
 .produs__foto figcaption {

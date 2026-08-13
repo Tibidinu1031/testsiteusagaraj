@@ -293,3 +293,58 @@
   .tile { transform: none; }
   .tile[aria-selected="true"] { transform: none; }
 }
+
+/* ==========================================================================
+   Vizualizarea rapidă — fotografiile reale, cotele și adăugarea în coș,
+   fără să părăsești răsfoirea.
+   ========================================================================== */
+
+.qv__toggle { margin-block-start: var(--s-3); }
+
+.qv {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: var(--s-5);
+  margin-block-start: var(--s-4);
+  padding-block-start: var(--s-4);
+  border-block-start: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  text-align: start;
+}
+@media (max-width: 720px) { .qv { grid-template-columns: 1fr; gap: var(--s-4); } }
+
+/* Fotografiile magazinului au între 255 și 510 px pe latura mare. Sunt așezate
+   într-o bandă care derulează, la înălțime fixă și `contain`, tocmai ca să nu
+   fie mărite peste rezoluția lor — o poză întinsă se vede imediat. */
+.qv__galerie {
+  display: flex;
+  gap: var(--s-2);
+  overflow-x: auto;
+  padding-block-end: var(--s-2);
+  scrollbar-width: thin;
+}
+.qv__galerie img {
+  block-size: clamp(5.5rem, 4rem + 6vw, 8rem);
+  inline-size: auto;
+  flex: none;
+  object-fit: contain;
+  background: var(--bg-sunken);
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  border-radius: var(--r-2);
+}
+
+.qv__date { display: grid; gap: var(--s-3); align-content: start; }
+
+.qv__spec {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2) var(--s-4);
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+}
+.qv__spec div { display: grid; gap: 1px; min-inline-size: 0; }
+.qv__spec dt { color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; }
+.qv__spec dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.qv__actiuni { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.qv__stare { font-family: var(--font-mono); font-size: var(--t--2); color: var(--acc); min-block-size: 1.2em; }

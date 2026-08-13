@@ -457,8 +457,10 @@ for (const p of PRODUSE) {
       <div class="produs__media">
         <div class="plate ticks produs__plansa">${UG.doorSVG(p, { cote: true, titlu: `${p.nume}. Desen la scară cu cote.` })}</div>
         <figure class="produs__foto">
-          <img src="../${UG.fotoProdus(p)}" alt="Fotografie ${p.familie === 'antracit' ? 'ușă de garaj gri antracit' : 'ușă de garaj maro'}" loading="lazy" decoding="async">
-          <figcaption>Fotografie din magazin · ${raluri}</figcaption>
+          <div class="produs__foto-banda">
+${UG.galerieProdus(p).map((g, i) => `            <img src="../${g.src}" width="${g.l}" height="${g.h}" loading="lazy" decoding="async" alt="${i === 0 ? `Fotografie ${p.familie === 'antracit' ? 'ușă de garaj gri antracit' : 'ușă de garaj maro'}` : `Detaliu ${i} — ${esc(p.nume)}`}">`).join('\n')}
+          </div>
+          <figcaption>${UG.galerieProdus(p).length} fotografii din magazin · ${raluri}</figcaption>
         </figure>
       </div>
 

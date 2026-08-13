@@ -35,10 +35,20 @@ window.UG = window.UG || {};
     var elIdx    = root.querySelector('#sw-idx');
     var elLive   = root.querySelector('#sw-live');
 
+    /* Vizualizarea rapidă */
+    var qv        = root.querySelector('#sw-qv');
+    var qvToggle  = root.querySelector('#sw-qv-toggle');
+    var qvGalerie = root.querySelector('#sw-qv-galerie');
+    var qvSpec    = root.querySelector('#sw-qv-spec');
+    var qvAdauga  = root.querySelector('#sw-qv-adauga');
+    var qvLink    = root.querySelector('#sw-qv-link');
+    var qvStare   = root.querySelector('#sw-qv-stare');
+
     var index = 0;
     var deschis = false;
     var mod = null;            // 'rapid' (⇧ ținut apăsat) sau 'fix' (deschis cu butonul)
     var focalizareAnterioara = null;
+    var qvDeschis = false;
 
     /* --- Construcția plăcilor, o singură dată ---------------------------- */
 
@@ -101,8 +111,71 @@ window.UG = window.UG || {};
       elLive.textContent = p.nume + '. ' + UG.lei(p.pret) +
         '. Poziția ' + (index + 1) + ' din ' + PRODUSE.length + '.';
 
+      if (qvDeschis) deseneazaQV(p);
       pozitioneazaSina();
     }
+
+    /* --- Vizualizarea rapidă ---------------------------------------------- */
+
+    /**
+     * Arată fotografiile reale, cotele și adăugarea în coș, fără să părăsești
+     * răsfoirea.
+     *
+     * Se randează DOAR când panoul e deschis, nu la fiecare schimbare de
+     * selecție: altfel, o parcurgere rapidă prin cele 21 de produse ar cere
+     * browserului să decodeze zeci de imagini pe care nimeni nu apucă să le
+     * vadă.
+     */
+    function deseneazaQV(p) {
+      var galerie = UG.galerieProdus(p);
+
+      qvGalerie.innerHTML = galerie.map(function (g, i) {
+        /* `eager`, nu `lazy`: galeria se construiește abia când se deschide
+           vizualizarea rapidă, deci imaginile sunt cerute exact când trebuie.
+           Cu `lazy` într-un container care până acum era `hidden`, browserul
+           nu le consideră niciodată intrate în cadru și rămân nedecodate. */
+        return '<img src="' + (window.UG_BASE || '') + g.src + '" width="' + g.l +
+          '" height="' + g.h + '" loading="eager" decoding="async" alt="' +
+          (i === 0 ? p.nume : 'Detaliu ' + i + ' — ' + p.nume) + '">';
+      }).join('');
+
+      var geo = UG.LAMELA[p.lamela];
+      var randuri = [
+        ['Cotă', p.l + ' × ' + p.h + ' mm'],
+        ['Lamelă', p.lamela + ' mm'],
+        ['Culoare', UG.culoriProdus(p)],
+        ['Casetă', geo.caseta + ' mm'],
+        ['Ghidaje', geo.pas === 55 ? '75 × 30 mm' : '90 × 35 mm']
+      ];
+      if (p.pasaj) randuri.push(['Trecere', p.pasaj]);
+
+      qvSpec.innerHTML = randuri.map(function (r) {
+        return '<div><dt>' + r[0] + '</dt><dd>' + r[1] + '</dd></div>';
+      }).join('');
+
+      qvLink.setAttribute('href', (window.UG_BASE || '') + 'produs/' + UG.fisierProdus(p) + '.html');
+      qvStare.textContent = '';
+    }
+
+    function comutaQV(fortat) {
+      qvDeschis = typeof fortat === 'boolean' ? fortat : !qvDeschis;
+      qv.hidden = !qvDeschis;
+      qvToggle.setAttribute('aria-expanded', String(qvDeschis));
+      if (qvDeschis) {
+        deseneazaQV(PRODUSE[index]);
+        /* Șina se re-măsoară: panoul tocmai și-a schimbat înălțimea. */
+        requestAnimationFrame(pozitioneazaSina);
+      }
+    }
+
+    qvToggle.addEventListener('click', function () { comutaQV(); });
+
+    qvAdauga.addEventListener('click', function () {
+      var p = PRODUSE[index];
+      if (!UG.cosAdaugă) { qvStare.textContent = 'Coșul nu este disponibil.'; return; }
+      UG.cosAdaugă(p.id, 1);
+      qvStare.textContent = 'Adăugat în coș: ' + p.nume + '.';
+    });
 
     function muta(pas) {
       index = (index + pas + PRODUSE.length) % PRODUSE.length;
@@ -161,6 +234,7 @@ window.UG = window.UG || {};
 
       deschis = false;
       mod = null;
+      comutaQV(false);          // panoul se redeschide curat, nu cu detaliile rămase
       root.classList.remove('is-open');
       root.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('is-locked');
@@ -206,10 +280,16 @@ window.UG = window.UG || {};
           e.preventDefault(); index = 0; deseneaza(); break;
         case 'End':
           e.preventDefault(); index = PRODUSE.length - 1; deseneaza(); break;
+        case 'v': case 'V':
+          e.preventDefault(); comutaQV(); break;
         case 'Enter': case ' ':
           e.preventDefault(); inchide(true); break;
         case 'Escape':
-          e.preventDefault(); inchide(false); break;
+          /* Prima apăsare închide doar vizualizarea rapidă, dacă e deschisă.
+             Altfel omul pierde tot panoul când voia să închidă doar detaliile. */
+          e.preventDefault();
+          if (qvDeschis) comutaQV(false); else inchide(false);
+          break;
       }
     });
 
