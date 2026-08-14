@@ -123,11 +123,10 @@ const HERO = `<section class="hero">
         garaj rămâne al dumneavoastră.
       </p>
       <div class="hero__cta">
-        <button type="button" class="btn btn--primary btn--lg" data-switch-open="">
+        <button type="button" class="btn btn--orange btn--lg" data-switch-open="">
           Răsfoiește produsele noastre
           <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
         </button>
-        <a class="btn btn--ghost btn--lg" href="magazin.html">Vezi cele ${s.total} de configurații</a>
       </div>
       <dl class="stats">
         <div class="stat"><dd class="stat__v">${s.total}</dd><dt class="stat__k">configurații în catalog</dt></div>

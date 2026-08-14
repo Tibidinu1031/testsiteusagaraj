@@ -136,37 +136,46 @@ p { text-wrap: pretty; }
   text-transform: uppercase;
   color: var(--ink-faint);
 }
+/* Liniuța dinaintea supratitlului este portocalie, nu verde: pe paginile fără
+   număr de rubrică — între ele prima pagină, adică exact ce vede omul întâi —
+   ea era singurul loc unde a doua culoare a mărcii ar fi putut apărea deasupra
+   pliului. Verde peste tot însemna un site care nu seamănă cu propria siglă. */
 .eyebrow::before {
   content: "";
   inline-size: 1.75rem;
-  block-size: 1px;
-  background: var(--acc);
+  block-size: 2px;
+  background: var(--brand-orange);
   flex: none;
 }
 
 /* Numărul de rubrică: „01 · CATALOG COMPLET”. Numerotarea secțiunilor e ce
    deosebește un document de o înșiruire de blocuri. Când numărul e prezent,
-   liniuța de dinaintea supratitlului devine redundantă. */
+   liniuța de dinaintea supratitlului devine redundantă.
+
+   Este purtătorul principal al portocaliului din siglă: apare pe fiecare
+   secțiune a fiecărei pagini, deci a doua culoare a mărcii se vede peste tot,
+   fără să concureze cu verdele, care rămâne al butoanelor și al legăturilor.
+
+   Culoarea textului este `--orange-txt`, nu portocaliul siglei: la 12 px,
+   portocaliul de marcă pe hârtie ajunge pe la 2:1 și devine ilizibil. Conturul
+   îl folosește totuși pe cel de marcă, unde contrastul nu e o cerință.
+
+   Regula asta a fost până acum scrisă de două ori, la câteva rânduri distanță,
+   a doua oară fără chenar — se aplicau amândouă și rezultatul depindea de
+   ordine. Acum e una singură. */
 .eyebrow__n {
   font-style: normal;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--acc);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+  color: var(--orange-txt);
   padding: 0.2em 0.45em;
-  border: 1px solid color-mix(in oklab, var(--acc) 42%, transparent);
+  border: 1px solid color-mix(in oklab, var(--brand-orange) 55%, transparent);
+  background: color-mix(in oklab, var(--brand-orange) 10%, transparent);
   border-radius: 3px;
   line-height: 1;
 }
 .eyebrow:has(.eyebrow__n)::before { display: none; }
-/* Numărul de rubrică. Ordinea secțiunilor devine explicită, ca într-un
-   cuprins — pagina se citește ca un document, nu ca un teanc de blocuri. */
-.eyebrow__n {
-  font-style: normal;
-  font-weight: 600;
-  color: var(--acc);
-  letter-spacing: 0.06em;
-  font-variant-numeric: tabular-nums;
-}
 
 .lede {
   font-size: var(--t-1);

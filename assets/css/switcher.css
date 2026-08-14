@@ -27,11 +27,6 @@
 .switcher__scrim {
   position: absolute;
   inset: 0;
-  background: color-mix(in oklab, var(--bg-sunken) 62%, transparent);
-  backdrop-filter: blur(26px) saturate(140%) brightness(0.72);
-  -webkit-backdrop-filter: blur(26px) saturate(140%) brightness(0.72);
-}
-:root[data-theme="light"] .switcher__scrim {
   background: color-mix(in oklab, #6b6559 42%, transparent);
   backdrop-filter: blur(26px) saturate(130%);
   -webkit-backdrop-filter: blur(26px) saturate(130%);

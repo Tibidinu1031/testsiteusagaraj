@@ -6,10 +6,8 @@
 
 .door { overflow: visible; }
 
-/* Umbra de pe pardoseală e prea grea pe fundal deschis. */
-:root[data-theme="light"] .door__shadow,
-:root:not([data-theme="dark"]) .door__shadow { opacity: 0.14; }
-:root[data-theme="dark"] .door__shadow { opacity: 0.28; }
+/* Umbra de pe pardoseală, potrivită pentru fundalul deschis. */
+.door__shadow { opacity: 0.14; }
 
 /* --- Cotele: linii subțiri, chihlimbar, ca pe un plan de execuție --- */
 .door__dims,

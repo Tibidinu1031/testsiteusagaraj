@@ -18,27 +18,11 @@
 
   document.body.insertAdjacentHTML('afterbegin', UG.defsSprite());
 
-  /* ==========================================================================
-     Temă
-     ========================================================================== */
-
-  (function tema() {
-    var KEY = 'ug-tema';
-    var root = document.documentElement;
-    var salvata = null;
-    try { salvata = localStorage.getItem(KEY); } catch (e) { /* file:// fără stocare */ }
-    if (salvata) root.dataset.theme = salvata;
-
-    var buton = document.querySelector('.theme-toggle');
-    if (!buton) return;
-    buton.addEventListener('click', function () {
-      var acum = root.dataset.theme ||
-        (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-      var noua = acum === 'dark' ? 'light' : 'dark';
-      root.dataset.theme = noua;
-      try { localStorage.setItem(KEY, noua); } catch (e) { /* ignorat */ }
-    });
-  })();
+  /* Aici a stat comutatorul de temă: citea o preferință din `localStorage`,
+     punea `data-theme` pe rădăcină și schimba între întuneric și lumină.
+     Site-ul are acum o singură temă, deci n-a mai rămas nimic de comutat.
+     Cheia veche `ug-tema` poate exista încă în browserele vizitatorilor, dar
+     nu o mai citește nimeni și nu strică nimic. */
 
   /* ==========================================================================
      Antet lipit de marginea de sus

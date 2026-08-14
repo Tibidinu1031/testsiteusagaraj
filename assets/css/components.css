@@ -80,14 +80,65 @@
   flex: none;
   margin-inline-end: auto;
 }
+/**
+ * Marca din antet arată DOAR pictograma din siglă — casa cu ciocanul.
+ *
+ * Sigla completă (1600×1600) are numele firmei și sloganul dedesubt. La
+ * 2,1rem, adică vreo 34 px, textul acela devine o pată cenușie: prezent,
+ * ilizibil, dăunător. Fereastra de mai jos mărește imaginea și o poziționează
+ * pe pictogramă, deci în antet rămâne semnul grafic, iar cuvintele le duce
+ * marca scrisă de lângă.
+ *
+ * Se folosește fundal, nu `<img>`, fiindcă `background-size` și
+ * `background-position` decupează exact, fără un element de împachetare în
+ * plus. Adresa e relativă la ACEST fișier, deci merge la fel din rădăcină și
+ * din `produs/` — nu depinde de calea de bază a paginii.
+ *
+ * VALORILE NU SUNT ESTIMATE — sunt calculate din poziția reală a pictogramei,
+ * măsurată direct în pixeli (scanare a imaginii pe canvas, prag de alb la
+ * 245/255): pictograma ocupă 18,6%–58,0% pe verticală, iar textul „ABBA
+ * CONFORT” începe la 62,4%. O primă variantă folosea 150% / 30% „din ochi” și
+ * arăta prost: fereastra rezultată mergea până la 76,7%, deci prindea toată
+ * pictograma ȘI numele firmei ȘI o bucată din slogan — trei rânduri de text
+ * ilizibile într-o iconiță de 34 px.
+ *
+ * Motivul pentru care „din ochi” a dat greș: spațiul alb DE SUB pictogramă,
+ * până la text, e de doar 70 px — de patru ori mai mic decât spațiul alb DE
+ * DEASUPRA ei. O centrare simetrică pe mijlocul pictogramei împinge automat
+ * marginea de jos a decupajului peste text.
+ *
+ * Dacă se schimbă sigla, se remăsoară cu același procedeu (scanare pe benzi
+ * orizontale, prag de alb), nu se reglează din ochi.
+ */
 .brand__mark {
-  inline-size: 2.1rem;
-  block-size: 2.1rem;
-  border-radius: var(--r-2);
-  background: var(--surface-hi);
+  flex: none;
+  /* 2,9rem, nu 2,1: la 34 px pictograma decupată era un punct. Antetul are
+     4,25rem înălțime, deci 46 px lasă loc suficient și dă siglei greutatea pe
+     care o merită prima marcă a paginii. */
+  inline-size: 2.9rem;
+  block-size: 2.9rem;
+  border-radius: 50%;
   border: 1px solid var(--line);
-  object-fit: contain;
-  padding: 2px;
+  background-color: var(--surface-hi);
+  background-image: url("../img/logo-abba-confort.jpeg");
+  background-repeat: no-repeat;
+  background-position: 50% 28%;
+  background-size: 216%;
+}
+
+/* Sigla întreagă, în subsol: acolo are loc, deci se citește și numele firmei
+   și sloganul. */
+/* Sigla e pătrată (1600 × 1600), deci `50%` dă un cerc exact, fără decupare.
+   `aspect-ratio` o ține pătrată chiar dacă fișierul s-ar schimba cândva. */
+.ftr__sigla {
+  display: block;
+  inline-size: clamp(9rem, 7rem + 6vw, 12rem);
+  aspect-ratio: 1;
+  block-size: auto;
+  margin-block-start: var(--s-5);
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid color-mix(in oklab, var(--brand-orange) 34%, transparent);
 }
 .brand__name {
   display: grid;
@@ -156,15 +207,34 @@
   --btn-ink: var(--acc-ink);
   --btn-line: transparent;
 }
-/* Pe întuneric butonul se aprinde la trecerea cursorului, pe lumină se
-   închide — în ambele cazuri se depărtează de fundal, nu se apropie. */
-.btn--primary:hover { background: var(--green-hi); }
-:root[data-theme="light"] .btn--primary:hover { background: #124e34; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) .btn--primary:hover { background: #124e34; }
+/* La trecerea cursorului verdele se închide — se depărtează de hârtie, nu se
+   apropie de ea. */
+.btn--primary:hover { background: #0a4a3f; }
+
+/* Butonul plin portocaliu, pentru chemarea principală din erou. Folosește
+   `--acc-2` / `--acc-2-ink`, perechea pregătită deja în tokens: portocaliul
+   mărcii cu cerneală brun-închisă, 6,6:1 — textul alb pe portocaliu ar fi picat
+   la 3:1. */
+.btn--orange {
+  --btn-bg: var(--acc-2);
+  --btn-ink: var(--acc-2-ink);
+  --btn-line: transparent;
 }
+.btn--orange:hover { background: var(--orange-hi); }
 
 .btn--ghost { --btn-bg: transparent; --btn-line: var(--line-strong); }
+
+/* Butonul secundar poartă a doua culoare a mărcii. Perechea verde plin +
+   portocaliu conturat repetă exact raportul din siglă: verdele e masa,
+   portocaliul e semnul. */
+.btn--ghost {
+  --btn-ink: var(--orange-txt);
+  --btn-line: color-mix(in oklab, var(--brand-orange) 65%, transparent);
+}
+.btn--ghost:hover {
+  background: color-mix(in oklab, var(--brand-orange) 12%, transparent);
+  border-color: var(--brand-orange);
+}
 .btn--lg { padding: 0.95rem 1.5rem; font-size: var(--t-0); }
 .btn--sm { padding: 0.45rem 0.7rem; font-size: var(--t--2); }
 
@@ -201,19 +271,8 @@ kbd {
 .icon-btn:hover { color: var(--ink); border-color: var(--line-strong); background: var(--surface); }
 .icon-btn svg { inline-size: 1.05rem; block-size: 1.05rem; }
 
-/* Butonul arată tema activă: lună pe întuneric, soare pe lumină.
-   Implicit e afișată luna; luminozitatea o înlocuiește, fie pentru că a fost
-   aleasă explicit, fie pentru că e moștenită de la sistem. */
-.theme-toggle .i-moon { display: block; }
-.theme-toggle .i-sun  { display: none; }
-
-:root[data-theme="light"] .theme-toggle .i-moon { display: none; }
-:root[data-theme="light"] .theme-toggle .i-sun  { display: block; }
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme]) .theme-toggle .i-moon { display: none; }
-  :root:not([data-theme]) .theme-toggle .i-sun  { display: block; }
-}
+/* Aici au stat regulile butonului de schimbare a temei — lună pe întuneric,
+   soare pe lumină. Site-ul are o singură temă, deci butonul nu mai există. */
 
 /* ==========================================================================
    4. Erou
@@ -247,17 +306,21 @@ kbd {
   position: absolute;
   inset: 0;
   background-image: var(--grain);
-  opacity: 0.16;
+  opacity: 0.07;
   mix-blend-mode: overlay;
   z-index: -1;
   pointer-events: none;
 }
-:root[data-theme="light"] .hero::after { opacity: 0.07; }
 
+/* Coloana din dreapta primește mai mult decât cea din stânga, iar spațiul
+   dintre ele s-a strâns de la 80 px la cel mult 40.
+   Textul are oricum lățime limitată prin `--measure`, deci lățimea în plus îi
+   folosea prea puțin; în schimb, cei 80 px goli tăiau pagina în două jumătăți
+   care nu comunicau, iar desenul ușii — argumentul de vânzare — rămânea mic. */
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(2rem, 1rem + 5vw, 5rem);
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: clamp(1.25rem, 0.5rem + 2.4vw, 2.5rem);
   align-items: center;
 }
 @media (max-width: 940px) {
@@ -297,20 +360,25 @@ kbd {
   padding: var(--s-3) var(--s-4);
   transition: background var(--d-2);
 }
-/* Linie de accent care crește din marginea de sus la trecerea cursorului. */
+/* Linie de accent care crește din marginea de sus la trecerea cursorului.
+   Merge de la verde la portocaliu — cele două culori ale siglei, în ordinea în
+   care apar și în ea. */
 .stat::before {
   content: "";
   position: absolute;
   inset-block-start: 0;
   inset-inline: 0;
   block-size: 2px;
-  background: var(--acc);
-  transform: scaleX(0);
+  background: linear-gradient(90deg, var(--brand-green), var(--brand-orange));
+  /* Linia se vede din start, doar mai stinsă; la trecerea cursorului se aprinde.
+     Ascunsă complet, cum era înainte, cele două culori ale mărcii apăreau doar
+     pentru cine plimba mausul — adică pentru nimeni, pe telefon. */
+  opacity: 0.5;
   transform-origin: 0 50%;
-  transition: transform var(--d-3) var(--ease-out);
+  transition: opacity var(--d-2) var(--ease-out);
 }
 .stat:hover { background: var(--surface); }
-.stat:hover::before { transform: scaleX(1); }
+.stat:hover::before { opacity: 1; }
 .stat__v {
   font-family: var(--font-mono);
   font-size: var(--t-3);
@@ -320,7 +388,9 @@ kbd {
   color: var(--ink);
   line-height: 1.1;
 }
-.stat__v sup { font-size: 0.5em; color: var(--acc); vertical-align: super; }
+/* Unitățile („lei”, „mm”) în portocaliu: patru pete de culoare chiar sub
+   titlu, în singurul bloc din hero care se citește ca date. */
+.stat__v sup { font-size: 0.5em; color: var(--orange-txt); vertical-align: super; }
 .stat__k {
   display: block;
   margin-block-start: var(--s-1);
@@ -469,6 +539,9 @@ kbd {
   color: var(--ink-muted);
   white-space: nowrap;
 }
+/* Punctele dintre mențiuni alternează cele două culori ale mărcii. `nth-child`
+   pe elementul din listă, nu pe pseudo-element: banda e dublată în marcaj ca
+   să curgă continuu, deci alternanța se păstrează la buclare. */
 .ticker__item::before {
   content: "";
   inline-size: 4px; block-size: 4px;
@@ -476,6 +549,7 @@ kbd {
   background: var(--acc);
   flex: none;
 }
+.ticker__item:nth-child(even)::before { background: var(--brand-orange); }
 @keyframes ticker { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .ticker__track { animation: none; } }
 
@@ -698,10 +772,27 @@ kbd {
 }
 
 /* Secțiunile alternante lasă textura de tablier să se vadă prin ele. */
-.section--alt {
-  background: color-mix(in oklab, var(--bg-raised) 86%, transparent);
-  border-block: 1px solid var(--line);
-}
+/* --- Ritmul benzilor ------------------------------------------------------
+   Culorile se numără DE JOS ÎN SUS, nu de sus în jos: subsolul e portocaliu,
+   secțiunea lipită de el verde, următoarea albă, apoi iar verde.
+   `nth-last-of-type` face exact asta — ancorează ritmul la subsol, indiferent
+   câte secțiuni are pagina. O pagină legală, cu o singură secțiune, primește
+   verde lângă subsolul portocaliu; prima pagină, cu șapte, alternează în sus.
+   Numărat de sus, fiecare pagină ar fi ieșit altfel la bază.
+
+   Eroul e scos: are propriul tratament, cu aură și granulație. Fiind mereu
+   prima secțiune, excluderea lui nu schimbă paritatea celorlalte. */
+main > section:nth-last-of-type(odd)  { background: var(--band-verde); }
+main > section:nth-last-of-type(even) { background: var(--band-alb); }
+main > section + section { border-block-start: 1px solid var(--line); }
+/* Selectorul trebuie să fie la fel de specific ca regula de ritm de mai sus
+   (`main > section:nth-last-of-type()`), altfel eroul primește bandă albă.
+   Un simplu `.hero` pierde: 0-1-0 față de 0-1-2. */
+main > section.hero { background: none; border-block-start: 0; }
+
+/* Clasa rămâne în marcajul generat, dar nu mai stabilește fundalul: culoarea
+   vine acum din poziția secțiunii, ca să existe o singură sursă de adevăr. */
+.section--alt { background: none; }
 
 .card__badges {
   position: absolute;
@@ -1229,13 +1320,17 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 
 .ftr {
   border-block-start: 1px solid var(--line);
-  background: var(--bg-sunken);
+  background: var(--band-portocaliu);
   padding-block: var(--s-7) var(--s-6);
 }
+/* Coloanele de legături se aliniază pe mijloc față de blocul de marcă, care e
+   mult mai înalt din cauza siglei. Lipite de sus, lăsau subsolul dezechilibrat:
+   text în stânga jos, gol în dreapta jos. */
 .ftr__cols {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) repeat(auto-fit, minmax(9rem, 1fr));
   gap: var(--s-7) var(--s-5);
+  align-items: center;
 }
 .ftr h2 {
   font-family: var(--font-mono);
@@ -1416,8 +1511,7 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   outline-offset: 1px;
 }
 .camp[data-eroare] input, .camp[data-eroare] select { border-color: #b91c1c; }
-.camp__eroare { font-size: var(--t--2); color: #f87171; }
-:root[data-theme="light"] .camp__eroare { color: #b91c1c; }
+.camp__eroare { font-size: var(--t--2); color: #b91c1c; }
 
 .plata-optiuni { display: grid; gap: var(--s-3); }
 .plata-optiune {

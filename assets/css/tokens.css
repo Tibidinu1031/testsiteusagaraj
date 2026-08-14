@@ -10,51 +10,70 @@
   --ral-8019: #3d3635; /* Maro închis (gri-maro) */
   --ral-9016: #f1f0ea; /* Alb trafic */
 
-  /* --- Scara neutrelor. Derivată din antracit, nu din gri pur. --- */
-  --n-0:  #0b0d0e;
-  --n-1:  #121517;
-  --n-2:  #181c1f;
-  --n-3:  #1f2427;
-  --n-4:  #2a3033;
-  --n-5:  #3a4145;
-  --n-6:  #5b6367;
-  --n-7:  #8b9296;
-  --n-8:  #b7bcbf;
-  --n-9:  #dfe2e3;
-  --n-10: #f4f2ed;
+  /* Aici a stat o scară de unsprezece neutre închise, derivată din antracit.
+     Alimenta exclusiv tema întunecată; odată cu ea a rămas fără niciun
+     consumator, așa că a fost ștearsă în loc să fie păstrată „pentru mai
+     târziu”. Valorile de hârtie sunt scrise direct la rolurile semantice. */
 
-  /* --- Accent: verde industrial. Semnalizare, nu decor. ---
-     Valorile sunt alese ca textul mic (12 px: supratitluri, etichetele CUI și
-     Nr. Reg. Com.) să treacă pragul WCAG AA pe fundalul pe care chiar stă —
-     de aceea verdele de pe hârtie este mult mai închis decât cel de pe negru. */
+  /* --- Culorile mărcii, luate din logo ---------------------------------
+     Verdele și portocaliul sunt cele două culori ale siglei ABBA CONFORT.
+     Restul paletei se construiește în jurul lor.
+
+     Fiecare are DOUĂ variante, iar distincția nu e stilistică, ci de lizibilitate:
+     nuanța de marcă e cea din siglă și se folosește la suprafețe, contururi și
+     iconuri; nuanța `-txt` este închisă la culoare cât să treacă pragul WCAG AA
+     pentru text mic pe hârtie. Portocaliul mărcii, pus sub un text de 12 px,
+     ajunge pe la 2:1 — ilizibil. De aceea nu se folosește niciodată direct
+     pentru text.                                                             */
+  --brand-green:  #0d5c4e;
+  --brand-orange: #f39c2c;
+
   --green-hi:  #7ed9a6;
   --green:     #4fb783;
   --green-dim: #3a9c72;
-  --green-lo:  #1a6b47;
+  --green-lo:  #0d5c4e;   /* verdele siglei; contrast 8,3:1 pe hârtie */
+
+  --orange:     var(--brand-orange);
+  --orange-hi:  #ffb85a;
+  --orange-txt: #9a530a;  /* portocaliu pentru TEXT; contrast 4,8:1 pe hârtie */
+
+  /* --- Benzile paginii, numărate de jos în sus ---
+     Subsolul e portocaliu, secțiunea de deasupra verde, următoarea albă, și tot
+     așa. Sunt TENTE ale culorilor mărcii, nu culori pline: la saturație mare
+     fundalul ar concura cu produsul, care e chiar lucrul de privit.
+     Procentele mici sunt intenționate — verificate pe hârtie, nu ghicite.
+     Regula care le distribuie e în `components.css`, „Ritmul benzilor”. */
+  --band-alb:        #fdfcfa;
+  --band-verde:      color-mix(in oklab, var(--brand-green) 7%, #fdfcfa);
+  --band-portocaliu: color-mix(in oklab, var(--brand-orange) 16%, #fdfcfa);
 
   /* --- Secundar: portocaliu-cărămiziu pentru reduceri ---
      Închis suficient cât textul alb de 10 px de pe eticheta de reducere să
      treacă pragul WCAG AA (5,5:1). Nuanța deschisă cădea la 4,1:1. */
   --rust: #b8401d;
 
-  /* --- Roluri semantice (tema întunecată, implicită) --- */
-  --bg:          var(--n-0);
-  --bg-raised:   var(--n-1);
-  --bg-sunken:   #070809;
-  --surface:     var(--n-2);
-  --surface-hi:  var(--n-3);
-  --line:        #23292c;
-  --line-strong: var(--n-4);
-  --ink:         #eef1f2;
-  --ink-muted:   var(--n-8);
-  --ink-faint:   var(--n-7);
-  --acc:         var(--green);
-  --acc-ink:     #06180f;
-  --sale:        #ef7d55;
+  /* --- Roluri semantice ---
+     Site-ul are o singură temă: hârtie caldă, nu alb clinic — se potrivește cu
+     aluminiul ușilor și cu albul din siglă. */
+  --bg:          #f4f2ed;
+  --bg-raised:   #fbfaf7;
+  --bg-sunken:   #e8e5dd;
+  --surface:     #ffffff;
+  --surface-hi:  #fbfaf7;
+  --line:        #dcd8ce;
+  --line-strong: #c3beb1;
+  --ink:         #14171a;
+  --ink-muted:   #4d5458;
+  --ink-faint:   #5f6669;
+  --acc:         var(--brand-green);
+  --acc-ink:     #f4fbf6;
+  --acc-2:       var(--brand-orange);
+  --acc-2-ink:   #3b2405;
+  --sale:        #a83718;
 
-  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow-2: 0 4px 16px -4px rgb(0 0 0 / 0.5), 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow-3: 0 24px 60px -20px rgb(0 0 0 / 0.7), 0 4px 12px rgb(0 0 0 / 0.4);
+  --shadow-1: 0 1px 2px rgb(20 23 26 / 0.06);
+  --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);
+  --shadow-3: 0 24px 60px -20px rgb(20 23 26 / 0.22), 0 4px 12px rgb(20 23 26 / 0.08);
 
   /* Unelte de construcții, în contur, pentru fundalul paginii: dubiță de
      livrare, bormașină, boloboc și șurubelniță — meseria, pe scurt.
@@ -64,8 +83,18 @@
      în jur de 2 px; altfel liniile s-ar fi îngroșat odată cu desenul.
      Fiecare grup se rotește în jurul propriului centru — de aceea apare
      `translate(-12 -12)` la capătul listei de transformări, unde se aplică
-     primul. Griul neutru se citește discret și pe negru, și pe hârtie. */
-  --unelte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420' fill='none' stroke='%237c8590' stroke-width='0.4' stroke-linecap='round' stroke-linejoin='round' opacity='0.34'%3E%3Cg transform='translate(100 88) rotate(-8) scale(5) translate(-12 -12)'%3E%3Cpath d='M2 16.1V8.7c0-.7.5-1.2 1.2-1.2h10.2l3.5 3.3H21c.6 0 1 .5 1 1.1v4.2'/%3E%3Cpath d='M2 16.1h2.4M9.6 16.1h5.4M19.6 16.1H22'/%3E%3Ccircle cx='7' cy='16.1' r='2.3'/%3E%3Ccircle cx='17.3' cy='16.1' r='2.3'/%3E%3Cpath d='M13.7 8.6v2.2h2.9'/%3E%3C/g%3E%3Cg transform='translate(310 150) rotate(14) scale(5) translate(-12 -12)'%3E%3Cpath d='M3 6.4h8.8c.9 0 1.6.7 1.6 1.6v3.2c0 .9-.7 1.6-1.6 1.6H3c-.9 0-1.6-.7-1.6-1.6V8c0-.9.7-1.6 1.6-1.6z'/%3E%3Cpath d='M13.4 8.3h2.8v2.6h-2.8z'/%3E%3Cpath d='M16.2 9.6h4.6'/%3E%3Cpath d='M5.4 12.8l-.7 4.9c-.1.9.6 1.7 1.5 1.7h2.9c.9 0 1.6-.8 1.5-1.7l-.7-4.9'/%3E%3Cpath d='M5.3 19.4h5.4v2.2H5.3z'/%3E%3C/g%3E%3Cg transform='translate(120 300) rotate(-12) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.4 9.6h21.2v4.8H1.4z'/%3E%3Crect x='8.4' y='10.5' width='7.2' height='3' rx='1.5'/%3E%3Cpath d='M10.4 10.5v3M13.6 10.5v3'/%3E%3Ccircle cx='12' cy='12' r='.85'/%3E%3Cpath d='M4.4 10.7v2.6M19.6 10.7v2.6'/%3E%3C/g%3E%3Cg transform='translate(325 330) rotate(22) scale(5) translate(-12 -12)'%3E%3Cpath d='M9.1 4.6c0-1.7 1.3-2.8 2.9-2.8s2.9 1.1 2.9 2.8v3.8c0 1.2-.7 2-1.6 2.4v1.1h-2.6v-1.1c-.9-.4-1.6-1.2-1.6-2.4z'/%3E%3Cpath d='M10.5 4.4v3.6M12 4v4M13.5 4.4v3.6'/%3E%3Cpath d='M10.8 11.9h2.4v1.2h-2.4z'/%3E%3Cpath d='M12 13.1V19.2'/%3E%3Cpath d='M12 19.2V21.8' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
+     primul.
+
+     Uneltele alternează cele două culori ale siglei: dubița și bolobocul sunt
+     verzi, bormașina și șurubelnița portocalii. Culoarea se pune pe fiecare
+     grup, nu pe rădăcina SVG-ului, tocmai ca să poată diferi între ele.
+
+     Opacitatea este 0,45 și grosimea conturului 0,55. Prima încercare le-a pus
+     la 0,20 și 0,4, „ca să nu fure atenția” — rezultatul a fost că uneltele
+     ieșeau cenușii: culorile erau corecte în cod, dar atât de diluate pe hârtie
+     încât nu se distingea nici verdele, nici portocaliul. O textură care nu se
+     vede nu e discretă, e degeaba. */
+  --unelte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420' fill='none' stroke-width='0.55' stroke-linecap='round' stroke-linejoin='round' opacity='0.45'%3E%3Cg stroke='%230d5c4e' transform='translate(100 88) rotate(-8) scale(5) translate(-12 -12)'%3E%3Cpath d='M2 16.1V8.7c0-.7.5-1.2 1.2-1.2h10.2l3.5 3.3H21c.6 0 1 .5 1 1.1v4.2'/%3E%3Cpath d='M2 16.1h2.4M9.6 16.1h5.4M19.6 16.1H22'/%3E%3Ccircle cx='7' cy='16.1' r='2.3'/%3E%3Ccircle cx='17.3' cy='16.1' r='2.3'/%3E%3Cpath d='M13.7 8.6v2.2h2.9'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(310 150) rotate(14) scale(5) translate(-12 -12)'%3E%3Cpath d='M3 6.4h8.8c.9 0 1.6.7 1.6 1.6v3.2c0 .9-.7 1.6-1.6 1.6H3c-.9 0-1.6-.7-1.6-1.6V8c0-.9.7-1.6 1.6-1.6z'/%3E%3Cpath d='M13.4 8.3h2.8v2.6h-2.8z'/%3E%3Cpath d='M16.2 9.6h4.6'/%3E%3Cpath d='M5.4 12.8l-.7 4.9c-.1.9.6 1.7 1.5 1.7h2.9c.9 0 1.6-.8 1.5-1.7l-.7-4.9'/%3E%3Cpath d='M5.3 19.4h5.4v2.2H5.3z'/%3E%3C/g%3E%3Cg stroke='%230d5c4e' transform='translate(120 300) rotate(-12) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.4 9.6h21.2v4.8H1.4z'/%3E%3Crect x='8.4' y='10.5' width='7.2' height='3' rx='1.5'/%3E%3Cpath d='M10.4 10.5v3M13.6 10.5v3'/%3E%3Ccircle cx='12' cy='12' r='.85'/%3E%3Cpath d='M4.4 10.7v2.6M19.6 10.7v2.6'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(325 330) rotate(22) scale(5) translate(-12 -12)'%3E%3Cpath d='M9.1 4.6c0-1.7 1.3-2.8 2.9-2.8s2.9 1.1 2.9 2.8v3.8c0 1.2-.7 2-1.6 2.4v1.1h-2.6v-1.1c-.9-.4-1.6-1.2-1.6-2.4z'/%3E%3Cpath d='M10.5 4.4v3.6M12 4v4M13.5 4.4v3.6'/%3E%3Cpath d='M10.8 11.9h2.4v1.2h-2.4z'/%3E%3Cpath d='M12 13.1V19.2'/%3E%3Cpath d='M12 19.2V21.8' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
 
   /* Textura peliculei — sparge planurile plate fără să ceară o imagine. */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
@@ -117,56 +146,8 @@
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --d-1: 120ms;  --d-2: 220ms;  --d-3: 380ms;  --d-4: 620ms;
 
-  color-scheme: dark;
-}
-
-/* --------------------------------------------------------------------------
-   Tema luminoasă. Hârtie caldă, nu alb clinic — se potrivește cu aluminiul.
-   -------------------------------------------------------------------------- */
-:root[data-theme="light"] {
-  --bg:          #f4f2ed;
-  --bg-raised:   #fbfaf7;
-  --bg-sunken:   #e8e5dd;
-  --surface:     #ffffff;
-  --surface-hi:  #fbfaf7;
-  --line:        #dcd8ce;
-  --line-strong: #c3beb1;
-  --ink:         #14171a;
-  --ink-muted:   #4d5458;
-  /* Neutrele stinse și accentul sunt vizibil mai închise decât corespondentele
-     lor de pe fundal întunecat: pe hârtie caldă, aceleași valori cad sub
-     pragul WCAG AA la corpurile mici de literă (12 px) unde chiar sunt
-     folosite — supratitluri, capete de tabel, etichetele codurilor fiscale. */
-  --ink-faint:   #5f6669;
-  --acc:         var(--green-lo);
-  --acc-ink:     #f4fbf6;
-  --sale:        #a83718;
-
-  --shadow-1: 0 1px 2px rgb(20 23 26 / 0.06);
-  --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);
-  --shadow-3: 0 24px 60px -20px rgb(20 23 26 / 0.22), 0 4px 12px rgb(20 23 26 / 0.08);
-
+  /* O singură temă. Declarația împiedică browserul să întunece singur
+     controalele de formular pe un sistem setat pe întuneric — altfel câmpurile
+     din finalizarea comenzii ar apărea negre pe o pagină de hârtie. */
   color-scheme: light;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    --bg:          #f4f2ed;
-    --bg-raised:   #fbfaf7;
-    --bg-sunken:   #e8e5dd;
-    --surface:     #ffffff;
-    --surface-hi:  #fbfaf7;
-    --line:        #dcd8ce;
-    --line-strong: #c3beb1;
-    --ink:         #14171a;
-    --ink-muted:   #4d5458;
-    --ink-faint:   #5f6669;
-    --acc:         var(--green-lo);
-    --acc-ink:     #f4fbf6;
-    --sale:        #a83718;
-    --shadow-1: 0 1px 2px rgb(20 23 26 / 0.06);
-    --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);
-    --shadow-3: 0 24px 60px -20px rgb(20 23 26 / 0.22), 0 4px 12px rgb(20 23 26 / 0.08);
-    color-scheme: light;
-  }
 }
