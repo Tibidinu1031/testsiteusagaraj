@@ -44,8 +44,8 @@
      Procentele mici sunt intenționate — verificate pe hârtie, nu ghicite.
      Regula care le distribuie e în `components.css`, „Ritmul benzilor”. */
   --band-alb:        #fdfcfa;
-  --band-verde:      color-mix(in oklab, var(--brand-green) 7%, #fdfcfa);
-  --band-portocaliu: color-mix(in oklab, var(--brand-orange) 16%, #fdfcfa);
+  --band-verde:      color-mix(in oklab, var(--brand-green) 22%, #fdfcfa);
+  --band-portocaliu: color-mix(in oklab, var(--brand-orange) 34%, #fdfcfa);
 
   /* --- Secundar: portocaliu-cărămiziu pentru reduceri ---
      Închis suficient cât textul alb de 10 px de pe eticheta de reducere să
@@ -64,7 +64,11 @@
   --line-strong: #c3beb1;
   --ink:         #14171a;
   --ink-muted:   #4d5458;
-  --ink-faint:   #5f6669;
+  /* Închis de la #5f6669 odată cu adâncirea benzilor: pe verdele #c9d7d1
+     supratitlurile cădeau la 3,9:1, iar titlurile din subsol la 4,5 fix, adică
+     pe muchie. O bandă mai saturată cere cerneală mai închisă — altfel textul
+     mic e primul care se pierde. */
+  --ink-faint:   #545a5d;
   --acc:         var(--brand-green);
   --acc-ink:     #f4fbf6;
   --acc-2:       var(--brand-orange);

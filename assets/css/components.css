@@ -278,9 +278,14 @@ kbd {
    4. Erou
    ========================================================================== */
 
+/* Eroul trebuie să încapă ÎNTREG sub antet, fără derulare. De aceea spațierea
+   lui se măsoară în `vh`, nu în `vw`: pe un laptop de 1366 × 768 lățimea e
+   generoasă, înălțimea nu — iar înălțimea decide dacă se vede tot.
+   `svh` (small viewport height) e cel care ține cont de bara de adrese a
+   telefonului atunci când e desfășurată. */
 .hero {
   position: relative;
-  padding-block: clamp(1.75rem, 1.1rem + 3.2vw, 3.25rem);
+  padding-block: clamp(0.75rem, 2.2vh, 2rem);
   overflow: hidden;
   isolation: isolate;
 }
@@ -334,7 +339,7 @@ kbd {
   font-variation-settings: "wdth" 96;
 }
 
-.hero__lede { margin-block-start: var(--s-5); }
+.hero__lede { margin-block-start: var(--s-4); }
 
 .hero__cta {
   display: flex;
@@ -344,11 +349,14 @@ kbd {
 }
 
 /* Barometrul de cifre — mono, aliniat pe coloane, cu linii de separare. */
+/* Patru coloane fixe, nu `auto-fit`. Cu `minmax(9rem, …)` cele patru cifre nu
+   încăpeau pe un rând în coloana eroului și treceau pe două — 203 px în loc de
+   circa 100, adică exact înălțimea care împingea eroul sub pliu. */
 .stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
-  margin-block-start: var(--s-6);
+  margin-block-start: var(--s-4);
   background: var(--line);
   border: 1px solid var(--line);
   border-radius: var(--r-3);
@@ -399,6 +407,23 @@ kbd {
   letter-spacing: 0.02em;
 }
 
+/* Panoul din dreapta se micșorează singur pe ecrane joase, fiindcă lățimea lui
+   e legată de `svh`. Coloana din stânga nu are cum: titlul, textul și cifrele
+   au înălțimi date de tipografie. Pe un laptop de 1366 × 768 rămân circa 640 px
+   sub antet, iar coloana cerea 634 — deci ea devenea cea care împinge eroul sub
+   pliu.
+   Aici se leagă și tipografia de înălțime. Pragul de 860 px prinde exact
+   laptopurile obișnuite; peste el nu se schimbă nimic. */
+@media (max-height: 860px) {
+  .hero__title { font-size: clamp(2rem, 6.4vh, 3.5rem); }
+  .hero__title { margin-block-start: var(--s-3); }
+  .hero__lede  { font-size: var(--t-0); margin-block-start: var(--s-3); }
+  .hero__cta   { margin-block-start: var(--s-4); }
+  .stats       { margin-block-start: var(--s-3); }
+  .stat        { padding: var(--s-2) var(--s-3); }
+  .stat__v     { font-size: var(--t-2); }
+}
+
 /* --- Scena eroului: ușa care se ridică ---
    Proporția cutiei o urmează pe cea a desenului cotat (3660 × 2950 unități de
    desen ≈ 1,24). Orice altă valoare ar lăsa desenul încadrat cu benzi goale —
@@ -412,6 +437,10 @@ kbd {
 
 /* --- Panoul eroului: placa de desen plus afișajul de stare --------------- */
 
+/* Lățimea panoului urmează ÎNĂLȚIMEA disponibilă, nu invers. Planșa are raport
+   fix (3660/3080 ≈ 1,188), deci dacă i-am da toată lățimea coloanei, ar deveni
+   automat prea înaltă și ar împinge eroul sub pliu. Legând lățimea de `svh`,
+   desenul se micșorează singur pe ecrane joase și rămâne mare pe cele înalte. */
 .hero__panel {
   margin: 0;
   display: grid;
@@ -421,7 +450,7 @@ kbd {
   background: var(--surface);
   box-shadow: var(--shadow-2);
   overflow: hidden;
-  max-inline-size: 40rem;
+  max-inline-size: min(40rem, calc((100svh - 19rem) * 1.188));
   margin-inline: auto;
   inline-size: 100%;
 }
@@ -773,26 +802,34 @@ kbd {
 
 /* Secțiunile alternante lasă textura de tablier să se vadă prin ele. */
 /* --- Ritmul benzilor ------------------------------------------------------
-   Culorile se numără DE JOS ÎN SUS, nu de sus în jos: subsolul e portocaliu,
-   secțiunea lipită de el verde, următoarea albă, apoi iar verde.
-   `nth-last-of-type` face exact asta — ancorează ritmul la subsol, indiferent
-   câte secțiuni are pagina. O pagină legală, cu o singură secțiune, primește
-   verde lângă subsolul portocaliu; prima pagină, cu șapte, alternează în sus.
-   Numărat de sus, fiecare pagină ar fi ieșit altfel la bază.
+   Trei trepte, numărate DE JOS ÎN SUS, și atât:
+
+       subsol      portocaliu
+       ultima      verde
+       restul      alb
+
+   `nth-last-of-type(1)` ancorează verdele la subsol indiferent câte secțiuni
+   are pagina — una singură la paginile legale, șapte la prima pagină. Numărat
+   de sus, fiecare pagină ar fi ieșit altfel la bază.
+
+   Prima variantă alterna verde/alb la nesfârșit în sus. Nu asta a fost cerut:
+   secvența se oprește după alb, ca privirea să urce dintr-o bandă caldă într-una
+   liniștită, nu să treacă prin dungi.
 
    Eroul e scos: are propriul tratament, cu aură și granulație. Fiind mereu
    prima secțiune, excluderea lui nu schimbă paritatea celorlalte. */
-main > section:nth-last-of-type(odd)  { background: var(--band-verde); }
-main > section:nth-last-of-type(even) { background: var(--band-alb); }
+main > section                      { background: var(--band-alb); }
+main > section:nth-last-of-type(1)  { background: var(--band-verde); }
 main > section + section { border-block-start: 1px solid var(--line); }
 /* Selectorul trebuie să fie la fel de specific ca regula de ritm de mai sus
    (`main > section:nth-last-of-type()`), altfel eroul primește bandă albă.
    Un simplu `.hero` pierde: 0-1-0 față de 0-1-2. */
 main > section.hero { background: none; border-block-start: 0; }
 
-/* Clasa rămâne în marcajul generat, dar nu mai stabilește fundalul: culoarea
-   vine acum din poziția secțiunii, ca să existe o singură sursă de adevăr. */
-.section--alt { background: none; }
+/* `.section--alt` rămâne în marcajul generat, dar NU mai are nicio regulă de
+   fundal — culoarea vine exclusiv din poziția secțiunii, ca să existe o singură
+   sursă de adevăr. Atenție dacă se reintroduce ceva aici: o clasă (0-1-0) bate
+   `main > section` (0-0-2), deci ar face secțiunile transparente. */
 
 .card__badges {
   position: absolute;
