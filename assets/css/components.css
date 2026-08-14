@@ -128,16 +128,30 @@
 
 /* Sigla întreagă, în subsol: acolo are loc, deci se citește și numele firmei
    și sloganul. */
-/* Sigla e pătrată (1600 × 1600), deci `50%` dă un cerc exact, fără decupare.
-   `aspect-ratio` o ține pătrată chiar dacă fișierul s-ar schimba cândva. */
+/* Sigla rotundă, dar FĂRĂ să taie din ea.
+   Prima variantă folosea `object-fit: cover`: imaginea umplea cercul, iar
+   colțurile pătratului erau retezate. Cum textul „PROBLEMA TA, SOLUȚIA
+   NOASTRĂ” ajunge până lângă margine, tăietura mânca prima și ultima literă.
+
+   Un pătrat încape întreg într-un cerc doar dacă e înscris în el, adică are
+   latura D/√2 ≈ 0,707·D. Rămân (1 − 0,707)/2 ≈ 14,6% spațiu de fiecare parte —
+   de aici umplutura de 15%, cu `contain` în loc de `cover`. Cercul rămâne
+   cerc, sigla rămâne întreagă. */
 .ftr__sigla {
+  /* Diametrul stă într-o variabilă fiindcă umplutura trebuie calculată din EL,
+     nu în procente: umplutura procentuală se raportează la lățimea părintelui,
+     nu a elementului. Cu `15%` ieșeau 53 px în loc de 28, iar sigla se
+     micșorase la 84 px într-un cerc de 192 — corectă, dar pierdută în alb. */
+  --d: clamp(9rem, 7rem + 6vw, 12rem);
   display: block;
-  inline-size: clamp(9rem, 7rem + 6vw, 12rem);
+  inline-size: var(--d);
   aspect-ratio: 1;
   block-size: auto;
   margin-block-start: var(--s-5);
+  padding: calc(var(--d) * 0.147);
   border-radius: 50%;
-  object-fit: cover;
+  object-fit: contain;
+  background: #fff;
   border: 1px solid color-mix(in oklab, var(--brand-orange) 34%, transparent);
 }
 .brand__name {
@@ -802,24 +816,30 @@ kbd {
 
 /* Secțiunile alternante lasă textura de tablier să se vadă prin ele. */
 /* --- Ritmul benzilor ------------------------------------------------------
-   Trei trepte, numărate DE JOS ÎN SUS, și atât:
+   Ciclu de PATRU, numărat DE JOS ÎN SUS, exact cum a fost cerut:
 
-       subsol      portocaliu
-       ultima      verde
-       restul      alb
+       subsol   portocaliu
+       07       verde          ← nth-last-of-type(4n+1)
+       06       alb            ← 4n+2
+       05       unelte         ← 4n+3, fundal transparent: se vede pagina
+       04       portocaliu     ← 4n+4
+       03       verde
+       02       alb
+       01       unelte
 
-   `nth-last-of-type(1)` ancorează verdele la subsol indiferent câte secțiuni
-   are pagina — una singură la paginile legale, șapte la prima pagină. Numărat
-   de sus, fiecare pagină ar fi ieșit altfel la bază.
+   `nth-last-of-type` ancorează ciclul la subsol, nu la antet. Numărat de sus,
+   fiecare pagină ar fi ieșit altfel la bază: prima pagină are șapte secțiuni,
+   o pagină legală are una singură.
 
-   Prima variantă alterna verde/alb la nesfârșit în sus. Nu asta a fost cerut:
-   secvența se oprește după alb, ca privirea să urce dintr-o bandă caldă într-una
-   liniștită, nu să treacă prin dungi.
+   Treapta „unelte” nu e o culoare, ci lipsa uneia: fundalul rămâne transparent
+   și se vede textura paginii — tablierul de rulou și uneltele desenate.
 
    Eroul e scos: are propriul tratament, cu aură și granulație. Fiind mereu
    prima secțiune, excluderea lui nu schimbă paritatea celorlalte. */
-main > section                      { background: var(--band-alb); }
-main > section:nth-last-of-type(1)  { background: var(--band-verde); }
+main > section:nth-last-of-type(4n + 1) { background: var(--band-verde); }
+main > section:nth-last-of-type(4n + 2) { background: var(--band-alb); }
+main > section:nth-last-of-type(4n + 3) { background: none; }
+main > section:nth-last-of-type(4n + 4) { background: var(--band-portocaliu); }
 main > section + section { border-block-start: 1px solid var(--line); }
 /* Selectorul trebuie să fie la fel de specific ca regula de ritm de mai sus
    (`main > section:nth-last-of-type()`), altfel eroul primește bandă albă.

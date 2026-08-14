@@ -43,9 +43,17 @@
      fundalul ar concura cu produsul, care e chiar lucrul de privit.
      Procentele mici sunt intenționate — verificate pe hârtie, nu ghicite.
      Regula care le distribuie e în `components.css`, „Ritmul benzilor”. */
+  /* Valori scrise direct, NU amestecuri cu alb.
+     Amestecul a fost greșeala: verdele mărcii (#0d5c4e) are nuanța 170°, adică
+     e un verde-albastru. Diluat spre alb, partea albastră rămâne și rezultatul
+     se citește gri-albastru, nu verde. La fel, portocaliul diluat prea mult
+     alunecă spre roz, fiindcă la saturație joasă ochiul nu mai distinge 32° de
+     roșu-pal.
+     Nuanțele de mai jos sunt verificate: verdele la 95°, adică verde-frunză
+     fără urmă de albastru; portocaliul la 33°, cald și clar. */
   --band-alb:        #fdfcfa;
-  --band-verde:      color-mix(in oklab, var(--brand-green) 22%, #fdfcfa);
-  --band-portocaliu: color-mix(in oklab, var(--brand-orange) 34%, #fdfcfa);
+  --band-verde:      #d3e5c6;
+  --band-portocaliu: #fbd9b0;
 
   /* --- Secundar: portocaliu-cărămiziu pentru reduceri ---
      Închis suficient cât textul alb de 10 px de pe eticheta de reducere să
