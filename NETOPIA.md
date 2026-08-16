@@ -1,5 +1,27 @@
 # Plata cu cardul prin NETOPIA Payments
 
+> ## ⏸ STARE: ADORMIT — 16 august 2026
+>
+> Magazinul funcționează pe **ramburs la livrare**, singura metodă activă.
+> Plata cu cardul este oprită la cerere, iar arhitectura este **păstrată
+> integral, comentată** — nu ștearsă:
+>
+> | ce | unde | stare |
+> |---|---|---|
+> | comutatorul | `build.js` → `PLATI.card` | `false` |
+> | metodele card și transfer | `build.js` → `PLATI.metode` | comentate |
+> | trimiterea către NETOPIA | `assets/js/checkout.js` | comentată, cu marcaj |
+> | mu-plugin WordPress | `wordpress/netopia-direct-redirect.php` | neatins |
+> | ramurile din generator | `build-pagini.js` | intacte, 11 locuri |
+>
+> **Reactivare:** se decomentează cele două blocuri marcate „ADORMIT”, se pune
+> `PLATI.card` pe `true` și se rulează `node build.js`. Pagina „Metode de
+> plată”, întrebările frecvente și formularul de finalizare se rescriu singure.
+> Înainte de asta se parcurg pașii de mai jos — mai ales testul din sandbox.
+>
+> Starea reală a magazinului, verificată azi:
+> `curl -s https://usa-garaj.ro/wp-json/wc/store/v1/cart` → `"payment_methods":["cod"]`
+
 Procedura de activare pentru magazinul propriu: vitrina statică din acest repo
 plus WooCommerce ca motor invizibil.
 

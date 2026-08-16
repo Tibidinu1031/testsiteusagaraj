@@ -92,7 +92,7 @@ function cardIdentitate(base) {
     <div class="idrow idrow--key"><dt>Nr. Reg. Com.</dt><dd>${FIRMA.j}</dd></div>
     <div class="idrow"><dt>Sediu social</dt><dd>${FIRMA.adresa}</dd></div>
     <div class="idrow"><dt>Telefon</dt><dd><a href="tel:${FIRMA.telHref}">${FIRMA.tel}</a></dd></div>
-    <div class="idrow"><dt>E-mail</dt><dd><a href="mailto:${FIRMA.email}">${FIRMA.email}</a></dd></div>
+${FIRMA.emailuri.map((e) => `    <div class="idrow"><dt>${e.rol}</dt><dd><a href="mailto:${e.adresa}">${e.adresa}</a></dd></div>`).join('\n')}
     <div class="idrow"><dt>Magazin</dt><dd><a href="${base}magazin.html">Catalogul nostru</a></dd></div>
   </dl>
 </div>`;
@@ -110,6 +110,33 @@ const firimituri = (base, cai) => `<nav class="crumbs" aria-label="Firimituri">
 
 const s = UG.sumar();
 const eroul = PRODUSE.filter((p) => p.id === 396)[0];
+
+/**
+ * Banda din josul eroului.
+ *
+ * Eticheta „De ce noi?” stă pe loc, în stânga; doar mențiunile curg. Sunt două
+ * roluri diferite — una întreabă, celelalte răspund — iar dacă întrebarea pleacă
+ * din cadru odată cu răspunsurile, banda devine o înșiruire fără cap.
+ *
+ * Cele patru mențiuni se repetă de trei ori. Fiind scurte, la două repetări
+ * rămâneau goluri pe ecranele late și se vedea bucla; animația mută șina cu
+ * exact o treime, deci reluarea cade peste un set identic.
+ *
+ * Șina e ascunsă de la citire (`aria-hidden`) fiindcă textul triplat s-ar auzi
+ * de trei ori la un cititor de ecran. Lista de dedesubt, vizibilă doar pentru
+ * ele, spune cele patru lucruri o singură dată.
+ */
+const MOTIVE = ['Preț competitiv', 'Calitate garantată', 'Transport inclus', 'Montaj asigurat'];
+
+const TICKER = `<div class="ticker">
+    <p class="ticker__eticheta">De ce noi?</p>
+    <div class="ticker__fereastra" aria-hidden="true">
+      <div class="ticker__track">
+        ${Array(3).fill(MOTIVE.map((t) => `<span class="ticker__item">${t}</span>`).join('')).join('')}
+      </div>
+    </div>
+    <ul class="sr-only">${MOTIVE.map((t) => `<li>${t}</li>`).join('')}</ul>
+  </div>`;
 
 const HERO = `<section class="hero">
   <div class="wrap wrap--wide hero__grid">
@@ -149,14 +176,8 @@ const HERO = `<section class="hero">
       </figcaption>
     </figure>
   </div>
+  ${TICKER}
 </section>`;
-
-const TICKER = `<div class="ticker" aria-hidden="true">
-  <div class="ticker__track">
-    ${Array(2).fill(['Transport gratuit','Montaj asigurat','Motor tubular cu centrală de comandă','2 telecomenzi incluse','Acționare manuală de siguranță','Deschidere în 10 secunde','Service și mentenanță','Proiecte la comandă']
-      .map((t) => `<span class="ticker__item">${t}</span>`).join('')).join('')}
-  </div>
-</div>`;
 
 const COMUTATOR = `<section class="section" id="comutator">
   <div class="wrap">
@@ -205,11 +226,37 @@ ${SERVICII.map(([t, d], i) => `  <div class="svc">
   </div>`).join('\n')}
 </div>`;
 
+/**
+ * Sloturile pentru fotografiile din teren.
+ *
+ * Imaginile au fost scoase — urmează să vină de la client. Sloturile RĂMÂN, cu
+ * proporția și așezarea finale, ca înlocuirea să nu miște nimic în pagină.
+ *
+ * Fiecare slot poartă în `data-slot` numele fișierului așteptat. Ca să se umple,
+ * se pun pozele în `assets/img/lucrari/` cu exact acele nume și se schimbă
+ * `imagini` de mai jos pe `true`. Fără fișiere, comutatorul trebuie să rămână pe
+ * `false`: patru imagini rupte arată mai rău decât patru locuri libere.
+ */
+const LUCRARI = {
+  imagini: false,
+  cale: 'assets/img/lucrari/',
+  sloturi: [
+    { fisier: 'lucrare-01.jpg', titlu: 'Lamele maro 8014 / 8019', alt: 'Ușă de garaj tip rulou cu lamele maro, montată la o casă de locuit.' },
+    { fisier: 'lucrare-02.jpg', titlu: 'Gri antracit, RAL 7016',  alt: 'Ușă de garaj tip rulou în gri antracit, cu caseta montată deasupra golului.' },
+    { fisier: 'lucrare-03.jpg', titlu: 'Detaliu ghidaj lateral',  alt: 'Detaliu cu ghidajul lateral din aluminiu și capătul lamelelor.' },
+    { fisier: 'lucrare-04.jpg', titlu: 'Detaliu tablier',         alt: 'Detaliu cu tablierul din lamele de aluminiu și lamela finală.' }
+  ]
+};
+
 const GALERIE = `<div class="gallery reveal">
-  <figure><img src="assets/img/usa-maro-8014-8019.jpeg" width="255" height="255" loading="lazy" decoding="async" alt="Ușă de garaj tip rulou, lamele maro, montată la o casă de locuit."><figcaption>Lamele maro 8014 / 8019</figcaption></figure>
-  <figure><img src="assets/img/usa-gri-antracit.jpg" width="510" height="495" loading="lazy" decoding="async" alt="Ușă de garaj tip rulou în gri antracit, cu caseta montată deasupra golului."><figcaption>Gri antracit, RAL 7016</figcaption></figure>
-  <figure><img src="assets/img/usa-detaliu-01.jpeg" width="275" height="183" loading="lazy" decoding="async" alt="Detaliu cu ghidajul lateral din aluminiu și capătul lamelelor."><figcaption>Detaliu ghidaj lateral</figcaption></figure>
-  <figure><img src="assets/img/usa-detaliu-02.jpeg" width="300" height="300" loading="lazy" decoding="async" alt="Detaliu cu tablierul din lamele de aluminiu și lamela finală."><figcaption>Detaliu tablier</figcaption></figure>
+${LUCRARI.sloturi.map((s) => `  <figure${LUCRARI.imagini ? '' : ' class="gallery__gol"'} data-slot="${s.fisier}">
+    ${LUCRARI.imagini
+      ? `<img src="${LUCRARI.cale}${s.fisier}" width="800" height="600" loading="lazy" decoding="async" alt="${esc(s.alt)}">`
+      : `<span class="gallery__semn" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.4"/><path d="m4 17 4.5-4.5a2 2 0 0 1 2.8 0L15 16"/><path d="m13.5 14.5 2-2a2 2 0 0 1 2.8 0L20 14"/></svg>
+    </span>`}
+    <figcaption>${s.titlu}</figcaption>
+  </figure>`).join('\n')}
 </div>`;
 
 const contactHTML = (base) => `<div class="contact-grid">
@@ -219,10 +266,10 @@ const contactHTML = (base) => `<div class="contact-grid">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 0 0 5.5 5.5l1.5-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.5 5.2 2 2 0 0 1 6.5 3Z"/></svg>
         <div><small>Telefon</small><b>${FIRMA.tel}</b></div>
       </a>
-      <a class="contact-line" href="mailto:${FIRMA.email}">
+${FIRMA.emailuri.map((e) => `      <a class="contact-line" href="mailto:${e.adresa}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
-        <div><small>Poștă electronică</small><b>${FIRMA.email}</b></div>
-      </a>
+        <div><small>${e.rol}</small><b>${e.adresa}</b></div>
+      </a>`).join('\n')}
       <a class="contact-line" href="magazin.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16l-1.2 12.2a2 2 0 0 1-2 1.8H7.2a2 2 0 0 1-2-1.8Z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg>
         <div><small>Comandă online</small><b>Vezi catalogul și comandă</b></div>
@@ -248,7 +295,7 @@ S('index.html', pagina({
   descriere: `Uși de garaj tip rulou ABBA, cu lamele de 55 mm și 77 mm, acționare automată cu telecomandă. ${s.total} de configurații, de la ${lei(s.pretMin)}, transport gratuit și montaj asigurat. ${FIRMA.nume}, CUI ${FIRMA.cui}, ${FIRMA.j}.`,
   ld: faqLd(),
   corp: `${HERO}
-${TICKER}
+
 ${COMUTATOR}
 
 <section class="section section--alt" id="catalog">
@@ -668,7 +715,7 @@ ${cardActiv ? `      <h2>Plata cu cardul</h2>
       <h2>Facturare</h2>
       <p>Pentru fiecare comandă emitem factură fiscală, transmisă pe e-mail.
       Persoanele juridice pot solicita factură proformă înainte de plată, la
-      <a href="mailto:${FIRMA.email}">${FIRMA.email}</a>.</p>
+      <a href="mailto:${FIRMA.emailComenzi}">${FIRMA.emailComenzi}</a>.</p>
 
       <h2>Retur și restituirea banilor</h2>
       <p>Aveți dreptul de a vă retrage din contract în termen de 14 zile de la

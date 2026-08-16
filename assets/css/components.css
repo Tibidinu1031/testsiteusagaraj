@@ -137,18 +137,38 @@
    latura D/√2 ≈ 0,707·D. Rămân (1 − 0,707)/2 ≈ 14,6% spațiu de fiecare parte —
    de aici umplutura de 15%, cu `contain` în loc de `cover`. Cercul rămâne
    cerc, sigla rămâne întreagă. */
+/**
+ * Sigla din subsol: rotundă, cât se poate de mare, fără să atingă cercul.
+ *
+ * Umplutura NU se mai ia din formula pătratului înscris (0,147 × d). Formula
+ * aceea presupune că desenul umple pătratul uniform — al nostru nu îl umple:
+ * sloganul „PROBLEMA TA, SOLUȚIA NOASTRĂ!” e lat și stă jos, deci colțurile de
+ * jos ale conținutului ies în afara cercului înainte ca pătratul să-l atingă.
+ *
+ * Măsurat pe fișierul real, prin scanarea pixelilor ne-albi: punctul cel mai
+ * depărtat de centru se află la 1,073 × semi-lățimea imaginii, în stânga-jos —
+ * exact litera „P” din „PROBLEMA”, cea reclamată ca ruptă. Simetric, semnul de
+ * exclamare din dreapta.
+ *
+ * De aici condiția: (lățime_imagine / 2) × 1,073 ≤ d / 2, adică
+ * lățime_imagine ≤ 0,932 × d. Se folosește 0,88 × d, cu marjă pentru chenar și
+ * pentru netezirea marginilor — deci umplutură de 0,06 × d de fiecare parte.
+ *
+ * Efectul: sigla trece de la 71 % la 88 % din diametru, adică e cu circa un
+ * sfert mai mare, iar sloganul redevine lizibil. Dacă se schimbă fișierul
+ * siglei, se remăsoară raza conținutului și se recalculează 0,06.
+ */
 .ftr__sigla {
   /* Diametrul stă într-o variabilă fiindcă umplutura trebuie calculată din EL,
      nu în procente: umplutura procentuală se raportează la lățimea părintelui,
-     nu a elementului. Cu `15%` ieșeau 53 px în loc de 28, iar sigla se
-     micșorase la 84 px într-un cerc de 192 — corectă, dar pierdută în alb. */
-  --d: clamp(9rem, 7rem + 6vw, 12rem);
+     nu a elementului. */
+  --d: clamp(10rem, 7.5rem + 7vw, 13.5rem);
   display: block;
   inline-size: var(--d);
   aspect-ratio: 1;
   block-size: auto;
   margin-block-start: var(--s-5);
-  padding: calc(var(--d) * 0.147);
+  padding: calc(var(--d) * 0.06);
   border-radius: 50%;
   object-fit: contain;
   background: #fff;
@@ -299,9 +319,34 @@ kbd {
    telefonului atunci când e desfășurată. */
 .hero {
   position: relative;
-  padding-block: clamp(0.75rem, 2.2vh, 2rem);
+  padding-block: clamp(0.75rem, 2.2vh, 2rem) 0;
   overflow: hidden;
   isolation: isolate;
+}
+
+/**
+ * Eroul, împreună cu banda din josul lui, încape într-un singur ecran.
+ *
+ * Scăderea acoperă ce stă deasupra: bara de identificare (35 px) și antetul
+ * (69 px), adică 6,5rem la corpul de literă implicit. Măsurat înainte, banda se
+ * termina la 740 px pe un ecran de 720 — lipseau exact 20.
+ *
+ * `100svh`, nu `100vh`: pe telefon `vh` se raportează la fereastra cu barele
+ * browserului ascunse, deci la încărcare banda ar cădea sub pliu tocmai pe
+ * ecranul unde contează cel mai mult.
+ *
+ * Doar peste 940 px, unde eroul e pe două coloane. Sub pragul ăsta conținutul
+ * se așază pe verticală și oricum nu are cum să încapă; forțat, ar tăia titlul.
+ */
+@media (min-width: 941px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-block-size: calc(100svh - 6.5rem);
+  }
+  /* Banda e împinsă la bază, indiferent cât de scund e conținutul de deasupra. */
+  .hero .ticker { margin-block-start: auto; }
 }
 
 /* Lumina rece care cade de sus, ca într-un garaj cu ușa ridicată. */
@@ -454,7 +499,11 @@ kbd {
 /* Lățimea panoului urmează ÎNĂLȚIMEA disponibilă, nu invers. Planșa are raport
    fix (3660/3080 ≈ 1,188), deci dacă i-am da toată lățimea coloanei, ar deveni
    automat prea înaltă și ar împinge eroul sub pliu. Legând lățimea de `svh`,
-   desenul se micșorează singur pe ecrane joase și rămâne mare pe cele înalte. */
+   desenul se micșorează singur pe ecrane joase și rămâne mare pe cele înalte.
+
+   Rezerva a crescut de la 19rem la 21rem odată cu mutarea benzii „De ce noi?”
+   în erou: banda ocupă circa 55 px, iar fără rezerva în plus panoul rămânea cu
+   3 px prea înalt și împingea banda exact sub marginea ecranului. */
 .hero__panel {
   margin: 0;
   display: grid;
@@ -464,7 +513,7 @@ kbd {
   background: var(--surface);
   box-shadow: var(--shadow-2);
   overflow: hidden;
-  max-inline-size: min(40rem, calc((100svh - 19rem) * 1.188));
+  max-inline-size: min(40rem, calc((100svh - 21rem) * 1.188));
   margin-inline: auto;
   inline-size: 100%;
 }
@@ -558,43 +607,98 @@ kbd {
    5. Banda de rulare — dovezi scurte
    ========================================================================== */
 
+/* Banda stă în josul eroului, pe toată lățimea: e ultimul lucru din primul
+   ecran, deci marchează hotarul dintre promisiune și catalog.
+   Nicio marjă negativă — banda e copil direct al secțiunii, nu al lui `wrap`,
+   deci e deja lată cât pagina. Cu marjă negativă ieșea 19 px în afara
+   secțiunii, unde o tăia `overflow: hidden`. */
 .ticker {
-  border-block: 1px solid var(--line);
-  background: var(--bg-raised);
-  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  margin-block-start: clamp(1rem, 2.5vh, 2rem);
+  border-block-start: 1px solid var(--line);
+  background: var(--brand-green);
+  color: #fff;
+}
+
+/* Eticheta NU se mișcă. Stă pe loc, deasupra șinei, cu fundal propriu ca
+   mențiunile să dispară sub ea, nu peste ea. */
+.ticker__eticheta {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  padding-inline: var(--gutter) var(--s-5);
   padding-block: var(--s-4);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--brand-green);
+  white-space: nowrap;
+  z-index: 1;
+}
+/* Linia portocalie de sub etichetă, ca în siglă: verdele e masa, portocaliul
+   e semnul. */
+.ticker__eticheta::after {
+  content: "";
+  inline-size: 1.5rem;
+  block-size: 2px;
+  background: var(--brand-orange);
+  flex: none;
+}
+
+.ticker__fereastra {
+  flex: 1;
+  min-inline-size: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, #000 88%, transparent);
 }
 .ticker__track {
   display: flex;
   inline-size: max-content;
   gap: var(--s-7);
-  animation: ticker 42s linear infinite;
+  animation: ticker 26s linear infinite;
 }
 .ticker:hover .ticker__track { animation-play-state: paused; }
+
 .ticker__item {
   display: inline-flex;
   align-items: center;
   gap: var(--s-3);
-  font-family: var(--font-mono);
   font-size: var(--t--1);
-  color: var(--ink-muted);
+  font-weight: 600;
+  color: #fff;
   white-space: nowrap;
 }
-/* Punctele dintre mențiuni alternează cele două culori ale mărcii. `nth-child`
-   pe elementul din listă, nu pe pseudo-element: banda e dublată în marcaj ca
-   să curgă continuu, deci alternanța se păstrează la buclare. */
+/* Bifă în cerc portocaliu, ca în materialele firmei. Desenată din contur, nu
+   dintr-o imagine: rămâne clară la orice mărime și nu cere o cerere în plus. */
 .ticker__item::before {
   content: "";
-  inline-size: 4px; block-size: 4px;
-  border-radius: 50%;
-  background: var(--acc);
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
   flex: none;
+  border-radius: 50%;
+  border: 2px solid var(--brand-orange);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f39c2c' stroke-width='3.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.6 4.5L19 7.5'/%3E%3C/svg%3E");
+  background-size: 68%;
+  background-position: 50% 52%;
+  background-repeat: no-repeat;
 }
-.ticker__item:nth-child(even)::before { background: var(--brand-orange); }
-@keyframes ticker { to { transform: translateX(-50%); } }
+/* Șina poartă trei copii ale setului, deci reluarea e la o treime. */
+@keyframes ticker { to { transform: translateX(calc(-100% / 3)); } }
 @media (prefers-reduced-motion: reduce) { .ticker__track { animation: none; } }
+
+@media (max-width: 640px) {
+  .ticker { flex-direction: column; align-items: stretch; }
+  .ticker__eticheta { padding-block: var(--s-3) 0; }
+  .ticker__fereastra { padding-block: var(--s-3) var(--s-4); }
+}
 
 /* ==========================================================================
    6. Invitația la Comutator
@@ -1088,6 +1192,23 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   transition: filter var(--d-3), transform var(--d-3) var(--ease-out);
 }
 .gallery figure:hover img { filter: none; transform: scale(1.03); }
+
+/* Slot gol, în așteptarea fotografiilor din teren.
+   Păstrează exact proporția și chenarul unei imagini reale, deci înlocuirea nu
+   mișcă nimic în pagină. Conturul întrerupt spune „aici urmează ceva”, nu
+   „aici s-a stricat ceva”. */
+.gallery__gol { background: var(--surface); }
+.gallery__semn {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  margin: var(--s-3);
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-2);
+  color: var(--ink-faint);
+  opacity: 0.55;
+}
+.gallery__semn svg { inline-size: 2.25rem; block-size: 2.25rem; }
 .gallery figcaption {
   padding: var(--s-3) var(--s-4);
   font-family: var(--font-mono);
@@ -1399,7 +1520,15 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   margin-block-end: var(--s-4);
 }
 .ftr ul { list-style: none; padding: 0; display: grid; gap: var(--s-2); }
-.ftr a { font-size: var(--t--1); color: var(--ink-muted); text-decoration: none; }
+/* Îngroșate: subsolul stă pe bandă portocalie, iar la corp mic pe fond colorat
+   greutatea normală se topește în fundal. 600 le desprinde fără să le facă
+   titluri. */
+.ftr a {
+  font-size: var(--t--1);
+  font-weight: 600;
+  color: var(--ink-muted);
+  text-decoration: none;
+}
 .ftr a:hover { color: var(--acc); }
 
 .ftr__legal {

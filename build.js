@@ -39,10 +39,34 @@ const FIRMA = {
   marca: 'Usa-garaj.ro',
   cui: '40437439',
   j: 'J15/136/2019',
-  adresa: 'Sat Voinești, Com. Voinești, Str. Principală, Nr. 146, jud. Dâmbovița',
+  adresa: 'Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște',
   tel: '0731 366 613',
   telHref: '+40731366613',
-  email: 'contact@usa-garaj.ro',
+
+  /**
+   * Două adrese, cu roluri diferite.
+   *
+   * `email` rămâne adresa implicită — cea folosită oriunde textul are nevoie de
+   * un singur punct de contact: date structurate, descrieri de pagină, formule
+   * de tipul „scrieți-ne la…”. Este cea de birou, fiindcă acolo ajunge orice,
+   * inclusiv ce nu ține de o comandă.
+   *
+   * `emailuri` este lista completă, folosită acolo unde chiar încap amândouă:
+   * pagina de contact și cartea de identitate. Rolul e scris lângă fiecare, ca
+   * omul să nu trimită o reclamație la comenzi și o comandă la birou.
+   */
+  email: 'Office@abbaconfort.ro',
+  emailComenzi: 'Comenzi@abbaconfort.ro',
+
+  /* Lista, pentru locurile unde încap amândouă. Se construiește din câmpurile
+     de mai sus, ca o adresă schimbată într-un loc să nu rămână veche în altul. */
+  get emailuri() {
+    return [
+      { adresa: this.email,        rol: 'Secretariat și informații' },
+      { adresa: this.emailComenzi, rol: 'Comenzi și oferte' }
+    ];
+  },
+
   site: 'https://usa-garaj.ro'
 };
 
@@ -114,7 +138,30 @@ const MAGAZIN = {
  * și se rulează din nou `node build.js`.
  */
 const PLATI = {
-  card: true,
+  /**
+   * OPRIT LA CERERE — 16 august 2026. Magazinul rămâne pe ramburs.
+   *
+   * Arhitectura pentru card NU a fost ștearsă, ci pusă în adormire:
+   *   · intrările de metodă sunt comentate mai jos, nu tăiate;
+   *   · blocul NETOPIA din `assets/js/checkout.js` e comentat, cu marcaj;
+   *   · `wordpress/netopia-direct-redirect.php` rămâne neatins;
+   *   · pașii compleți de reactivare sunt în NETOPIA.md.
+   *
+   * Comutatorul acesta este singurul lucru care trebuie mutat pe `true` ca
+   * site-ul să promită din nou plata cu cardul: pagina „Metode de plată”,
+   * întrebările frecvente, descrierile și formularul de finalizare se rescriu
+   * toate din el. Cât timp e `false`, nicăieri pe site nu apare cuvântul card
+   * ca metodă disponibilă.
+   *
+   * Starea reală a magazinului, verificată azi:
+   *   curl -s https://usa-garaj.ro/wp-json/wc/store/v1/cart
+   *   → "payment_methods":["cod"]
+   *
+   * Deci `false` nu e o preferință de design, ci adevărul de pe server. Un site
+   * care anunță plata cu cardul fără gateway activ este exact genul de
+   * promisiune neacoperită pentru care ANPC dă amendă.
+   */
+  card: false,
   procesator: 'NETOPIA Payments',
   procesatorUrl: 'https://netopia-payments.com',
   carduri: ['Visa', 'Visa Electron', 'Mastercard', 'Maestro'],
@@ -124,8 +171,14 @@ const PLATI = {
       nume: 'Ramburs la livrare',
       text: 'Plătiți curierului, în numerar, în momentul livrării. Metodă disponibilă pentru toate produsele din catalog.',
       activ: true
-    },
-    {
+    }
+
+    /* ---------------------------------------------------------------------
+       ADORMITE. Se readuc în listă la reactivarea plății online.
+       Cardul depinde și de comutatorul `card` de mai sus; transferul bancar
+       poate fi reactivat singur, fiind o metodă manuală, fără gateway.
+
+    ,{
       cod: 'card',
       nume: 'Card bancar, online',
       text: 'Plată cu cardul în pagina securizată a procesatorului. Datele cardului se introduc pe serverele procesatorului, nu pe site-ul nostru, iar magazinul nu le stochează.',
@@ -137,12 +190,13 @@ const PLATI = {
       text: 'Pentru persoane juridice și comenzi pe bază de factură proformă. Detaliile de cont se transmit la confirmarea comenzii.',
       activ: true
     }
+    --------------------------------------------------------------------- */
   ]
 };
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=38';
+const VER = 'v=45';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -223,8 +277,9 @@ function jsonLd(base) {
     email: FIRMA.email,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Str. Principală, Nr. 146',
-      addressLocality: 'Sat Voinești, Com. Voinești',
+      streetAddress: 'Strada Radu de la Afumați 17, Sc. G',
+      addressLocality: 'Târgoviște',
+      postalCode: '130150',
       addressRegion: 'Dâmbovița',
       addressCountry: 'RO'
     },
@@ -305,7 +360,7 @@ ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
       <span class="brand__mark" aria-hidden="true"></span>
       <span class="brand__name">
         <b>Ușă&#8288;-&#8288;Garaj<span style="color:var(--acc)">.ro</span></b>
-        <small>Uși rulou ABBA</small>
+        <small>Parte a Grupului Abba Confort</small>
       </span>
     </a>
 
@@ -339,7 +394,7 @@ ${o.corp}
           <span class="brand__mark" aria-hidden="true"></span>
           <span class="brand__name">
             <b>Ușă&#8288;-&#8288;Garaj<span style="color:var(--acc)">.ro</span></b>
-            <small>Uși rulou ABBA</small>
+            <small>Parte a Grupului Abba Confort</small>
           </span>
         </a>
         <p style="font-size:var(--t--1);color:var(--ink-muted);max-inline-size:34ch">

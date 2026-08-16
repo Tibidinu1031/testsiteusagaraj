@@ -163,11 +163,19 @@ window.UG = window.UG || {};
       payment_data: []
     };
 
-    /* Pluginul NETOPIA cere metoda aleasă și în `payment_data`; fără ea,
-       `validate_fields()` respinge comanda cu „Alege metoda de plata”. */
+    /* ---------------------------------------------------------------------
+       ADORMIT — 16 august 2026, odată cu `PLATI.card = false` din build.js.
+       Magazinul funcționează pe ramburs; formularul nu mai oferă cardul, deci
+       ramura de mai jos nu ar fi oricum niciodată atinsă. E păstrată, nu
+       ștearsă: la reactivare se decomentează împreună cu comutatorul.
+
+       Pluginul NETOPIA cere metoda aleasă și în `payment_data`; fără ea,
+       `validate_fields()` respinge comanda cu „Alege metoda de plata”.
+
     if (metoda === 'netopiapayments') {
       corp.payment_data = [{ key: 'netopia_method_pay', value: 'credit_card' }];
     }
+    --------------------------------------------------------------------- */
 
     if (eroareGenerala) eroareGenerala.hidden = true;
     buton.disabled = true;

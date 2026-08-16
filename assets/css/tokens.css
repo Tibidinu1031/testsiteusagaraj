@@ -35,7 +35,11 @@
 
   --orange:     var(--brand-orange);
   --orange-hi:  #ffb85a;
-  --orange-txt: #9a530a;  /* portocaliu pentru TEXT; contrast 4,8:1 pe hârtie */
+  /* Portocaliu pentru TEXT. Închis de la #9a530a odată cu adâncirea benzilor:
+     pe verdele #c2dcb1 numerele de rubrică — corp de 12 px — cădeau la 3,92:1,
+     sub pragul AA. Valoarea de acum trece pe TOATE cele patru fundaluri ale
+     paginii: 4,97 pe verde, 4,86 pe portocaliu, 7,18 pe alb, 6,58 pe hârtie. */
+  --orange-txt: #854507;
 
   /* --- Benzile paginii, numărate de jos în sus ---
      Subsolul e portocaliu, secțiunea de deasupra verde, următoarea albă, și tot
@@ -50,10 +54,16 @@
      alunecă spre roz, fiindcă la saturație joasă ochiul nu mai distinge 32° de
      roșu-pal.
      Nuanțele de mai jos sunt verificate: verdele la 95°, adică verde-frunză
-     fără urmă de albastru; portocaliul la 33°, cald și clar. */
+     fără urmă de albastru; portocaliul la 33°, cald și clar.
+
+     Adâncite încă o treaptă față de varianta anterioară (#d3e5c6 / #fbd9b0):
+     benzile se citeau ca o umbră a hârtiei, nu ca o culoare. Nuanța rămâne
+     aceeași — s-a coborât doar luminozitatea, deci ritmul paginii se vede fără
+     ca fundalul să concureze cu produsul. Verificarea de contrast e mai jos, la
+     `--ink-faint`: o bandă mai saturată cere cerneală mai închisă. */
   --band-alb:        #fdfcfa;
-  --band-verde:      #d3e5c6;
-  --band-portocaliu: #fbd9b0;
+  --band-verde:      #c2dcb1;
+  --band-portocaliu: #f8ca92;
 
   /* --- Secundar: portocaliu-cărămiziu pentru reduceri ---
      Închis suficient cât textul alb de 10 px de pe eticheta de reducere să
