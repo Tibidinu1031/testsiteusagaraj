@@ -341,5 +341,19 @@
 .qv__spec dt { color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; }
 .qv__spec dd { margin: 0; color: var(--ink); font-variant-numeric: tabular-nums; }
 
-.qv__actiuni { display: flex; flex-wrap: wrap; gap: var(--s-2); }
-.qv__stare { font-family: var(--font-mono); font-size: var(--t--2); color: var(--acc); min-block-size: 1.2em; }
+/* Centrate, nu lipite de marginea din stânga: în panoul de răsfoire coloana de
+   date e îngustă, iar două butoane aliniate la stânga lăsau un gol lat în
+   dreapta, exact sub specificațiile care ocupă toată lățimea. */
+.qv__actiuni {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--s-2);
+}
+.qv__stare {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--acc);
+  min-block-size: 1.2em;
+  text-align: center;
+}

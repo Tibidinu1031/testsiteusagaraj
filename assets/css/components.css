@@ -168,7 +168,16 @@
   aspect-ratio: 1;
   block-size: auto;
   margin-block-start: var(--s-5);
-  padding: calc(var(--d) * 0.06);
+
+  /* 11%, nu 6%. Măsurat pe fișier: pixelul de cerneală cel mai depărtat de
+     centru — colțul din stânga-jos al lui „P” din PROBLEMA — stă la 0,536 din
+     latura desenului. La 6% umplutură desenul are 88% din diametru, deci acel
+     colț ajunge la 0,471·D, adică la 7 px de marginea cercului pe un diametru
+     de 210. Tehnic nu se taie niciun pixel — verificat, zero pierderi la
+     decupaj — dar cerneala care atinge muchia SE CITEȘTE ca tăiată, și asta
+     contează la fel de mult. La 11% rămân circa 8% din diametru spațiu liber
+     de jur împrejur, deci prima și ultima literă se văd limpede. */
+  padding: calc(var(--d) * 0.11);
   border-radius: 50%;
   object-fit: contain;
   background: #fff;

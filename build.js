@@ -196,7 +196,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=45';
+const VER = 'v=46';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -214,9 +214,12 @@ function scrie(rel, html) {
 
 /* --- Structura navigării ------------------------------------------------- */
 
+/* „Acasă” și „Magazin” au fost scoase din bara de sus: sigla duce deja la prima
+   pagină, iar magazinul e la un clic prin oricare dintre categorii, prin
+   butonul „Produsele noastre” și prin subsol. O bară cu opt intrări obosește
+   ochiul mai mult decât ajută; rămân șase, toate distincte între ele.
+   Legăturile există în continuare în subsol și în harta site-ului. */
 const NAV = [
-  { href: 'index.html',                            text: 'Acasă' },
-  { href: 'magazin.html',                          text: 'Magazin' },
   { href: 'categorie/usi-garaj-rulou-55-mm.html',  text: 'Rulou 55 mm' },
   { href: 'categorie/usi-garaj-rulou-77-mm.html',  text: 'Rulou 77 mm' },
   { href: 'categorie/promotii.html',               text: 'Promoții' },
