@@ -1134,25 +1134,33 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 /* Exact trei coloane: cele șase servicii cad în două rânduri egale, 3 și 3.
    Cu `auto-fit` ecranele late produceau patru pe primul rând și două pe al
    doilea — un rând ciuntit, care se vede imediat. */
+/* Liniile despartitoare sunt chiar spatiile grilei: fundalul se vede prin ele.
+   Erau desenate cu , prea deschis pe cartelele aproape albe ca sa se
+   distinga;  le face sa se citeasca drept chenar de tabel. */
 .svc-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1px;
-  background: var(--line);
-  border: 1px solid var(--line);
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
   border-radius: var(--r-4);
   overflow: hidden;
 }
 @media (max-width: 900px) { .svc-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 580px) { .svc-grid { grid-template-columns: 1fr; } }
 
+/* Continut centrat, pe toata latimea celulei. Spatierea laterala e mica tocmai
+   ca randul sa mearga dintr-un capat in celalalt: aliniat la stanga, textul
+   lasa o pana alba in dreapta fiecarei cartele. */
 .svc {
   position: relative;
   background: var(--bg-raised);
-  padding: var(--s-6) var(--s-5) var(--s-6);
+  padding: var(--s-6) var(--s-4);
   display: grid;
   gap: var(--s-3);
   align-content: start;
+  justify-items: center;
+  text-align: center;
   transition: background var(--d-2);
 }
 .svc:hover { background: var(--surface); }
@@ -1168,6 +1176,7 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   align-items: center;
   gap: var(--s-3);
 }
+.svc__n::before,
 .svc__n::after {
   content: "";
   block-size: 1px;
@@ -1175,7 +1184,15 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   background: color-mix(in oklab, var(--acc) 45%, transparent);
 }
 .svc h3 { font-size: var(--t-1); letter-spacing: -0.02em; }
-.svc p { font-size: var(--t--1); color: var(--ink-muted); }
+/*  umple fiecare rand pana la capat. Regula generala pentru
+    foloseste , care muta cuvinte pe randul urmator ca sa evite
+   orfanii - potrivit la text curent, risipitor intr-o cartela ingusta. */
+.svc p {
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+  text-wrap: auto;
+  inline-size: 100%;
+}
 
 /* ==========================================================================
    10. Galerie
@@ -2021,6 +2038,8 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   font-variation-settings: "wdth" 104;
 }
 .oferta p { color: var(--ink-muted); font-size: var(--t--1); }
+.oferta .btn { justify-self: center; }
+
 .oferta__nota {
   font-family: var(--font-mono);
   font-size: var(--t--2);
