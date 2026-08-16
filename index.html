@@ -22,11 +22,11 @@
 
 <script>document.documentElement.classList.add('js');</script>
 
-<link rel="stylesheet" href="assets/css/tokens.css?v=46">
-<link rel="stylesheet" href="assets/css/base.css?v=46">
-<link rel="stylesheet" href="assets/css/door.css?v=46">
-<link rel="stylesheet" href="assets/css/components.css?v=46">
-<link rel="stylesheet" href="assets/css/switcher.css?v=46">
+<link rel="stylesheet" href="assets/css/tokens.css?v=47">
+<link rel="stylesheet" href="assets/css/base.css?v=47">
+<link rel="stylesheet" href="assets/css/door.css?v=47">
+<link rel="stylesheet" href="assets/css/components.css?v=47">
+<link rel="stylesheet" href="assets/css/switcher.css?v=47">
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","HomeAndConstructionBusiness"],"@id":"https://usa-garaj.ro/#firma","name":"Usa-garaj.ro","legalName":"ABBA CONFORT SOLUTIONS HOMES S.R.L.","url":"https://usa-garaj.ro/","taxID":"40437439","identifier":[{"@type":"PropertyValue","name":"CUI","value":"40437439"},{"@type":"PropertyValue","name":"Nr. Registrul Comerțului","value":"J15/136/2019"}],"telephone":"+40731366613","email":"Office@abbaconfort.ro","address":{"@type":"PostalAddress","streetAddress":"Strada Radu de la Afumați 17, Sc. G","addressLocality":"Târgoviște","postalCode":"130150","addressRegion":"Dâmbovița","addressCountry":"RO"},"areaServed":"RO"}</script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Ce se întâmplă dacă rămâne garajul fără curent electric?","acceptedAnswer":{"@type":"Answer","text":"Ușa poate fi acționată și manual. Sistemul este livrat cu manivelă și legătură cardanică, tocmai pentru situațiile în care nu există alimentare cu energie electrică."}},{"@type":"Question","name":"Ce conține livrarea unei uși de garaj automate?","acceptedAnswer":{"@type":"Answer","text":"Livrarea include accesoriile necesare montajului: legătura cardanică, manivela, motorul tubular, centrala de comandă și 2 telecomenzi."}},{"@type":"Question","name":"Dimensiunile din denumire sunt cele ale golului de trecere?","acceptedAnswer":{"@type":"Answer","text":"Nu. Dimensiunile menționate ca L × H includ ghidajele și caseta. Pentru spațiul util de trecere se scad 150 mm pe lățime și 300 mm pe înălțime la ușile cu lamelă de 55 mm, respectiv 180 mm pe lățime și 377 mm pe înălțime la cele cu lamelă de 77 mm."}},{"@type":"Question","name":"Care este diferența dintre lamela de 55 mm și cea de 77 mm?","acceptedAnswer":{"@type":"Answer","text":"Lamela de 55 mm are 14 mm grosime și o masă a tabliei de 4 kg/m², cu ax din oțel zincat de Ø60 mm și ghidaje de 75 × 30 mm. Lamela de 77 mm are 18,5 mm grosime și 6 kg/m², cu ax de Ø70 mm și ghidaje de 90 × 35 mm, fiind indicată pentru deschideri mai mari."}},{"@type":"Question","name":"Cât durează deschiderea ușii?","acceptedAnswer":{"@type":"Answer","text":"Depinde de model. Magazinul declară aproximativ 10 secunde la majoritatea ușilor, 25 de secunde la ușile de 3000–3200 mm lățime și 30 de secunde la modelul de 3000 × 3000 mm cu lamelă de 55 mm. Valoarea exactă este trecută în fișa fiecărui produs."}},{"@type":"Question","name":"Se pot executa uși la alte dimensiuni decât cele din magazin?","acceptedAnswer":{"@type":"Answer","text":"Da. Pe lângă produsele standard, disponibile în stoc, executăm și proiecte personalizate, la dimensiunile golului dumneavoastră."}},{"@type":"Question","name":"Cum pot plăti comanda?","acceptedAnswer":{"@type":"Answer","text":"Comenzile se achită ramburs la livrare, în numerar, sau prin transfer bancar pe bază de factură proformă, pentru persoane juridice. Plata online cu cardul urmează să fie activată."}}]}</script>
@@ -726,6 +726,19 @@
               aria-expanded="false" aria-controls="sw-qv">
         Vizualizare rapidă <kbd>V</kbd>
       </button>
+
+      <!-- Acțiunile stăteau în coloana din dreapta a vizualizării rapide, deci
+           ieșeau centrate FAȚĂ DE EA, adică împinse spre marginea din dreapta a
+           panoului. Mutate aici, sub butonul de vizualizare, cad pe aceeași
+           axă cu el și cu numele produsului. Rămân vizibile și cu vizualizarea
+           închisă: „adaugă în coș” e util în orice moment al răsfoirii. -->
+      <div class="switcher__actiuni">
+        <div class="qv__actiuni">
+          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
+          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
+        </div>
+        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
+      </div>
     </div>
 
     <!-- Vizualizarea rapidă: fotografiile reale, cotele și adăugarea în coș,
@@ -734,11 +747,6 @@
       <div class="qv__galerie" id="sw-qv-galerie" data-galerie></div>
       <div class="qv__date">
         <dl class="qv__spec" id="sw-qv-spec"></dl>
-        <div class="qv__actiuni">
-          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
-          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
-        </div>
-        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
       </div>
     </div>
 
@@ -759,13 +767,13 @@
 
 <script>window.UG_BASE = "";
 window.UG_MAGAZIN = {"store":"https://usa-garaj.ro/wp-json/wc/store/v1","activ":true,"card":false};</script>
-<script src="assets/js/catalog.js?v=46"></script>
-<script src="assets/js/door.js?v=46"></script>
-<script src="assets/js/switcher.js?v=46"></script>
-<script src="assets/js/lupa.js?v=46"></script>
-<script src="assets/js/cos.js?v=46"></script>
-<script src="assets/js/cos-ui.js?v=46"></script>
+<script src="assets/js/catalog.js?v=47"></script>
+<script src="assets/js/door.js?v=47"></script>
+<script src="assets/js/switcher.js?v=47"></script>
+<script src="assets/js/lupa.js?v=47"></script>
+<script src="assets/js/cos.js?v=47"></script>
+<script src="assets/js/cos-ui.js?v=47"></script>
 
-<script src="assets/js/app.js?v=46"></script>
+<script src="assets/js/app.js?v=47"></script>
 </body>
 </html>

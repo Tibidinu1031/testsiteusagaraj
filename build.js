@@ -32,6 +32,52 @@ const UG = global.window.UG;
 
 const { PRODUSE, CATEGORII, RAL } = UG;
 
+/* --- Controlul cotelor de imagine ---------------------------------------- */
+
+/**
+ * Citește lățimea și înălțimea reale dintr-un JPEG, din marcajul SOF.
+ *
+ * Există fiindcă `MASURI` din `catalog.js` ține cotele scrise de mână, iar ele
+ * ajung în `width`/`height` pe fiecare `<img>`. Dacă cineva înlocuiește un
+ * fișier cu altul de altă mărime — exact ce se întâmplă când o poză blurată e
+ * schimbată cu una clară — cotele rămân vechi, iar browserul rezervă un loc de
+ * altă formă decât imaginea: pagina sare la încărcare, iar raportul e strivit.
+ * Eșecul e tăcut, deci merită prins automat.
+ */
+function coteJPEG(cale) {
+  const b = fs.readFileSync(cale);
+  let i = 2;
+  while (i < b.length - 9) {
+    if (b[i] !== 0xff) { i++; continue; }
+    const m = b[i + 1];
+    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) {
+      return { l: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5) };
+    }
+    i += 2 + b.readUInt16BE(i + 2);
+  }
+  return null;
+}
+
+function verificaCoteImagini() {
+  const nepotriviri = [];
+  for (const p of PRODUSE) {
+    for (const g of UG.galerieProdus(p)) {
+      const abs = path.join(IESIRE, g.src);
+      if (!fs.existsSync(abs) || !/\.jpe?g$/i.test(g.src)) continue;
+      const real = coteJPEG(abs);
+      if (real && (real.l !== g.l || real.h !== g.h)) {
+        nepotriviri.push(`${g.src}: declarat ${g.l}×${g.h}, fișier ${real.l}×${real.h}`);
+      }
+    }
+  }
+  const unice = [...new Set(nepotriviri)];
+  if (unice.length) {
+    console.warn('\n  ! COTE DE IMAGINE NEPOTRIVITE — actualizați `MASURI` din catalog.js:');
+    unice.forEach((n) => console.warn('      ' + n));
+  }
+  return unice.length;
+}
+
 /* --- Datele firmei ------------------------------------------------------- */
 
 const FIRMA = {
@@ -196,7 +242,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=46';
+const VER = 'v=47';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -444,6 +490,19 @@ ${subsol}
               aria-expanded="false" aria-controls="sw-qv">
         Vizualizare rapidă <kbd>V</kbd>
       </button>
+
+      <!-- Acțiunile stăteau în coloana din dreapta a vizualizării rapide, deci
+           ieșeau centrate FAȚĂ DE EA, adică împinse spre marginea din dreapta a
+           panoului. Mutate aici, sub butonul de vizualizare, cad pe aceeași
+           axă cu el și cu numele produsului. Rămân vizibile și cu vizualizarea
+           închisă: „adaugă în coș” e util în orice moment al răsfoirii. -->
+      <div class="switcher__actiuni">
+        <div class="qv__actiuni">
+          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
+          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
+        </div>
+        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
+      </div>
     </div>
 
     <!-- Vizualizarea rapidă: fotografiile reale, cotele și adăugarea în coș,
@@ -452,11 +511,6 @@ ${subsol}
       <div class="qv__galerie" id="sw-qv-galerie" data-galerie></div>
       <div class="qv__date">
         <dl class="qv__spec" id="sw-qv-spec"></dl>
-        <div class="qv__actiuni">
-          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
-          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
-        </div>
-        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
       </div>
     </div>
 
@@ -563,7 +617,7 @@ const FILTRE = `<div class="filters reveal">
   </div>
 </div>`;
 
-module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV };
+module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV, verificaCoteImagini };
 
 /* Restul generatorului este în build-pagini.js, încărcat mai jos, ca fișierul
    acesta să rămână la o dimensiune citibilă. */

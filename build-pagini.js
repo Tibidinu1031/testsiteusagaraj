@@ -1029,6 +1029,8 @@ async function paginiContinut() {
   scrie('robots.txt',
     `User-agent: *\nAllow: /\n${NEINDEXATE.map((f) => `Disallow: /${f}`).join('\n')}\nSitemap: ${GAZDA}/sitemap.xml\n`);
 
+  B.verificaCoteImagini();
+
   console.log(`\nGenerate ${scrise.length} pagini HTML + sitemap.xml + robots.txt`);
   console.log(`  ${PRODUSE.length} pagini de produs`);
   console.log(`  ${CATEGORII_PAGINI.length} pagini de categorie`);

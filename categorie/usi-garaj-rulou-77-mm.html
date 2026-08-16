@@ -22,11 +22,11 @@
 
 <script>document.documentElement.classList.add('js');</script>
 
-<link rel="stylesheet" href="../assets/css/tokens.css?v=46">
-<link rel="stylesheet" href="../assets/css/base.css?v=46">
-<link rel="stylesheet" href="../assets/css/door.css?v=46">
-<link rel="stylesheet" href="../assets/css/components.css?v=46">
-<link rel="stylesheet" href="../assets/css/switcher.css?v=46">
+<link rel="stylesheet" href="../assets/css/tokens.css?v=47">
+<link rel="stylesheet" href="../assets/css/base.css?v=47">
+<link rel="stylesheet" href="../assets/css/door.css?v=47">
+<link rel="stylesheet" href="../assets/css/components.css?v=47">
+<link rel="stylesheet" href="../assets/css/switcher.css?v=47">
 
 <script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","HomeAndConstructionBusiness"],"@id":"https://usa-garaj.ro/#firma","name":"Usa-garaj.ro","legalName":"ABBA CONFORT SOLUTIONS HOMES S.R.L.","url":"https://usa-garaj.ro/","taxID":"40437439","identifier":[{"@type":"PropertyValue","name":"CUI","value":"40437439"},{"@type":"PropertyValue","name":"Nr. Registrul Comerțului","value":"J15/136/2019"}],"telephone":"+40731366613","email":"Office@abbaconfort.ro","address":{"@type":"PostalAddress","streetAddress":"Strada Radu de la Afumați 17, Sc. G","addressLocality":"Târgoviște","postalCode":"130150","addressRegion":"Dâmbovița","addressCountry":"RO"},"areaServed":"RO"}</script>
 
@@ -387,6 +387,19 @@
               aria-expanded="false" aria-controls="sw-qv">
         Vizualizare rapidă <kbd>V</kbd>
       </button>
+
+      <!-- Acțiunile stăteau în coloana din dreapta a vizualizării rapide, deci
+           ieșeau centrate FAȚĂ DE EA, adică împinse spre marginea din dreapta a
+           panoului. Mutate aici, sub butonul de vizualizare, cad pe aceeași
+           axă cu el și cu numele produsului. Rămân vizibile și cu vizualizarea
+           închisă: „adaugă în coș” e util în orice moment al răsfoirii. -->
+      <div class="switcher__actiuni">
+        <div class="qv__actiuni">
+          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
+          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
+        </div>
+        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
+      </div>
     </div>
 
     <!-- Vizualizarea rapidă: fotografiile reale, cotele și adăugarea în coș,
@@ -395,11 +408,6 @@
       <div class="qv__galerie" id="sw-qv-galerie" data-galerie></div>
       <div class="qv__date">
         <dl class="qv__spec" id="sw-qv-spec"></dl>
-        <div class="qv__actiuni">
-          <button type="button" class="btn btn--primary btn--sm" id="sw-qv-adauga">Adaugă în coș</button>
-          <a class="btn btn--ghost btn--sm" id="sw-qv-link" href="#">Vezi pagina produsului</a>
-        </div>
-        <p class="qv__stare" id="sw-qv-stare" role="status" aria-live="polite"></p>
       </div>
     </div>
 
@@ -420,13 +428,13 @@
 
 <script>window.UG_BASE = "../";
 window.UG_MAGAZIN = {"store":"https://usa-garaj.ro/wp-json/wc/store/v1","activ":true,"card":false};</script>
-<script src="../assets/js/catalog.js?v=46"></script>
-<script src="../assets/js/door.js?v=46"></script>
-<script src="../assets/js/switcher.js?v=46"></script>
-<script src="../assets/js/lupa.js?v=46"></script>
-<script src="../assets/js/cos.js?v=46"></script>
-<script src="../assets/js/cos-ui.js?v=46"></script>
+<script src="../assets/js/catalog.js?v=47"></script>
+<script src="../assets/js/door.js?v=47"></script>
+<script src="../assets/js/switcher.js?v=47"></script>
+<script src="../assets/js/lupa.js?v=47"></script>
+<script src="../assets/js/cos.js?v=47"></script>
+<script src="../assets/js/cos-ui.js?v=47"></script>
 
-<script src="../assets/js/app.js?v=46"></script>
+<script src="../assets/js/app.js?v=47"></script>
 </body>
 </html>
