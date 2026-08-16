@@ -290,7 +290,7 @@ const recomandate = [396, 401, 388, 180, 386, 161, 397, 178]
   .map((id) => PRODUSE.filter((p) => p.id === id)[0]).filter(Boolean);
 
 S('index.html', pagina({
-  base: '', activ: 'index.html',
+  base: '', activ: 'index.html', mainClasa: 'acasa',
   titlu: 'Uși de garaj tip rulou ABBA — lamele de 55 mm și 77 mm | Usa-garaj.ro',
   descriere: `Uși de garaj tip rulou ABBA, cu lamele de 55 mm și 77 mm, acționare automată cu telecomandă. ${s.total} de configurații, de la ${lei(s.pretMin)}, transport gratuit și montaj asigurat. ${FIRMA.nume}, CUI ${FIRMA.cui}, ${FIRMA.j}.`,
   ld: faqLd(),

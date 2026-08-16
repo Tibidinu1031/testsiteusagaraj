@@ -2048,3 +2048,80 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   border-block-start: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
   inline-size: 100%;
 }
+
+/* ==========================================================================
+   Prima pagină: text centrat, pe toată lățimea
+   ==========================================================================
+   Limitat la `.acasa`, adică DOAR prima pagină. Pe paginile legale și de
+   produs textul rămâne aliniat la stânga: un document de câteva mii de
+   caractere, centrat, e greu de urmărit — ochiul pierde începutul rândului.
+   Aici blocurile sunt scurte, deci centrarea le adună în jurul axei paginii
+   în loc să lase o pană albă în dreapta.                                     */
+
+.acasa .section-head { justify-content: center; }
+
+.acasa .section-head__text {
+  max-inline-size: none;      /* era 44ch, adică sub jumătate din coloană */
+  justify-items: center;
+  text-align: center;
+  inline-size: 100%;
+}
+
+.acasa .section-head__text .eyebrow { justify-content: center; }
+
+/* `--measure` (68ch) ținea rândul la circa 60% din lățimea disponibilă.
+   Centrat, restul rămânea gol de ambele părți. */
+.acasa .lede {
+  max-inline-size: none;
+  margin-inline: auto;
+  text-wrap: auto;
+}
+
+.acasa .proza {
+  max-inline-size: none;
+  text-align: center;
+  justify-items: center;
+}
+.acasa .proza p { text-wrap: auto; max-inline-size: none; margin-inline: auto; }
+
+/* Secțiunea „Unde se potrivesc” are textul lângă cartela de ofertă, deci
+   coloana e deja îngustă: acolo centrarea ar rupe rândurile inutil. */
+.acasa .unde .proza { text-align: start; }
+.acasa .unde .proza p { margin-inline: 0; }
+
+/* Nota despre cote și lista de calcul rămân la stânga: sunt reguli de citit
+   rând cu rând, nu text de prezentare. */
+.acasa .note { text-align: start; }
+
+/* --------------------------------------------------------------------------
+   Liniile orizontale ale grilei de servicii
+   --------------------------------------------------------------------------
+   Spațiile grilei desenau linia pe verticală, dar pe orizontală nu se vedea.
+   Trecut pe chenare EXPLICITE pe fiecare celulă, cu marginile exterioare
+   scoase după poziție. E mai mult cod decât `gap: 1px`, dar e determinist:
+   linia există fiindcă e desenată, nu fiindcă se întrevede un fundal.
+   Regulile se repetă pe fiecare prag, fiindcă „ultima coloană” înseamnă alt
+   element la 3, la 2 și la o coloană.                                        */
+.svc-grid { gap: 0; background: none; }
+
+.svc {
+  border-inline-end: 1px solid var(--line-strong);
+  border-block-end: 1px solid var(--line-strong);
+}
+
+/* 3 coloane: fără chenar dreapta la a treia, fără chenar jos pe ultimul rând */
+.svc:nth-child(3n) { border-inline-end: 0; }
+.svc:nth-child(n + 4) { border-block-end: 0; }
+
+@media (max-width: 900px) {
+  .svc:nth-child(3n) { border-inline-end: 1px solid var(--line-strong); }
+  .svc:nth-child(2n) { border-inline-end: 0; }
+  .svc:nth-child(n + 4) { border-block-end: 1px solid var(--line-strong); }
+  .svc:nth-child(n + 5) { border-block-end: 0; }
+}
+
+@media (max-width: 580px) {
+  .svc { border-inline-end: 0; }
+  .svc:nth-child(n + 4) { border-block-end: 1px solid var(--line-strong); }
+  .svc:last-child { border-block-end: 0; }
+}

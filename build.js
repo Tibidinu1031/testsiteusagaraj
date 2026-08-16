@@ -274,7 +274,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=52';
+const VER = 'v=54';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -463,7 +463,7 @@ ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
   </div>
 </header>
 
-<main id="continut">
+<main id="continut"${o.mainClasa ? ` class="${o.mainClasa}"` : ''}>
 ${o.corp}
 </main>
 
