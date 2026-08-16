@@ -312,10 +312,21 @@ ${COMUTATOR}
 
 <section class="section" id="tehnic">
   <div class="wrap">
-    ${rubrica('03', 'Fișă tehnică', '55 mm sau 77 mm',
-      'Diferența dintre cele două familii nu este estetică, ci structurală. Lamela mai groasă înseamnă tablier mai rigid, ax mai gros și ghidaje mai late — adică deschideri mai mari, executate în siguranță.')}
+    ${rubrica('03', 'De ce ne poți contacta?', 'Uși de garaj de tip rulou, acționate prin telecomandă',
+      'Dacă aveți nevoie de o ușă de garaj nouă, fie că este prima alegere, fie că o înlocuiți pe cea veche, noi suntem soluția. Producem și montăm uși de garaj cu design personalizat și în dimensiuni diverse.')}
     <div class="stack-lg">
-      ${tabelTehnic()}
+      <div class="proza reveal">
+        <p>Ușile de garaj sunt mai mult decât un portal de acces spre garaj. Sunt
+        asigurarea dumneavoastră că bunurile vă sunt protejate. Iar noi le
+        proiectăm și montăm pe cele potrivite, atât pentru spații rezidențiale,
+        cât și comerciale.</p>
+
+        <p>Realizate din aluminiu, astfel de uși de garaj sunt soluția pentru un
+        plus de siguranță și intimitate. Sunt durabile și au marele avantaj de a
+        putea fi montate chiar și în spații înguste. Datorită sistemului de
+        închidere, respectiv deschidere, nu vor ocupa spațiu inutil ca în cazul
+        ușilor clasice.</p>
+      </div>
       ${NOTA_COTE}
       <p><a class="btn btn--ghost" href="tehnic.html">Toate detaliile tehnice</a></p>
     </div>
@@ -326,12 +337,69 @@ ${COMUTATOR}
   <div class="wrap">
     ${rubrica('04', 'Ce facem, de la măsurătoare la mentenanță', 'Serviciile noastre', '')}
     ${svcHTML()}
+
+    <div class="proza reveal" style="margin-block-start:var(--s-6)">
+      <p>Cu noi veți câștiga un partener pe termen lung. Proiectăm și montăm uși
+      de garaj de tip rulou, acționate prin telecomandă sau cu deschidere
+      clasică, manuală. Serviciile noastre sunt extinse și includ mentenanța,
+      service-ul, precum și proiecte personalizate de uși de garaj.</p>
+
+      <p>Pentru ușile de garaj standard, în stoc disponibil, puteți comanda
+      imediat în funcție de dimensiuni și culoare.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     05 — Unde se potrivesc. Secțiune nouă, cerută după „Serviciile noastre”.
+     Se încheie cu chemarea la ofertă personalizată, fiindcă ultimul paragraf
+     duce exact acolo: „proiectăm personalizat, în culoarea dorită”.
+     ========================================================================== -->
+<section class="section" id="unde">
+  <div class="wrap">
+    ${rubrica('05', 'Unde se potrivesc', 'Versatile, în orice spațiu', '')}
+
+    <div class="unde">
+      <div class="proza reveal">
+        <p>Ușile de garaj de tip rulou sunt versatile și se potrivesc în orice
+        spațiu. Sunt o soluție practică pentru siguranța garajului, atât pentru
+        spații comerciale, cât și rezidențiale. Este una dintre alegerile
+        populare, cu mecanism simplu și practic. Funcționează silențios, vă
+        scutesc de efort la închidere și deschidere și vin într-o varietate de
+        culori și dimensiuni.</p>
+
+        <p>Un avantaj major al ușilor de garaj de tip rulou este salvarea
+        spațiului. Chiar și când nu dispuneți de un garaj generos ca suprafață, o
+        ușă de acces de tip rulou vă avantajează. Cu închidere și deschidere pe
+        verticală, interiorul îl veți exploata la maximum.</p>
+
+        <p>Sunt o alegere potrivită fie că locuiți la apartament și dețineți un
+        garaj în zona special amenajată pentru astfel de spații de depozitare,
+        fie că locuiți la casă și ați proiectat și garajul ca parte din curtea
+        dumneavoastră.</p>
+
+        <p>Astfel de uși de tip rulou vor deservi și celor care au hale sau alte
+        tipuri de spații comerciale, depozite. Proiectăm personalizat, în funcție
+        de dimensiunile dorite, în culoarea dorită!</p>
+      </div>
+
+      <aside class="oferta reveal">
+        <h3>Căutați alte dimensiuni și design-uri?</h3>
+        <p>Știm, nu suntem toți la fel, iar despre gusturi nu discutăm. Ne place
+        să creăm, să ne distingem prin ofertele personalizate. Solicitați acum
+        serviciile noastre, ușile dorite, după caracteristicile dorite. Pentru
+        noi va fi o provocare pe care o acceptăm numaidecât!</p>
+        <p class="oferta__nota">Vă vom contacta curând pentru a vă prezenta
+        oferta noastră.</p>
+        <a class="btn btn--orange btn--lg" href="contact.html">Solicitați o ofertă</a>
+      </aside>
+    </div>
   </div>
 </section>
 
 <section class="section">
   <div class="wrap">
-    ${rubrica('05', 'Din teren', 'Lucrări executate',
+    ${rubrica('06', 'Din teren', 'Lucrări executate',
       'Fotografii de la montaje reale. Sunt păstrate la dimensiunea lor originală, fără mărire forțată.')}
     ${GALERIE}
   </div>
@@ -339,14 +407,14 @@ ${COMUTATOR}
 
 <section class="section section--alt" id="intrebari">
   <div class="wrap">
-    ${rubrica('06', 'Înainte să comandați', 'Întrebări frecvente', '')}
+    ${rubrica('07', 'Înainte să comandați', 'Întrebări frecvente', '')}
     ${faqHTML()}
   </div>
 </section>
 
 <section class="section" id="contact">
   <div class="wrap">
-    ${rubrica('07', 'Stăm de vorbă', 'Contact și date de identificare',
+    ${rubrica('08', 'Stăm de vorbă', 'Contact și date de identificare',
       'Spuneți-ne dimensiunile golului și culoarea dorită, iar noi vă răspundem cu varianta potrivită din catalog sau cu o ofertă la comandă.', '', 'h2')}
     ${contactHTML('')}
   </div>

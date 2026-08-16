@@ -1984,3 +1984,48 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   align-items: start;
 }
 @media (max-width: 860px) { .spec-doua { grid-template-columns: 1fr; } }
+
+/* ==========================================================================
+   Secțiunea „Unde se potrivesc” + chemarea la ofertă personalizată
+   ========================================================================== */
+
+/* Textul la stânga, chemarea la ofertă la dreapta. Pe ecrane înguste trec una
+   sub alta, cu oferta la final — acolo unde omul a terminat de citit. */
+.unde {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+  align-items: start;
+}
+@media (max-width: 900px) { .unde { grid-template-columns: 1fr; } }
+
+/* Cartela de ofertă. Portocaliul mărcii o desprinde de restul paginii fără să
+   țipe: e singurul loc din secțiune care cere o acțiune. */
+.oferta {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  padding: clamp(1.25rem, 1rem + 1.4vw, 2rem);
+  border: 1px solid color-mix(in oklab, var(--brand-orange) 45%, transparent);
+  border-radius: var(--r-4);
+  background: var(--band-portocaliu);
+  box-shadow: var(--shadow-2);
+  position: sticky;
+  top: 6rem;
+}
+@media (max-width: 900px) { .oferta { position: static; } }
+
+.oferta h3 {
+  font-size: var(--t-2);
+  letter-spacing: -0.025em;
+  font-variation-settings: "wdth" 104;
+}
+.oferta p { color: var(--ink-muted); font-size: var(--t--1); }
+.oferta__nota {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink);
+  padding-block-start: var(--s-3);
+  border-block-start: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+  inline-size: 100%;
+}
