@@ -44,38 +44,70 @@ const { PRODUSE, CATEGORII, RAL } = UG;
  * altă formă decât imaginea: pagina sare la încărcare, iar raportul e strivit.
  * Eșecul e tăcut, deci merită prins automat.
  */
-function coteJPEG(cale) {
+function coteImagine(cale) {
   const b = fs.readFileSync(cale);
-  let i = 2;
-  while (i < b.length - 9) {
-    if (b[i] !== 0xff) { i++; continue; }
-    const m = b[i + 1];
-    if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) {
-      return { l: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5) };
+
+  /* Formatul se citește din SEMNĂTURĂ, nu din extensie. Extensia minte ușor:
+     pozele de profil au ajuns fișiere PNG salvate peste nume `.jpeg`, iar un
+     cititor care se ia după extensie ar fi tăcut exact atunci când e nevoie
+     de el. */
+  if (b.length > 24 && b.readUInt32BE(0) === 0x89504e47) {
+    return { l: b.readUInt32BE(16), h: b.readUInt32BE(20), tip: 'PNG' };
+  }
+
+  if (b.length > 4 && b[0] === 0xff && b[1] === 0xd8) {
+    let i = 2;
+    while (i < b.length - 9) {
+      if (b[i] !== 0xff) { i++; continue; }
+      const m = b[i + 1];
+      if (m >= 0xc0 && m <= 0xcf && m !== 0xc4 && m !== 0xc8 && m !== 0xcc) {
+        return { l: b.readUInt16BE(i + 7), h: b.readUInt16BE(i + 5), tip: 'JPEG' };
+      }
+      i += 2 + b.readUInt16BE(i + 2);
     }
-    i += 2 + b.readUInt16BE(i + 2);
   }
   return null;
 }
 
 function verificaCoteImagini() {
-  const nepotriviri = [];
+  const nepotriviri = [], lipsa = [], grele = [];
+  const vazute = new Set();
+
   for (const p of PRODUSE) {
     for (const g of UG.galerieProdus(p)) {
+      if (vazute.has(g.src)) continue;
+      vazute.add(g.src);
+
       const abs = path.join(IESIRE, g.src);
-      if (!fs.existsSync(abs) || !/\.jpe?g$/i.test(g.src)) continue;
-      const real = coteJPEG(abs);
-      if (real && (real.l !== g.l || real.h !== g.h)) {
+      if (!fs.existsSync(abs)) { lipsa.push(g.src); continue; }
+
+      const real = coteImagine(abs);
+      if (!real) continue;
+      if (real.l !== g.l || real.h !== g.h) {
         nepotriviri.push(`${g.src}: declarat ${g.l}×${g.h}, fișier ${real.l}×${real.h}`);
       }
+
+      /* Peste 400 KB o imagine de galerie devine o problemă de viteză, nu de
+         calitate: se încarcă pe conexiuni mobile, la produse pe care omul doar
+         le răsfoiește. Semnalat, nu blocat — decizia de a o micșora e a omului. */
+      const kb = fs.statSync(abs).size / 1024;
+      if (kb > 400) grele.push(`${g.src}: ${(kb / 1024).toFixed(2)} MB (${real.tip} ${real.l}×${real.h})`);
     }
   }
-  const unice = [...new Set(nepotriviri)];
-  if (unice.length) {
-    console.warn('\n  ! COTE DE IMAGINE NEPOTRIVITE — actualizați `MASURI` din catalog.js:');
-    unice.forEach((n) => console.warn('      ' + n));
+
+  if (lipsa.length) {
+    console.warn('\n  ! IMAGINI LIPSĂ:');
+    lipsa.forEach((n) => console.warn('      ' + n));
   }
-  return unice.length;
+  if (nepotriviri.length) {
+    console.warn('\n  ! COTE NEPOTRIVITE — actualizați `MASURI` din catalog.js:');
+    nepotriviri.forEach((n) => console.warn('      ' + n));
+  }
+  if (grele.length) {
+    console.warn('\n  ! IMAGINI GRELE (peste 400 KB), de micșorat înainte de publicare:');
+    grele.forEach((n) => console.warn('      ' + n));
+  }
+  return nepotriviri.length + lipsa.length;
 }
 
 /* --- Datele firmei ------------------------------------------------------- */
@@ -242,7 +274,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=47';
+const VER = 'v=48';
 
 /* --- Unelte -------------------------------------------------------------- */
 

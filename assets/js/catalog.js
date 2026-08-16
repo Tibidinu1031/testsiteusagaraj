@@ -85,10 +85,10 @@ window.UG = window.UG || {};
   var FOTO = {
     maro:     'assets/img/usa-maro-8014-8019.jpeg',
     antracit: 'assets/img/usa-gri-antracit.jpg',
-    det01:    'assets/img/usa-detaliu-01.jpeg',
+    det01:    'assets/img/usa-detaliu-01.png',
     det02:    'assets/img/usa-detaliu-02.jpeg',
     det03:    'assets/img/usa-detaliu-03.jpeg',
-    det04:    'assets/img/usa-detaliu-04.jpeg'
+    det04:    'assets/img/usa-detaliu-04.png'
   };
 
   /**
@@ -135,10 +135,10 @@ window.UG = window.UG || {};
   var MASURI = {
     maro:     [255, 255],
     antracit: [510, 495],
-    det01:    [275, 183],
+    det01:    [1536, 1024],
     det02:    [300, 300],
     det03:    [255, 255],
-    det04:    [450, 450]
+    det04:    [1254, 1254]
   };
 
   var BASE = 'https://usa-garaj.ro/produs/';
