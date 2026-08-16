@@ -566,33 +566,154 @@ ${sugestii.map((x) => B.cardHTML(x, '../')).join('\n')}
 
 /* --- tehnic.html --------------------------------------------------------- */
 
+/**
+ * Specificațiile celor două familii, transcrise din fișa producătorului.
+ *
+ * Sunt liste SEPARATE, nu două coloane ale aceluiași tabel, fiindcă fișa nu
+ * declară aceleași câmpuri pentru amândouă: la 55 mm apare caseta, cu cotă și
+ * grosime de tablă, la 77 mm nu apare deloc. Într-un tabel comparativ ar fi
+ * ieșit o celulă goală în dreptul casetei — iar o celulă goală într-o fișă
+ * tehnică se citește „nu are”, ceea ce ar fi fals. Aici lipsa e pur și simplu
+ * absentă, nu afirmată.
+ *
+ * Singura intervenție asupra textului este ortografică: diacritice și virgulă
+ * zecimală (18,5 în loc de 18.5), ca peste tot pe site. Nicio cotă schimbată.
+ */
+const SPEC_55 = [
+  ['Casetă din tablă de aluminiu', '250 × 250 mm, grosime 0,95 mm'],
+  ['Capace laterale din aluminiu', '250 mm'],
+  ['Lamele din aluminiu cu spumă poliuretanică', '55 mm, grosime 14 mm'],
+  ['Greutate covor lamelă', '4 kg/m²'],
+  ['Lamelă finală', 'din aluminiu'],
+  ['Ax metalic zincat', 'Ø 60 mm'],
+  ['Rulmenți', 'oțel'],
+  ['Ghidaje (picioare) ușă din aluminiu', '75 × 30 mm']
+];
+
+const SPEC_77 = [
+  ['Capace laterale din aluminiu', '300 sau 350 mm'],
+  ['Lamele din aluminiu cu spumă poliuretanică', '77 mm, grosime 18,5 mm'],
+  ['Greutate covor lamelă', '6 kg/m²'],
+  ['Lamelă finală', 'din aluminiu'],
+  ['Ax metalic zincat', 'Ø 70 mm'],
+  ['Rulmenți', 'oțel'],
+  ['Ghidaje (picioare) ușă din aluminiu', '90 × 35 mm']
+];
+
+const tabelSpec = (titlu, randuri) => `<div class="spec-panel reveal">
+  <div class="table-scroll">
+    <table class="spec">
+      <caption>${titlu}</caption>
+      <tbody>
+${randuri.map(([k, v]) => `        <tr><th scope="row">${k}</th><td>${v}</td></tr>`).join('\n')}
+      </tbody>
+    </table>
+  </div>
+</div>`;
+
+/* Diagramele de profil, cu cotele lor reale luate din catalog — aceeași sursă
+   ca galeriile de produs, deci o imagine schimbată nu trebuie actualizată în
+   două locuri. `data-galerie` le face să se deschidă în lupă. */
+const figuraProfil = (cheie, alt, legenda) => {
+  const m = UG.MASURI[cheie];
+  return `<figure class="profil">
+    <img src="${UG.FOTO[cheie]}" width="${m[0]}" height="${m[1]}" alt="${alt}"
+         loading="lazy" decoding="async" tabindex="0" role="button">
+    <figcaption>${legenda}</figcaption>
+  </figure>`;
+};
+
 S('tehnic.html', pagina({
   base: '', activ: 'tehnic.html',
-  titlu: 'Fișă tehnică — uși de garaj rulou 55 mm și 77 mm | Usa-garaj.ro',
-  descriere: 'Cote constructive pentru ușile de garaj tip rulou ABBA: pas lamelă, grosime, masă tablier, casetă, ghidaje, ax. Regula de calcul a spațiului util de trecere.',
+  titlu: 'Tehnic — uși de garaj tip rulou, lamelă 55 și 77 mm | Usa-garaj.ro',
+  descriere: 'Fișa tehnică a ușilor de garaj tip rulou: cum se citesc dimensiunile, calculul spațiului util de trecere, specificațiile complete pentru lamela de 55 mm și cea de 77 mm.',
   corp: `<section class="section">
   <div class="wrap">
     ${firimituri('', [['Acasă', 'index.html'], ['Tehnic', null]])}
-    ${rubrica('01', 'Fișă tehnică', '55 mm sau 77 mm',
-      'Diferența dintre cele două familii nu este estetică, ci structurală. Lamela mai groasă înseamnă tablier mai rigid, ax mai gros și ghidaje mai late — adică deschideri mai mari, executate în siguranță.', '', 'h1')}
+    ${rubrica('01', 'Fișă tehnică', 'Uși de garaj tip rulou',
+      'Confecționate din aluminiu, cu lamelele umplute cu spumă poliuretanică. Mai jos: cum se citesc cotele din denumirea produsului, cum se află spațiul util de trecere și specificațiile complete ale celor două familii de lamelă.', '', 'h1')}
+
     <div class="stack-lg">
-      ${tabelTehnic()}
-      ${NOTA_COTE}
-      <div class="spec-panel reveal">
-        <div class="table-scroll">
-          <table class="spec">
-            <caption>Ce cuprinde livrarea unei uși automate</caption>
-            <tbody>
-              <tr><th scope="row">Acționare</th><td>motor tubular cu centrală de comandă</td></tr>
-              <tr><th scope="row">Telecomenzi</th><td>2 bucăți</td></tr>
-              <tr><th scope="row">Acționare de rezervă</th><td>manivelă și legătură cardanică</td></tr>
-              <tr><th scope="row">Timp de deschidere / închidere</th><td>circa 10 secunde</td></tr>
-              <tr><th scope="row">Lamelă finală</th><td>din aluminiu, inclusă</td></tr>
-              <tr><th scope="row">Grosime tablă casetă</th><td>0,95 mm</td></tr>
-            </tbody>
-          </table>
+
+      <div class="reveal">
+        <h2>Cum se citesc dimensiunile</h2>
+        <p class="lede" style="margin-block-start:var(--s-4)">
+          Dimensiunile listate pe site sunt <b>AAAA × BBBB</b>, unde
+          <b>AAAA = lățimea</b>, iar <b>BBBB = înălțimea</b>.
+        </p>
+        <p style="margin-block-start:var(--s-4);max-inline-size:var(--measure);color:var(--ink-muted)">
+          Aceste cote reprezintă dimensiunile de execuție ale ușilor de garaj și
+          includ <b>ghidajele pe lățime</b> și <b>caseta pe înălțime</b>.
+        </p>
+      </div>
+
+      <div class="note reveal">
+        <div>
+          <p><b>Spațiul util de trecere</b> se află scăzând din cotele de execuție:</p>
+          <ul class="calcul">
+            <li><b>Uși rulou 55 mm</b><span>AAAA − 150 mm și BBBB − 300 mm</span></li>
+            <li><b>Uși rulou 77 mm</b><span>AAAA − 180 mm și BBBB − 377 mm</span></li>
+          </ul>
+          <p>Acolo unde producătorul declară explicit spațiul de trecere, acesta
+          este afișat pe pagina produsului.</p>
         </div>
       </div>
+
+      <div class="reveal">
+        <h2>De ce o ușă tip rulou</h2>
+        <div class="proza" style="margin-block-start:var(--s-4)">
+          <p>Ușa de garaj reprezintă un element foarte important în cadrul
+          amenajărilor exterioare de calitate, iar gama de culori vă permite
+          înviorarea peisajului casei dumneavoastră. Recunoscute pentru
+          fiabilitatea și siguranța lor, ușile tip rulou reprezintă alegerea
+          ideală în echiparea garajului dumneavoastră.</p>
+
+          <p>Confecționată din aluminiu, ușa de garaj rezidențială tip rulou
+          orizontal izolează termic și fonic, având lamelele umplute cu spumă
+          poliuretanică. Acestea pot fi utilizate în diverse contexte, de la
+          obișnuitul rol de ușă de garaj, până la cel de ușă pentru spațiu
+          comercial sau pentru o hală industrială.</p>
+
+          <p>Prin modalitatea de închidere-deschidere, spațiul ocupat de ușa de
+          garaj este foarte mic, iar accesibilitatea este sporită. Avantajul
+          ușilor de tip rulou față de cele secționale constă în faptul că toate
+          lamelele se strâng într-o casetă care necesită și ocupă un spațiu mult
+          mai mic.</p>
+
+          <p>Constructiv, ușile de garaj tip rulou sunt niște rulouri exterioare
+          de dimensiuni mai mari, care au lamelele umplute cu spumă poliuretanică
+          pentru izolare termică și rezistență. În funcție de mărimea ușii sau de
+          rezistența și izolarea termică cerute de proiect, lamelele au
+          dimensiunea de <b>55</b> sau <b>77 mm</b>.</p>
+        </div>
+      </div>
+
+      <div class="profile reveal" data-galerie>
+        ${figuraProfil('det01',
+          'Secțiune comparativă prin profilul P55 și profilul PA77, cu cotele 55 / 12 mm și 77 / 21 mm.',
+          'Profil P55 și profil PA77, comparate')}
+        ${figuraProfil('det04',
+          'Secțiune prin lamela de 55 mm, cu grosimea de 14 mm și umplutura de spumă poliuretanică.',
+          'Lamela de 55 mm, în secțiune')}
+      </div>
+
+      <div class="reveal">
+        <h2>Specificații tehnice</h2>
+      </div>
+
+      <div class="spec-doua">
+        ${tabelSpec('Uși tip rulou cu lamelă de 55 mm', SPEC_55)}
+        ${tabelSpec('Uși tip rulou cu lamelă de 77 mm', SPEC_77)}
+      </div>
+
+      ${tabelSpec('Ce cuprinde livrarea unei uși automate', [
+        ['Acționare', 'motor tubular cu centrală de comandă'],
+        ['Telecomenzi', '2 bucăți'],
+        ['Acționare de rezervă', 'manivelă și legătură cardanică'],
+        ['Timp de deschidere / închidere', 'circa 10 secunde, în funcție de model'],
+        ['Lamelă finală', 'din aluminiu, inclusă']
+      ])}
+
     </div>
   </div>
 </section>`

@@ -657,6 +657,9 @@ window.UG = window.UG || {};
   UG.CULOARE_FOTO = CULOARE_FOTO;
   UG.LAMELA = LAMELA;
   UG.FOTO = FOTO;
+  /* Expuse ca pagina „Tehnic” să poată folosi diagramele de profil cu cotele
+     lor reale, fără să le rescrie de mână — aceeași sursă ca galeriile. */
+  UG.MASURI = MASURI;
   UG.PRODUSE = PRODUSE;
   UG.CATEGORII = { C55: C55, C77: C77, NOI: NOI, PRO: PRO, A55: A55, A77: A77 };
 

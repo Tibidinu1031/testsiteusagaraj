@@ -1911,3 +1911,76 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   .lupa__nav--prev { inset-inline-start: var(--s-5); }
   .lupa__nav--next { inset-inline-end: var(--s-5); }
 }
+
+/* ==========================================================================
+   Pagina „Tehnic” — lista de calcul, diagramele de profil, tabelele pereche
+   ========================================================================== */
+
+/* Cele două reguli de scădere. Etichetă și formulă pe rânduri separate la
+   ecrane înguste, una lângă alta când e loc — formula e mono, ca să se citească
+   ca o cotă, nu ca text curent. */
+.calcul {
+  list-style: none;
+  padding: 0;
+  margin-block: var(--s-4);
+  display: grid;
+  gap: var(--s-3);
+}
+.calcul li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-2) var(--s-4);
+  padding-block-end: var(--s-3);
+  border-block-end: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+}
+.calcul li:last-child { border-block-end: 0; padding-block-end: 0; }
+.calcul b { color: var(--ink); min-inline-size: 11rem; }
+.calcul span {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--acc);
+  font-weight: 500;
+}
+
+/* Diagramele de profil. Fundal alb fiindcă sunt randări pe alb: pe hârtia caldă
+   a paginii ar fi plutit într-un dreptunghi de altă nuanță. */
+/* Exact doua coloane, nu : sunt fix doua diagrame, iar    incapea trei pe ecran lat, deci lasa o coloana goala in dreapta si micsora
+   inutil desenele. */
+.profile {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-5);
+}
+@media (max-width: 760px) { .profile { grid-template-columns: 1fr; } }
+.profile figure {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r-4);
+  overflow: hidden;
+  background: #fff;
+}
+.profile img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  cursor: zoom-in;
+}
+.profile figcaption {
+  padding: var(--s-3) var(--s-4);
+  border-block-start: 1px solid var(--line);
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+}
+
+/* Cele două fișe, alăturate pe ecrane late și una sub alta pe telefon. */
+/* Aceeasi problema ca la .profile: doua fise, deci doua coloane. */
+.spec-doua {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-5);
+  align-items: start;
+}
+@media (max-width: 860px) { .spec-doua { grid-template-columns: 1fr; } }
