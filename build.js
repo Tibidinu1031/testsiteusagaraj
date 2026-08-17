@@ -321,7 +321,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=60';
+const VER = 'v=61';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -475,10 +475,15 @@ ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
       <b>${FIRMA.nume}</b>
       <span class="idbar__sep" aria-hidden="true">·</span>
       <span class="idbar__code"><span>CUI</span>&nbsp;${FIRMA.cui}</span>
+    </p>
+    <!-- Numărul de ordine și telefonul stau în ACELAȘI element, ca să rămână pe
+         același rând când bara se rupe pe ecran îngust. Erau două elemente
+         separate, iar ruperea pe rânduri le trimitea pe rânduri diferite. -->
+    <p class="idbar__reg">
       <span class="idbar__sep" aria-hidden="true">·</span>
       <span class="idbar__code"><span>Nr. Reg. Com.</span>&nbsp;${FIRMA.j}</span>
+      <a class="idbar__tel" href="tel:${FIRMA.telHref}">${FIRMA.tel}</a>
     </p>
-    <p><a class="idbar__tel" href="tel:${FIRMA.telHref}">${FIRMA.tel}</a></p>
   </div>
 </div>
 

@@ -364,7 +364,7 @@ ${COMUTATOR}
      ========================================================================== -->
 <section class="section" id="unde">
   <div class="wrap">
-    ${rubrica('05', 'Unde se potrivesc', 'Versatile, în orice spațiu', '')}
+    ${rubrica('05', 'Unde se potrivesc', 'Despre ușile noastre', '')}
 
     <div class="unde">
       <div class="proza reveal">
@@ -406,8 +406,7 @@ ${COMUTATOR}
 
 <section class="section">
   <div class="wrap">
-    ${rubrica('06', 'Din teren', 'Lucrări executate',
-      'Fotografii de la montaje reale. Sunt păstrate la dimensiunea lor originală, fără mărire forțată.')}
+    ${rubrica('06', 'Din teren', 'Lucrări executate', '')}
     ${GALERIE}
   </div>
 </section>
