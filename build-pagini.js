@@ -101,9 +101,15 @@ const INTREBARI = [
    'Da. Ne puteți trimite fotografii ale garajului și dimensiunile aproximative, iar echipa noastră vă poate indica informațiile necesare pentru stabilirea soluției potrivite.']
 ];
 
+/* Numărul se scrie din POZIȚIA în listă, nu din text. Așa rămâne corect dacă se
+   adaugă sau se scoate o întrebare la mijloc — altfel ar trebui renumerotate
+   toate de mână, iar una uitată ar trece neobservată.
+
+   `aria-hidden` pe număr: un cititor de ecran care ar spune „zero unu, Ce tipuri
+   de uși…” adaugă zgomot, nu informație. Poziția în listă o anunță oricum. */
 const faqHTML = () => `<div class="faq reveal">
-${INTREBARI.map(([q, a]) => `  <details>
-    <summary>${q}</summary>
+${INTREBARI.map(([q, a], i) => `  <details>
+    <summary><i class="faq__n" aria-hidden="true">${String(i + 1).padStart(2, '0')}</i>${q}</summary>
     <div><p>${a}</p></div>
   </details>`).join('\n')}
 </div>`;

@@ -1346,7 +1346,26 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
    11. Întrebări frecvente
    ========================================================================== */
 
-.faq { display: grid; gap: 0; border-block-start: 1px solid var(--line); }
+/**
+ * Numerele întrebărilor sunt DISCRETE, nu plăcuțe portocalii ca numerele de
+ * secțiune. Acolo sunt șapte pe pagină și marchează începuturi; aici sunt
+ * douăzeci unul sub altul și doar ajută la orientare — douăzeci de plăcuțe
+ * portocalii ar fi tras ochiul de la întrebările propriu-zise.
+ *
+ * `tabular-nums` ține cifrele pe aceeași lățime, deci „01” și „18” ocupă exact
+ * cât „20” și toate întrebările pornesc din același punct.
+ */
+.faq { --faq-n: 2.5rem; display: grid; gap: 0; border-block-start: 1px solid var(--line); }
+.faq__n {
+  flex: none;
+  inline-size: var(--faq-n);
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: var(--t--1);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+}
 .faq details { border-block-end: 1px solid var(--line); }
 .faq summary {
   display: flex;
@@ -1375,9 +1394,19 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 .faq details[open] summary::after { rotate: -135deg; }
 .faq details > div {
   padding-block-end: var(--s-5);
+  /* Răspunsul pornește de sub ÎNTREBARE, nu de sub număr: lățimea numărului plus
+     distanța dintre elementele din antet. Aliniat la marginea din stânga, ar fi
+     părut că aparține altui rând. */
+  padding-inline-start: calc(var(--faq-n) + var(--s-4));
   color: var(--ink-muted);
   max-inline-size: var(--measure);
   font-size: var(--t-0);
+}
+
+/* Pe ecran îngust retragerea ar mânca prea mult din lățimea textului. */
+@media (max-width: 560px) {
+  .faq { --faq-n: 1.9rem; }
+  .faq details > div { padding-inline-start: 0; }
 }
 
 /* ==========================================================================
