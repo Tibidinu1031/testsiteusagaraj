@@ -145,8 +145,55 @@ const FIRMA = {
     ];
   },
 
-  site: 'https://usa-garaj.ro'
+  site: 'https://usa-garaj.ro',
+
+  /**
+   * Paginile de Facebook ale grupului.
+   *
+   * Adresele sunt cele CANONICE, nu legăturile de partajare primite
+   * (`/share/14oK9ECmNHN/`). Un link de partajare este un identificator de
+   * sesiune: duce la pagină azi, dar poartă parametri de urmărire și nu e
+   * garantat pe termen lung. Cele de mai jos au fost obținute deschizând
+   * fiecare legătură de partajare și citind `link[rel=canonical]`.
+   *
+   * `eticheta` este scurtă fiindcă apare pe buton, lângă pictogramă; `nume`
+   * este numele întreg al paginii și ajunge în `aria-label` și în `title`, ca
+   * cine folosește un cititor de ecran să audă unde ajunge.
+   */
+  facebook: [
+    {
+      url: 'https://www.facebook.com/abbaconfort',
+      eticheta: 'Uși de garaj',
+      nume: 'Uși de garaj ABBA Confort'
+    },
+    {
+      url: 'https://www.facebook.com/people/Montaj-Aer-Conditionat-D%C3%A2mbovi%C8%9Ba/61566935046909/',
+      eticheta: 'Aer condiționat',
+      nume: 'Montaj Aer Condiționat Dâmbovița'
+    }
+  ]
 };
+
+/**
+ * Butoanele de Facebook, generate din `FIRMA.facebook`.
+ *
+ * O singură funcție pentru ambele locuri — erou și subsol — ca o adresă
+ * schimbată să nu rămână veche într-unul din ele. Diferă doar clasa de
+ * dimensiune.
+ *
+ * `rel="noopener"` fiindcă se deschid în filă nouă: fără el, pagina Facebook
+ * primește o referință către fereastra noastră prin `window.opener`.
+ */
+function butoaneFacebook(clasa) {
+  const sigla = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' +
+    '<path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.45 2.9h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg>';
+
+  return FIRMA.facebook.map((p) =>
+    `<a class="fb-btn ${clasa}" href="${p.url}" target="_blank" rel="noopener"
+       aria-label="${esc(p.nume)} pe Facebook, se deschide într-o filă nouă"
+       title="${esc(p.nume)}">${sigla}<span>${esc(p.eticheta)}</span></a>`
+  ).join('\n        ');
+}
 
 /* --- Domeniile ----------------------------------------------------------- */
 
@@ -274,7 +321,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=54';
+const VER = 'v=60';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -482,9 +529,22 @@ ${o.corp}
           Uși de garaj tip rulou cu lamele de aluminiu, acționate cu telecomandă.
           Proiectare, montaj și service.
         </p>
-        <img class="ftr__sigla" src="${base}assets/img/logo-abba-confort.jpeg"
+
+        <div class="fb-grup">
+          <p class="fb-grup__titlu">Ne găsiți pe Facebook</p>
+          <div class="fb-grup__butoane">
+        ${butoaneFacebook('fb-btn--sm')}
+          </div>
+        </div>
+        <!-- Sigla poartă versiunea în adresă, ca și foile de stil. Motivul nu e
+             teoretic: fișierul a fost adăugat după ce paginile îl cereau deja,
+             iar browserele care apucaseră să primească un 404 țineau minte
+             eșecul și nu mai încercau — sigla rămânea goală oricâte reîncărcări
+             normale s-ar fi făcut. Cu versiune în adresă, un fișier nou vine cu
+             adresă nouă și nu poate moșteni un eșec vechi. -->
+        <img class="ftr__sigla" src="${base}assets/img/logo-abba-rotund.png?${VER}"
              alt="ABBA CONFORT — problema ta, soluția noastră"
-             width="1600" height="1600" loading="lazy" decoding="async">
+             width="512" height="512" decoding="async">
       </div>
 ${subsol}
     </div>
@@ -649,7 +709,7 @@ const FILTRE = `<div class="filters reveal">
   </div>
 </div>`;
 
-module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV, verificaCoteImagini };
+module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV, verificaCoteImagini, butoaneFacebook };
 
 /* Restul generatorului este în build-pagini.js, încărcat mai jos, ca fișierul
    acesta să rămână la o dimensiune citibilă. */

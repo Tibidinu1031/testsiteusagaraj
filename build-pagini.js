@@ -6,7 +6,7 @@
 'use strict';
 
 const B = require('./build.js');
-const { pagina, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG } = B;
+const { pagina, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, butoaneFacebook } = B;
 const { PRODUSE, RAL, LAMELA, CATEGORII } = UG;
 const lei = UG.lei;
 
@@ -154,6 +154,13 @@ const HERO = `<section class="hero">
           Răsfoiește produsele noastre
           <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
         </button>
+      </div>
+
+      <!-- Paginile de Facebook stau SUB chemarea principală, nu lângă ea: sunt
+           o a doua cale, nu una egală. Alături, ar fi concurat cu butonul care
+           duce la produse — adică exact ce trebuie apăsat întâi. -->
+      <div class="fb-grup fb-grup--erou">
+        ${butoaneFacebook('fb-btn--lg')}
       </div>
       <dl class="stats">
         <div class="stat"><dd class="stat__v">${s.total}</dd><dt class="stat__k">configurații în catalog</dt></div>
@@ -525,8 +532,7 @@ for (const p of PRODUSE) {
     ...(p.pasaj ? [['Spațiu util de trecere', p.pasaj.replace(/^L/, 'L ').replace(/ H/, ' × H ')]] : []),
     ['Pasul lamelei', `${p.lamela} mm`],
     ['Culoare', raluri],
-    ...randuriMagazin,
-    ['Cod produs', String(p.id)]
+    ...randuriMagazin
   ];
 
   /* Magazinul nu publică specificații pentru toate produsele. Unde lipsesc, se

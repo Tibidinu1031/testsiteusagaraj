@@ -138,50 +138,29 @@
    de aici umplutura de 15%, cu `contain` în loc de `cover`. Cercul rămâne
    cerc, sigla rămâne întreagă. */
 /**
- * Sigla din subsol: rotundă, cât se poate de mare, fără să atingă cercul.
+ * Sigla din subsol.
  *
- * Umplutura NU se mai ia din formula pătratului înscris (0,147 × d). Formula
- * aceea presupune că desenul umple pătratul uniform — al nostru nu îl umple:
- * sloganul „PROBLEMA TA, SOLUȚIA NOASTRĂ!” e lat și stă jos, deci colțurile de
- * jos ale conținutului ies în afara cercului înainte ca pătratul să-l atingă.
+ * CERCUL E ÎN FIȘIER, nu aici. `logo-abba-rotund.png` e deja un disc alb pe
+ * fond transparent, cu sigla micșorată la 84 % și așezată în centru; cea mai
+ * depărtată cerneală stă la 90,5 % din rază, deci sloganul are spațiu liber de
+ * jur împrejur.
  *
- * Măsurat pe fișierul real, prin scanarea pixelilor ne-albi: punctul cel mai
- * depărtat de centru se află la 1,073 × semi-lățimea imaginii, în stânga-jos —
- * exact litera „P” din „PROBLEMA”, cea reclamată ca ruptă. Simetric, semnul de
- * exclamare din dreapta.
+ * Ce a fost înainte aici — `padding` + `object-fit: contain` + `border-radius`
+ * peste fișierul pătrat — nu putea funcționa. CSS-ul taie un cerc dintr-un
+ * pătrat, dar nu poate muta conținutul din interiorul lui: sloganul „PROBLEMA
+ * TA, SOLUȚIA NOASTRĂ!” atinge marginile pătratului la circa 80 % din înălțime,
+ * exact unde cercul e cel mai îngust, așa că „P” și „!” cădeau în afară. Orice
+ * umplutură destul de mare cât să-l salveze făcea sigla mult prea mică.
  *
- * De aici condiția: (lățime_imagine / 2) × 1,073 ≤ d / 2, adică
- * lățime_imagine ≤ 0,932 × d. Se folosește 0,88 × d, cu marjă pentru chenar și
- * pentru netezirea marginilor — deci umplutură de 0,06 × d de fiecare parte.
- *
- * Efectul: sigla trece de la 71 % la 88 % din diametru, adică e cu circa un
- * sfert mai mare, iar sloganul redevine lizibil. Dacă se schimbă fișierul
- * siglei, se remăsoară raza conținutului și se recalculează 0,06.
+ * DECI: nu adăuga înapoi `padding`, `border-radius`, `object-fit` sau
+ * `background` — nu mai au ce potrivi și pot doar strica ce e deja corect. Dacă
+ * se schimbă sigla, se regenerează fișierul, nu se reglează stilul.
  */
 .ftr__sigla {
-  /* Diametrul stă într-o variabilă fiindcă umplutura trebuie calculată din EL,
-     nu în procente: umplutura procentuală se raportează la lățimea părintelui,
-     nu a elementului. */
-  --d: clamp(10rem, 7.5rem + 7vw, 13.5rem);
   display: block;
-  inline-size: var(--d);
-  aspect-ratio: 1;
+  inline-size: clamp(10rem, 7.5rem + 7vw, 13.5rem);
   block-size: auto;
   margin-block-start: var(--s-5);
-
-  /* 11%, nu 6%. Măsurat pe fișier: pixelul de cerneală cel mai depărtat de
-     centru — colțul din stânga-jos al lui „P” din PROBLEMA — stă la 0,536 din
-     latura desenului. La 6% umplutură desenul are 88% din diametru, deci acel
-     colț ajunge la 0,471·D, adică la 7 px de marginea cercului pe un diametru
-     de 210. Tehnic nu se taie niciun pixel — verificat, zero pierderi la
-     decupaj — dar cerneala care atinge muchia SE CITEȘTE ca tăiată, și asta
-     contează la fel de mult. La 11% rămân circa 8% din diametru spațiu liber
-     de jur împrejur, deci prima și ultima literă se văd limpede. */
-  padding: calc(var(--d) * 0.11);
-  border-radius: 50%;
-  object-fit: contain;
-  background: #fff;
-  border: 1px solid color-mix(in oklab, var(--brand-orange) 34%, transparent);
 }
 .brand__name {
   display: grid;
@@ -513,6 +492,17 @@ kbd {
    Rezerva a crescut de la 19rem la 21rem odată cu mutarea benzii „De ce noi?”
    în erou: banda ocupă circa 55 px, iar fără rezerva în plus panoul rămânea cu
    3 px prea înalt și împingea banda exact sub marginea ecranului. */
+/* Panoul e mai îngust decât coloana lui (limita de `max-inline-size` intră în
+   joc pe ecranele late și joase), deci trebuie ancorat la o margine, nu lăsat
+   să plutească.
+
+   `margin-inline-start: auto` — nu `margin-inline: auto` — îl lipește de
+   marginea DREAPTĂ a paginii, cu zero spațiu în plus, exact cum textul din
+   stânga pornește cu zero spațiu în plus de la marginea stângă. Cu ambele
+   margini pe auto, panoul se centra în coloana lui: rămâneau ~82 px liberi și
+   în stânga, și în dreapta, iar ușa nu ajungea niciodată la marginea paginii —
+   arăta trasă spre centru, în loc să încadreze coloana ca o oglindă a
+   textului. */
 .hero__panel {
   margin: 0;
   display: grid;
@@ -523,7 +513,7 @@ kbd {
   box-shadow: var(--shadow-2);
   overflow: hidden;
   max-inline-size: min(40rem, calc((100svh - 21rem) * 1.188));
-  margin-inline: auto;
+  margin-inline-start: auto;
   inline-size: 100%;
 }
 
@@ -1008,6 +998,21 @@ main > section.hero { background: none; border-block-start: 0; }
   color: var(--ink-faint);
 }
 .spec-row span { white-space: nowrap; }
+
+/* Secțiunea 02 de pe prima pagină: conținutul cartelelor stă centrat, în
+   continuarea textelor de secțiune. `.spec-row` și `.price` sunt cutii flex,
+   deci nu ascultă de `text-align` — au nevoie de `justify-content`.
+   Domeniul e `.acasa`, deci magazinul, categoriile și paginile de produs
+   păstrează alinierea la stânga.
+
+   `.card__foot` intră și el în centrare. A fost lăsat întins între capete ca
+   „bară de utilitare”, dar pe o cartelă în care titlul, cotele, descrierea și
+   prețul stau toate pe axa din mijloc, un singur rând împins spre margini se
+   citea ca o scăpare, nu ca o intenție. */
+.acasa .card__body { text-align: center; }
+.acasa .spec-row,
+.acasa .price,
+.acasa .card__foot { justify-content: center; }
 
 .price { display: flex; align-items: baseline; gap: var(--s-3); flex-wrap: wrap; margin-block-start: var(--s-1); }
 .price__now {
@@ -2124,4 +2129,75 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   .svc { border-inline-end: 0; }
   .svc:nth-child(n + 4) { border-block-end: 1px solid var(--line-strong); }
   .svc:last-child { border-block-end: 0; }
+}
+
+/* ==========================================================================
+   Paginile de Facebook ale grupului
+   ========================================================================== */
+
+/**
+ * Butoanele NU folosesc albastrul Facebook.
+ *
+ * Un buton albastru pe o pagină verde-portocalie arată ca un obiect străin
+ * lipit peste design. Pictograma singură spune deja despre ce rețea e vorba —
+ * e una dintre puținele forme recunoscute fără culoare. Așa că butonul rămâne
+ * în paleta mărcii, iar Facebook e semnalat prin semn, nu prin fond.
+ */
+.fb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  padding: 0.6rem 1rem;
+  border: 1px solid color-mix(in oklab, var(--brand-green) 32%, transparent);
+  border-radius: var(--r-2);
+  background: color-mix(in oklab, var(--brand-green) 6%, transparent);
+  color: var(--acc);
+  font-size: var(--t--1);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background var(--d-1), border-color var(--d-1), transform var(--d-1) var(--ease-out);
+}
+.fb-btn svg { inline-size: 1.15rem; block-size: 1.15rem; flex: none; }
+.fb-btn:hover {
+  transform: translateY(-1px);
+  background: color-mix(in oklab, var(--brand-green) 12%, transparent);
+  border-color: var(--brand-green);
+}
+.fb-btn--lg { padding: 0.75rem 1.15rem; font-size: var(--t-0); }
+.fb-btn--lg svg { inline-size: 1.3rem; block-size: 1.3rem; }
+.fb-btn--sm { padding: 0.5rem 0.8rem; font-size: var(--t--2); }
+.fb-btn--sm svg { inline-size: 1rem; block-size: 1rem; }
+
+.fb-grup { display: grid; gap: var(--s-3); margin-block-start: var(--s-5); }
+.fb-grup__titlu {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.fb-grup__butoane { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+
+/* Aliniate la stânga, ca titlul, textul și butonul principal — coloana din
+   erou NU e centrată, doar secțiunea 02 e. Presupunerea greșită anterioară le
+   centra pe ele singure, rupte de restul coloanei. */
+.fb-grup--erou {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-block-start: var(--s-4);
+}
+
+/* În subsol banda e portocalie, deci verdele conturat n-are contrast suficient:
+   butoanele trec pe fond alb, cu literă verde. */
+.ftr .fb-btn {
+  background: color-mix(in oklab, #fff 78%, transparent);
+  border-color: color-mix(in oklab, var(--brand-green) 45%, transparent);
+}
+.ftr .fb-btn:hover { background: #fff; border-color: var(--brand-green); }
+
+@media (max-width: 520px) {
+  .fb-grup--erou .fb-btn { flex: 1 1 100%; }
 }
