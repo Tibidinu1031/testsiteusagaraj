@@ -82,7 +82,13 @@ window.UG = window.UG || {};
       rail.style.transform = 'translateX(' + Math.round(x) + 'px)';
     }
 
-    function deseneaza() {
+    /**
+     * `inTimpulGestului` se dă doar din glisare, cât degetul e încă pe ecran.
+     * Atunci se sar două lucruri: repoziționarea șinei — pe care o conduce
+     * degetul, nu codul — și redesenarea galeriei din vizualizarea rapidă, care
+     * ar reconstrui zeci de imagini în timp ce trec plăcile pe sub deget.
+     */
+    function deseneaza(inTimpulGestului) {
       var p = PRODUSE[index];
       var c = UG.culoareDesen(p);
       var red = UG.reducere(p);
@@ -111,8 +117,8 @@ window.UG = window.UG || {};
       elLive.textContent = p.nume + '. ' + UG.lei(p.pret) +
         '. Poziția ' + (index + 1) + ' din ' + PRODUSE.length + '.';
 
-      if (qvDeschis) deseneazaQV(p);
-      pozitioneazaSina();
+      if (qvDeschis && !inTimpulGestului) deseneazaQV(p);
+      if (!inTimpulGestului) pozitioneazaSina();
     }
 
     /* --- Vizualizarea rapidă ---------------------------------------------- */
@@ -328,6 +334,9 @@ window.UG = window.UG || {};
        fiecare pixel. */
     rail.addEventListener('pointermove', function (e) {
       if (mod !== 'fix' || e.pointerType !== 'mouse') return;
+      /* Cât se trage de șină cu mausul apăsat, selecția o dă poziția șinei, nu
+         placa de sub cursor — altfel cele două s-ar bate pe fiecare pixel. */
+      if (trage) return;
       var t = e.target.closest('.tile');
       if (!t || Number(t.dataset.i) === index) return;
       index = Number(t.dataset.i);
@@ -358,24 +367,25 @@ window.UG = window.UG || {};
      * Decizia se ia și pe verticală: o mișcare mai degrabă verticală este o
      * încercare de derulare a paginii, nu o răsfoire, și se ignoră.
      *
-     * CÂTE PRODUSE PARCURGE O GLISARE
-     * Prima variantă avansa exact unul, oricât de lung sau de rapid ar fi fost
-     * gestul — la 21 de produse însemna 20 de glisări ca să ajungi la capăt.
-     * Acum contează și distanța, și viteza, ca la o listă care se rostogolește:
+     * CUM SE MIȘCĂ ȘINA
+     * Nu în trepte, ci sub deget. Varianta dinainte aștepta ridicarea degetului,
+     * calcula câți pași „merită” gestul și sărea acolo: cât ținea degetul pe
+     * ecran nu se mișca nimic, iar la final produsele săreau brusc. Acum șina
+     * urmează degetul pixel cu pixel, iar la ridicare alunecă mai departe cu o
+     * distanță luată din VITEZA cu care s-a ridicat degetul, apoi se așază pe
+     * cel mai apropiat produs.
      *
-     *   pași = distanță / lățimea unei plăci  +  bonus din viteză
-     *
-     * Lățimea plăcii se citește din pagină, nu e o constantă: `--tile-w` este
-     * declarat cu `clamp()` și diferă între telefon și desktop. Împărțind la
-     * lățimea reală, un gest care mătură trei plăci avansează trei produse —
-     * adică exact ce arată degetul că vrea.
-     *
-     * Bonusul de viteză folosește pixeli pe milisecundă. O aruncare rapidă
-     * (peste ~1,2 px/ms) adaugă până la 6 pași, ca la o listă cu inerție.
-     * Plafonul de 12 există ca o smucitură accidentală să nu sară jumătate de
-     * catalog, de unde omul nu mai știe unde a ajuns.
+     * Viteza se măsoară pe ultimele ~120 ms, nu pe tot gestul. Contează cât de
+     * repede se mișca degetul CÂND s-a ridicat: o glisare lungă și lentă care se
+     * termină cu o smucitură trebuie să arunce, iar una rapidă care se oprește
+     * pe loc înainte de ridicare trebuie să se oprească.
      */
     var x0 = null, y0 = null, t0 = 0, idIndicator = null;
+    var xPornire = 0;       // translația șinei în clipa atingerii
+    var trage = false;      // gestul a fost recunoscut ca răsfoire
+    var axaDecisa = false;  // s-a hotărât dacă e orizontal sau vertical
+    var probe = [];         // ultimele poziții ale degetului, pentru viteză
+    var pozitii = [];       // translația la care fiecare placă ajunge în mijloc
 
     function latimePlaca() {
       var t = tiles[0];
@@ -384,14 +394,29 @@ window.UG = window.UG || {};
       return t.offsetWidth + gap;
     }
 
-    function pasiDinGest(dx, durata) {
-      var distanta = Math.abs(dx);
-      var pasi = Math.round(distanta / latimePlaca());
+    /* Se calculează O DATĂ, la atingere, nu la fiecare mișcare a degetului:
+       `offsetLeft` și `clientWidth` forțează browserul să recalculeze așezarea,
+       iar într-o glisare vin zeci de evenimente pe secundă. */
+    function calculeazaPozitii() {
+      var padStanga = parseFloat(getComputedStyle(viewport).paddingLeft) || 0;
+      var mijloc = viewport.clientWidth / 2;
+      pozitii = tiles.map(function (t) {
+        return mijloc - padStanga - (t.offsetLeft + t.offsetWidth / 2);
+      });
+    }
 
-      var viteza = durata > 0 ? distanta / durata : 0;   // px/ms
-      if (viteza > 1.2) pasi += Math.min(6, Math.round((viteza - 1.2) * 4));
+    function translatieCurenta() {
+      var m = /translateX\((-?[\d.]+)px\)/.exec(rail.style.transform || '');
+      return m ? parseFloat(m[1]) : (pozitii[index] || 0);
+    }
 
-      return Math.max(1, Math.min(12, pasi));
+    function indexPentruTranslatie(x) {
+      var bun = 0, dMin = Infinity;
+      for (var i = 0; i < pozitii.length; i++) {
+        var d = Math.abs(pozitii[i] - x);
+        if (d < dMin) { dMin = d; bun = i; }
+      }
+      return bun;
     }
 
     function incepe(e) {
@@ -399,22 +424,95 @@ window.UG = window.UG || {};
       y0 = e.clientY;
       t0 = e.timeStamp || Date.now();
       idIndicator = e.pointerId;
+      trage = false;
+      axaDecisa = false;
+      probe = [{ x: e.clientX, t: t0 }];
+      calculeazaPozitii();
+      xPornire = translatieCurenta();
+      rail.classList.add('switcher__rail--trage');
       try { viewport.setPointerCapture(e.pointerId); } catch (err) { /* nu e obligatoriu */ }
     }
 
-    function termina(e) {
-      if (x0 === null || e.pointerId !== idIndicator) return;
+    function misca(e) {
+      if (idIndicator === null || e.pointerId !== idIndicator) return;
 
       var dx = e.clientX - x0;
       var dy = e.clientY - y0;
-      var durata = (e.timeStamp || Date.now()) - t0;
-      x0 = y0 = idIndicator = null;
-      try { viewport.releasePointerCapture(e.pointerId); } catch (err) { /* deja eliberat */ }
 
-      /* Prag de 36 px, dar numai dacă gestul e mai lat decât înalt. */
-      if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
+      /* Sub 8 px nu se hotărăște nimic: atâta tremură degetul la o atingere
+         obișnuită, iar o decizie luată acolo ar fi pe zgomot, nu pe intenție. */
+      if (!axaDecisa) {
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        axaDecisa = true;
+        trage = Math.abs(dx) > Math.abs(dy);
+        if (!trage) {
+          /* E o derulare verticală a paginii. Ne retragem de tot, ca degetul să
+             nu tragă și pagina, și șina, în același timp. */
+          try { viewport.releasePointerCapture(e.pointerId); } catch (err) { /* deja eliberat */ }
+          idIndicator = null;
+          rail.classList.remove('switcher__rail--trage');
+          return;
+        }
+      }
+      if (!trage) return;
+
+      e.preventDefault();
+
+      probe.push({ x: e.clientX, t: e.timeStamp || Date.now() });
+      if (probe.length > 8) probe.shift();
+
+      /* Dincolo de capete șina opune rezistență în loc să se oprească sec:
+         degetul simte marginea, dar mișcarea nu pare blocată. */
+      var x = xPornire + dx;
+      var max = pozitii[0], min = pozitii[pozitii.length - 1];
+      if (x > max) x = max + (x - max) * 0.35;
+      else if (x < min) x = min + (x - min) * 0.35;
+
+      rail.style.transform = 'translateX(' + x + 'px)';
+
+      /* Titlul și prețul se schimbă în timpul glisării, nu doar la final:
+         altfel textul de sub plăci ar arăta alt produs decât cel din mijloc. */
+      var langa = indexPentruTranslatie(x);
+      if (langa !== index) {
+        index = langa;
+        deseneaza(true);
+      }
+    }
+
+    function termina(e) {
+      if (idIndicator === null || e.pointerId !== idIndicator) return;
+
+      var dx = e.clientX - x0;
+      var dy = e.clientY - y0;
+      var eraTragere = trage;
+
+      idIndicator = null;
+      trage = false;
+      try { viewport.releasePointerCapture(e.pointerId); } catch (err) { /* deja eliberat */ }
+      rail.classList.remove('switcher__rail--trage');
+
+      if (eraTragere) {
         glisatLa = Date.now();
-        muta((dx < 0 ? 1 : -1) * pasiDinGest(dx, durata));
+
+        var v = 0;
+        if (probe.length >= 2) {
+          var ultim = probe[probe.length - 1], prim = probe[0];
+          for (var i = probe.length - 2; i >= 0; i--) {
+            if (ultim.t - probe[i].t <= 120) prim = probe[i]; else break;
+          }
+          var dt = ultim.t - prim.t;
+          if (dt > 0) v = (ultim.x - prim.x) / dt;      // px/ms, cu semn
+        }
+
+        /* Cât ar mai aluneca șina dacă ar încetini singură: viteza înmulțită cu
+           durata echivalentă a alunecării. Plafonul de șase plăci există ca o
+           smucitură accidentală să nu sară jumătate de catalog, de unde omul nu
+           mai știe unde a ajuns. */
+        var plafon = 6 * latimePlaca();
+        var proiectie = Math.max(-plafon, Math.min(plafon, v * 140));
+
+        index = indexPentruTranslatie(xPornire + dx + proiectie);
+        deseneaza();
         return;
       }
 
@@ -451,10 +549,16 @@ window.UG = window.UG || {};
 
     function renunta(e) {
       if (e.pointerId !== idIndicator) return;
-      x0 = y0 = idIndicator = null;
+      idIndicator = null;
+      rail.classList.remove('switcher__rail--trage');
+      /* Gestul a fost întrerupt cu șina oriunde între două plăci: se așază
+         înapoi pe cea selectată, ca să nu rămână oprită la jumătate. */
+      if (trage) pozitioneazaSina();
+      trage = false;
     }
 
     viewport.addEventListener('pointerdown', incepe);
+    viewport.addEventListener('pointermove', misca, { passive: false });
     viewport.addEventListener('pointerup', termina);
     viewport.addEventListener('pointercancel', renunta);
 

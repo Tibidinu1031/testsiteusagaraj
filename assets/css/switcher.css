@@ -124,6 +124,11 @@
   will-change: transform;
   transition: transform var(--d-3) var(--ease-out);
 }
+/* Cât ține degetul pe ecran, șina NU are tranziție: trebuie să stea exact sub
+   deget, nu să alerge după el cu o zecime de secundă întârziere. Tranziția se
+   întoarce la ridicarea degetului, ca alunecarea până la produsul următor să
+   fie lină. */
+.switcher__rail--trage { transition: none; }
 
 .tile {
   --tile-w: clamp(5.5rem, 4.2rem + 5.2vw, 9.5rem);

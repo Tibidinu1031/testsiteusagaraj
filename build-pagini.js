@@ -141,14 +141,7 @@ const TICKER = `<div class="ticker">
 const HERO = `<section class="hero">
   <div class="wrap wrap--wide hero__grid">
     <div>
-      <p class="eyebrow">Uși de garaj tip rulou · lamele ABBA</p>
-      <h1 class="hero__title">Uși de garaj<br>tip rulou,<br><em>la milimetru.</em></h1>
-      <p class="lede hero__lede">
-        Tablier din lamele de aluminiu cu spumă poliuretanică, casetă compactă
-        deasupra golului și acționare cu telecomandă — cu manivelă de rezervă,
-        pentru zilele fără curent. Ușa urcă pe verticală, așa că spațiul din
-        garaj rămâne al dumneavoastră.
-      </p>
+      <h1 class="hero__title">Partenerul vostru pentru proiectarea și montarea ușilor de garaj de tip rulou</h1>
       <div class="hero__cta">
         <button type="button" class="btn btn--orange btn--lg" data-switch-open="">
           Răsfoiește produsele noastre

@@ -409,16 +409,23 @@ kbd {
   font-variation-settings: "wdth" 96;
 }
 
-.hero__lede { margin-block-start: var(--s-4); }
 
+/**
+ * Butonul principal și cele două de Facebook formează un bloc de trei, pe
+ * aceeași lățime: cel portocaliu ține un rând întreg, iar cele două de dedesubt
+ * îl împart în jumătăți egale.
+ *
+ * Amândouă rândurile sunt GRILE pe aceeași coloană, nu cutii flexibile lăsate
+ * să-și ia lățimea din text. Așa marginea din stânga și cea din dreapta coincid
+ * exact, oricât de lung ar fi textul de pe butoane — înainte, butonul portocaliu
+ * își lua lățimea din propriul text și nu se potrivea cu perechea de sub el.
+ */
 .hero__cta {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
   gap: var(--s-3);
   margin-block-start: var(--s-6);
 }
-/* Aceeași casetă ca butoanele de Facebook de dedesubt: aceeași umplutură, deci
-   aceeași înălțime. `btn--lg` avea 0,95rem/1,5rem și ieșea mai mare decât ele. */
+/* Aceeași umplutură ca butoanele de Facebook, deci aceeași înălțime. */
 .hero__cta .btn--lg { padding: 0.75rem 1.15rem; }
 
 /* Barometrul de cifre — mono, aliniat pe coloane, cu linii de separare. */
@@ -490,7 +497,6 @@ kbd {
 @media (max-height: 860px) {
   .hero__title { font-size: clamp(2rem, 6.4vh, 3.5rem); }
   .hero__title { margin-block-start: var(--s-3); }
-  .hero__lede  { font-size: var(--t-0); margin-block-start: var(--s-3); }
   .hero__cta   { margin-block-start: var(--s-4); }
   .stats       { margin-block-start: var(--s-3); }
   .stat        { padding: var(--s-2) var(--s-3); }
@@ -514,7 +520,6 @@ kbd {
 @media (min-width: 941px) and (max-height: 780px) {
   .hero { padding-block-start: var(--s-2); }
   .hero__title { font-size: clamp(1.85rem, 5.6vh, 3rem); margin-block-start: var(--s-2); }
-  .hero__lede { font-size: var(--t--1); line-height: 1.45; margin-block-start: var(--s-2); }
   .hero__cta { margin-block-start: var(--s-3); }
   .fb-grup--erou { margin-block-start: var(--s-3); }
   .stats { margin-block-start: var(--s-2); }
@@ -522,21 +527,9 @@ kbd {
   .stat__v { font-size: var(--t-1); }
 }
 
-/**
- * A treia treaptă — scurtarea TEXTULUI — doar sub 680 px înălțime.
- *
- * E singura care ascunde conținut, deci se aplică ultima și cât mai jos. La
- * 768 px strângerea spațiilor de mai sus ajunge singură, iar tăierea unui rând
- * acolo ar fi fost o pierdere degeaba: rămâneau 16 px liberi.
- */
-@media (min-width: 941px) and (max-height: 680px) {
-  .hero__lede {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
+/* Aici a stat o a treia treaptă, care scurta textul introductiv la două rânduri
+   sub 680 px înălțime. Textul a fost scos din erou, deci treapta n-a mai avut ce
+   scurta. */
 
 /* --- Scena eroului: ușa care se ridică ---
    Proporția cutiei o urmează pe cea a desenului cotat (3660 × 2950 unități de
@@ -2307,8 +2300,8 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
    erou NU e centrată, doar secțiunea 02 e. Presupunerea greșită anterioară le
    centra pe ele singure, rupte de restul coloanei. */
 .fb-grup--erou {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--s-3);
   margin-block-start: var(--s-4);
 }
@@ -2321,9 +2314,8 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 }
 .ftr .fb-btn:hover { background: #fff; border-color: var(--brand-green); }
 
+/* Pe ecran îngust cele două trec una sub alta, deci tot blocul devine o coloană
+   de trei butoane de aceeași lățime. */
 @media (max-width: 520px) {
-  .fb-grup--erou .fb-btn { flex: 1 1 100%; }
-  /* Butonul principal se lățește odată cu ele, altfel ar fi singurul din
-     coloană cu altă lățime. */
-  .hero__cta .btn { flex: 1 1 100%; }
+  .fb-grup--erou { grid-template-columns: minmax(0, 1fr); }
 }
