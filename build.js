@@ -156,22 +156,25 @@ const FIRMA = {
    * garantat pe termen lung. Cele de Facebook au fost obținute deschizând
    * fiecare legătură de partajare și citind `link[rel=canonical]`.
    *
-   * `retea` alege pictograma și numele rețelei din `aria-label`. `eticheta`
-   * este scurtă fiindcă apare pe buton, lângă pictogramă; `nume` este numele
-   * întreg al contului și ajunge în `aria-label` și în `title`, ca cine
-   * folosește un cititor de ecran să audă unde ajunge.
+   * `retea` alege pictograma și numele rețelei din `aria-label`.
+   *
+   * `eticheta` este textul de pe buton. Toate poartă marca, „usa-garaj”, fără
+   * diacritice — e scrisă ca o adresă, nu ca un cuvânt românesc. Fiind aceeași
+   * peste tot, deosebirea o face `nume`, care intră în `aria-label` împreună cu
+   * rețeaua: altfel cine folosește un cititor de ecran ar auzi patru butoane
+   * identice și n-ar ști pe care să apese.
    */
   social: [
     {
       retea: 'facebook',
       url: 'https://www.facebook.com/abbaconfort',
-      eticheta: 'Uși de garaj',
+      eticheta: 'usa-garaj',
       nume: 'Uși de garaj ABBA Confort'
     },
     {
       retea: 'tiktok',
       url: 'https://www.tiktok.com/@abba_confort',
-      eticheta: 'ABBA Confort',
+      eticheta: 'usa-garaj',
       /* Fără „pe TikTok” aici: rețeaua o adaugă șablonul, iar scrisă în amândouă
          locurile ieșea „ABBA Confort pe TikTok pe TikTok” în `aria-label`. */
       nume: 'ABBA Confort'
@@ -340,7 +343,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=64';
+const VER = 'v=65';
 
 /* --- Unelte -------------------------------------------------------------- */
 

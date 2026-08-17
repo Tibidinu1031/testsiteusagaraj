@@ -65,7 +65,10 @@ const INTREBARI = [
   ['Cum pot plăti comanda?',
    PLATI.card
      ? `Puteți plăti cu cardul, online, prin ${PLATI.procesator} — acceptăm ${PLATI.carduri.join(', ')} — sau ramburs la livrare, în numerar. Pentru persoane juridice este disponibil și transferul bancar pe bază de proformă. Datele cardului se introduc pe pagina securizată a procesatorului, nu pe site-ul nostru.`
-     : 'Comenzile se achită ramburs la livrare, în numerar, sau prin transfer bancar pe bază de factură proformă, pentru persoane juridice. Plata online cu cardul urmează să fie activată.']
+     /* Transferul bancar NU se mai pomenește aici: în `PLATI.metode` e adormit,
+        deci formularul de finalizare nu-l oferă. Un răspuns care promite o
+        metodă pe care clientul n-o găsește la plată e mai rău decât unul scurt. */
+     : 'În acest moment, comenzile se achită exclusiv ramburs la livrare, în numerar. Plata online cu cardul urmează să fie implementată în curând.']
 ];
 
 const faqHTML = () => `<div class="faq reveal">
