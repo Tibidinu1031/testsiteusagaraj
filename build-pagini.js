@@ -46,29 +46,59 @@ const NOTA_COTE = `<div class="note reveal">
   </div>
 </div>`;
 
+/**
+ * Întrebările frecvente — textul integral primit de la client, 17 august 2026.
+ *
+ * Lista veche a fost înlocuită în întregime, la cerere. Numerotarea din textul
+ * primit („1.”, „2.”…) NU se păstrează în întrebare: ordinea o dă poziția în
+ * listă, iar un număr scris în text ar rămâne greșit în ziua în care se adaugă
+ * sau se scoate o întrebare la mijloc.
+ *
+ * Aceeași listă hrănește și `faqLd()`, adică datele structurate pentru Google.
+ * Deci orice se schimbă aici se schimbă și în ce vede motorul de căutare — nu
+ * există o a doua copie de întreținut.
+ */
 const INTREBARI = [
-  ['Ce se întâmplă dacă rămâne garajul fără curent electric?',
-   'Ușa poate fi acționată și manual. Sistemul este livrat cu manivelă și legătură cardanică, tocmai pentru situațiile în care nu există alimentare cu energie electrică.'],
-  ['Ce conține livrarea unei uși de garaj automate?',
-   'Livrarea include accesoriile necesare montajului: legătura cardanică, manivela, motorul tubular, centrala de comandă și 2 telecomenzi.'],
-  ['Dimensiunile din denumire sunt cele ale golului de trecere?',
-   'Nu. Dimensiunile menționate ca L × H includ ghidajele și caseta. Pentru spațiul util de trecere se scad 150 mm pe lățime și 300 mm pe înălțime la ușile cu lamelă de 55 mm, respectiv 180 mm pe lățime și 377 mm pe înălțime la cele cu lamelă de 77 mm.'],
-  ['Care este diferența dintre lamela de 55 mm și cea de 77 mm?',
-   'Lamela de 55 mm are 14 mm grosime și o masă a tabliei de 4 kg/m², cu ax din oțel zincat de Ø60 mm și ghidaje de 75 × 30 mm. Lamela de 77 mm are 18,5 mm grosime și 6 kg/m², cu ax de Ø70 mm și ghidaje de 90 × 35 mm, fiind indicată pentru deschideri mai mari.'],
-  /* Timpul NU este unul singur pe tot catalogul: magazinul declară 10 secunde
-     la majoritatea ușilor, 25 la 401/400/398/397/393/391 și 30 la 394. Un
-     răspuns cu o singură cifră contrazicea fișa produsului. */
-  ['Cât durează deschiderea ușii?',
-   'Depinde de model. Magazinul declară aproximativ 10 secunde la majoritatea ușilor, 25 de secunde la ușile de 3000–3200 mm lățime și 30 de secunde la modelul de 3000 × 3000 mm cu lamelă de 55 mm. Valoarea exactă este trecută în fișa fiecărui produs.'],
-  ['Se pot executa uși la alte dimensiuni decât cele din magazin?',
-   'Da. Pe lângă produsele standard, disponibile în stoc, executăm și proiecte personalizate, la dimensiunile golului dumneavoastră.'],
-  ['Cum pot plăti comanda?',
-   PLATI.card
-     ? `Puteți plăti cu cardul, online, prin ${PLATI.procesator} — acceptăm ${PLATI.carduri.join(', ')} — sau ramburs la livrare, în numerar. Pentru persoane juridice este disponibil și transferul bancar pe bază de proformă. Datele cardului se introduc pe pagina securizată a procesatorului, nu pe site-ul nostru.`
-     /* Transferul bancar NU se mai pomenește aici: în `PLATI.metode` e adormit,
-        deci formularul de finalizare nu-l oferă. Un răspuns care promite o
-        metodă pe care clientul n-o găsește la plată e mai rău decât unul scurt. */
-     : 'În acest moment, comenzile se achită exclusiv ramburs la livrare, în numerar. Plata online cu cardul urmează să fie implementată în curând.']
+  ['Ce tipuri de uși de garaj comercializați?',
+   'Oferim uși de garaj tip rulou din aluminiu, disponibile în mai multe dimensiuni, culori și configurații. Ușile pot fi acționate manual sau automat, în funcție de necesitățile fiecărui garaj.'],
+  ['Ușile de garaj rulou sunt potrivite pentru orice garaj?',
+   'În majoritatea cazurilor, da. Ușile tip rulou pot fi montate atât la garaje rezidențiale, cât și la spații comerciale sau industriale. Înainte de comandă recomandăm verificarea și măsurarea spațiului de montaj.'],
+  ['Ce diferență este între lamelele de 55 mm și cele de 77 mm?',
+   'Diferența principală este dimensiunea lamelei și nivelul de rezistență. Lamelele de 77 mm sunt o variantă mai robustă, recomandată în special pentru goluri mai mari și utilizare intensă.'],
+  ['Ușa de garaj poate fi automatizată?',
+   'Da. Ușile de garaj tip rulou pot fi echipate cu motor electric și telecomandă, pentru deschidere și închidere rapidă și confortabilă.'],
+  ['Pot deschide ușa de garaj și manual dacă se întrerupe curentul?',
+   'Da. În funcție de sistemul de acționare ales, ușa poate fi prevăzută cu sistem de deblocare pentru utilizarea manuală în cazul unei pene de curent.'],
+  ['Ce culori sunt disponibile pentru ușile de garaj?',
+   'Ușile sunt disponibile în mai multe culori și finisaje, inclusiv variante moderne precum gri antracit, alb, maro și alte nuanțe disponibile în funcție de model.'],
+  ['Cum aflu ce dimensiune de ușă de garaj îmi trebuie?',
+   'Dimensiunea se stabilește în funcție de golul existent și de spațiul disponibil pentru montaj. Pentru o ofertă corectă, este recomandată măsurarea golului și verificarea condițiilor de montaj.'],
+  ['Oferiți și montaj pentru ușile de garaj?',
+   'Da. Oferim servicii de montaj pentru ușile de garaj, iar echipa noastră poate verifica înainte de instalare condițiile existente și soluția potrivită pentru fiecare lucrare.'],
+  ['Cât durează montajul unei uși de garaj rulou?',
+   'Durata montajului depinde de dimensiunea ușii, tipul de acționare și condițiile existente la garaj. În cazul unei instalații pregătite corespunzător, montajul se poate realiza într-un timp scurt.'],
+  ['Ușile de garaj rulou oferă protecție împotriva intemperiilor?',
+   'Da. Lamelele din aluminiu și sistemul de închidere contribuie la protejarea garajului împotriva vântului, ploii, zăpezii și prafului, în limitele caracteristicilor tehnice ale modelului ales.'],
+  ['Pot comanda o ușă de garaj făcută pe dimensiunea golului meu?',
+   'Da. Ușile de garaj pot fi configurate în funcție de dimensiunile golului și de condițiile de montaj. Pentru o ofertă exactă, este important să avem dimensiunile corecte.'],
+  ['Pot folosi ușa de garaj pentru un spațiu comercial sau industrial?',
+   'Da. Pentru spațiile comerciale și industriale se pot alege configurații mai robuste, în funcție de dimensiunea golului și frecvența de utilizare.'],
+  ['Ce întreținere necesită o ușă de garaj rulou?',
+   'Pentru funcționare corectă și o durată de viață cât mai mare, recomandăm verificarea periodică a componentelor mecanice, a sistemului de acționare și curățarea lamelelor și a elementelor accesibile.'],
+  ['Oferiți garanție pentru ușile de garaj?',
+   'Da. Produsele și lucrările beneficiază de garanție conform condițiilor aplicabile. Perioada și condițiile de garanție sunt prezentate la momentul achiziției.'],
+  ['Cum pot primi o ofertă pentru o ușă de garaj?',
+   'Ne puteți contacta cu dimensiunile aproximative ale golului, localitatea și tipul de ușă dorit. Pe baza acestor informații vă putem orienta către soluția potrivită și vă putem pregăti o ofertă personalizată.'],
+  ['De ce este recomandată măsurarea înainte de comandă?',
+   'Măsurarea corectă este foarte importantă pentru alegerea dimensiunii ușii, a casetei și a sistemului de montaj. O măsurătoare corectă reduce riscul apariției problemelor la instalare.'],
+  ['Ușa de garaj rulou economisește spațiu?',
+   'Da. Unul dintre avantajele importante ale sistemului rulou este faptul că ușa se ridică vertical și se rulează într-o casetă, fără să ocupe spațiul din tavan necesar altor tipuri de uși.'],
+  ['De ce să aleg o ușă de garaj rulou din aluminiu?',
+   'Ușile din aluminiu oferă un raport foarte bun între greutate, rezistență și funcționalitate. Sistemul rulou este practic, ocupă puțin spațiu și poate fi configurat cu acționare manuală sau electrică.'],
+  ['Montajul este disponibil doar în Dâmbovița?',
+   'Nu. În funcție de lucrare și de locație, putem realiza montajul și în alte localități din țară. Pentru confirmarea disponibilității, contactați-ne și transmiteți localitatea și dimensiunile aproximative ale ușii.'],
+  ['Pot solicita o ofertă dacă nu cunosc dimensiunile exacte?',
+   'Da. Ne puteți trimite fotografii ale garajului și dimensiunile aproximative, iar echipa noastră vă poate indica informațiile necesare pentru stabilirea soluției potrivite.']
 ];
 
 const faqHTML = () => `<div class="faq reveal">
