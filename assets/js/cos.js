@@ -290,6 +290,23 @@ window.UG = window.UG || {};
       method: optiuni.method || 'GET',
       headers: anteturi,
       body: optiuni.body ? JSON.stringify(optiuni.body) : undefined
+    }).catch(function () {
+      /* `fetch` respinge FĂRĂ status doar când răspunsul n-a ajuns deloc la
+         pagină. Două cauze, amândouă invizibile pentru client: conexiunea a
+         căzut, sau răspunsul a fost blocat de browser fiindcă vine de la altă
+         origine, iar serverul nu i-a dat voie să-l citească.
+
+         Browserele numesc asta „NetworkError when attempting to fetch resource”
+         sau „Failed to fetch”. Textul acela ajungea neatins în pagină, sub
+         rezumatul comenzii: nimeni nu putea face nimic cu el. Aici devine un
+         mesaj cu o ieșire — comanda se poate da și la telefon.
+
+         Partea de server ține de `wordpress/vitrina-cors.php`. */
+      throw new Error(
+        'Magazinul nu a putut fi contactat. Verificați conexiunea și încercați ' +
+        'din nou, sau sunați la ' + (CFG.tel || '0731 366 613') +
+        ' și preluăm comanda telefonic.'
+      );
     }).then(function (r) {
       var nou = r.headers.get('Cart-Token');
       if (nou) {

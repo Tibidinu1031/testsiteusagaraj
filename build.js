@@ -321,7 +321,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=62';
+const VER = 'v=63';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -627,7 +627,7 @@ ${subsol}
 </button>
 
 <script>window.UG_BASE = ${JSON.stringify(base)};
-window.UG_MAGAZIN = ${JSON.stringify({ store: MAGAZIN.store, activ: MAGAZIN.activ, card: PLATI.card })};</script>
+window.UG_MAGAZIN = ${JSON.stringify({ store: MAGAZIN.store, activ: MAGAZIN.activ, card: PLATI.card, tel: FIRMA.tel })};</script>
 <script src="${base}assets/js/catalog.js?${VER}"></script>
 <script src="${base}assets/js/door.js?${VER}"></script>
 <script src="${base}assets/js/switcher.js?${VER}"></script>
