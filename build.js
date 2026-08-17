@@ -148,50 +148,69 @@ const FIRMA = {
   site: 'https://usa-garaj.ro',
 
   /**
-   * Paginile de Facebook ale grupului.
+   * Conturile publice ale grupului.
    *
    * Adresele sunt cele CANONICE, nu legăturile de partajare primite
    * (`/share/14oK9ECmNHN/`). Un link de partajare este un identificator de
    * sesiune: duce la pagină azi, dar poartă parametri de urmărire și nu e
-   * garantat pe termen lung. Cele de mai jos au fost obținute deschizând
+   * garantat pe termen lung. Cele de Facebook au fost obținute deschizând
    * fiecare legătură de partajare și citind `link[rel=canonical]`.
    *
-   * `eticheta` este scurtă fiindcă apare pe buton, lângă pictogramă; `nume`
-   * este numele întreg al paginii și ajunge în `aria-label` și în `title`, ca
-   * cine folosește un cititor de ecran să audă unde ajunge.
+   * `retea` alege pictograma și numele rețelei din `aria-label`. `eticheta`
+   * este scurtă fiindcă apare pe buton, lângă pictogramă; `nume` este numele
+   * întreg al contului și ajunge în `aria-label` și în `title`, ca cine
+   * folosește un cititor de ecran să audă unde ajunge.
    */
-  facebook: [
+  social: [
     {
+      retea: 'facebook',
       url: 'https://www.facebook.com/abbaconfort',
       eticheta: 'Uși de garaj',
       nume: 'Uși de garaj ABBA Confort'
     },
     {
-      url: 'https://www.facebook.com/people/Montaj-Aer-Conditionat-D%C3%A2mbovi%C8%9Ba/61566935046909/',
-      eticheta: 'Aer condiționat',
-      nume: 'Montaj Aer Condiționat Dâmbovița'
+      retea: 'tiktok',
+      url: 'https://www.tiktok.com/@abba_confort',
+      eticheta: 'ABBA Confort',
+      /* Fără „pe TikTok” aici: rețeaua o adaugă șablonul, iar scrisă în amândouă
+         locurile ieșea „ABBA Confort pe TikTok pe TikTok” în `aria-label`. */
+      nume: 'ABBA Confort'
     }
   ]
 };
 
 /**
- * Butoanele de Facebook, generate din `FIRMA.facebook`.
+ * Butoanele către conturile publice, generate din `FIRMA.social`.
  *
  * O singură funcție pentru ambele locuri — erou și subsol — ca o adresă
  * schimbată să nu rămână veche într-unul din ele. Diferă doar clasa de
  * dimensiune.
  *
- * `rel="noopener"` fiindcă se deschid în filă nouă: fără el, pagina Facebook
+ * Clasele CSS păstrează prefixul `fb-`, deși grupul ține acum și TikTok. E o
+ * rămășiță de nume, nu o scăpare: redenumirea ar atinge cincisprezece reguli
+ * din `components.css` fără nicio schimbare vizibilă pentru cititor.
+ *
+ * `rel="noopener"` fiindcă se deschid în filă nouă: fără el, pagina de destinație
  * primește o referință către fereastra noastră prin `window.opener`.
  */
-function butoaneFacebook(clasa) {
-  const sigla = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' +
-    '<path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.45 2.9h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg>';
+const SIGLE_SOCIAL = {
+  facebook: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' +
+    '<path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.9h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.45 2.9h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg>',
 
-  return FIRMA.facebook.map((p) =>
+  /* Nota muzicală TikTok: coada cu cârlig în dreapta sus și cercul din stânga
+     jos, dintr-un singur contur umplut — la fel ca sigla Facebook de mai sus,
+     ca perechea să aibă aceeași greutate optică. */
+  tiktok: '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">' +
+    '<path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.3 0 .6.05.88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1Z"/></svg>'
+};
+
+const NUME_RETEA = { facebook: 'Facebook', tiktok: 'TikTok' };
+
+function butoaneSocial(clasa) {
+  return FIRMA.social.map((p) =>
     `<a class="fb-btn ${clasa}" href="${p.url}" target="_blank" rel="noopener"
-       aria-label="${esc(p.nume)} pe Facebook, se deschide într-o filă nouă"
-       title="${esc(p.nume)}">${sigla}<span>${esc(p.eticheta)}</span></a>`
+       aria-label="${esc(p.nume)} pe ${NUME_RETEA[p.retea]}, se deschide într-o filă nouă"
+       title="${esc(p.nume)}">${SIGLE_SOCIAL[p.retea]}<span>${esc(p.eticheta)}</span></a>`
   ).join('\n        ');
 }
 
@@ -321,7 +340,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=63';
+const VER = 'v=64';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -536,9 +555,9 @@ ${o.corp}
         </p>
 
         <div class="fb-grup">
-          <p class="fb-grup__titlu">Ne găsiți pe Facebook</p>
+          <p class="fb-grup__titlu">Urmăriți-ne</p>
           <div class="fb-grup__butoane">
-        ${butoaneFacebook('fb-btn--sm')}
+        ${butoaneSocial('fb-btn--sm')}
           </div>
         </div>
         <!-- Sigla poartă versiunea în adresă, ca și foile de stil. Motivul nu e
@@ -714,7 +733,7 @@ const FILTRE = `<div class="filters reveal">
   </div>
 </div>`;
 
-module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV, verificaCoteImagini, butoaneFacebook };
+module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV, verificaCoteImagini, butoaneSocial };
 
 /* Restul generatorului este în build-pagini.js, încărcat mai jos, ca fișierul
    acesta să rămână la o dimensiune citibilă. */

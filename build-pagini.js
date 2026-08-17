@@ -6,7 +6,7 @@
 'use strict';
 
 const B = require('./build.js');
-const { pagina, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, butoaneFacebook } = B;
+const { pagina, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, butoaneSocial } = B;
 const { PRODUSE, RAL, LAMELA, CATEGORII } = UG;
 const lei = UG.lei;
 
@@ -153,7 +153,7 @@ const HERO = `<section class="hero">
            o a doua cale, nu una egală. Alături, ar fi concurat cu butonul care
            duce la produse — adică exact ce trebuie apăsat întâi. -->
       <div class="fb-grup fb-grup--erou">
-        ${butoaneFacebook('fb-btn--lg')}
+        ${butoaneSocial('fb-btn--lg')}
       </div>
       <dl class="stats">
         <div class="stat"><dd class="stat__v">${s.total}</dd><dt class="stat__k">configurații în catalog</dt></div>
@@ -226,38 +226,11 @@ ${SERVICII.map(([t, d], i) => `  <div class="svc">
   </div>`).join('\n')}
 </div>`;
 
-/**
- * Sloturile pentru fotografiile din teren.
- *
- * Imaginile au fost scoase — urmează să vină de la client. Sloturile RĂMÂN, cu
- * proporția și așezarea finale, ca înlocuirea să nu miște nimic în pagină.
- *
- * Fiecare slot poartă în `data-slot` numele fișierului așteptat. Ca să se umple,
- * se pun pozele în `assets/img/lucrari/` cu exact acele nume și se schimbă
- * `imagini` de mai jos pe `true`. Fără fișiere, comutatorul trebuie să rămână pe
- * `false`: patru imagini rupte arată mai rău decât patru locuri libere.
- */
-const LUCRARI = {
-  imagini: false,
-  cale: 'assets/img/lucrari/',
-  sloturi: [
-    { fisier: 'lucrare-01.jpg', titlu: 'Lamele maro 8014 / 8019', alt: 'Ușă de garaj tip rulou cu lamele maro, montată la o casă de locuit.' },
-    { fisier: 'lucrare-02.jpg', titlu: 'Gri antracit, RAL 7016',  alt: 'Ușă de garaj tip rulou în gri antracit, cu caseta montată deasupra golului.' },
-    { fisier: 'lucrare-03.jpg', titlu: 'Detaliu ghidaj lateral',  alt: 'Detaliu cu ghidajul lateral din aluminiu și capătul lamelelor.' },
-    { fisier: 'lucrare-04.jpg', titlu: 'Detaliu tablier',         alt: 'Detaliu cu tablierul din lamele de aluminiu și lamela finală.' }
-  ]
-};
-
-const GALERIE = `<div class="gallery reveal">
-${LUCRARI.sloturi.map((s) => `  <figure${LUCRARI.imagini ? '' : ' class="gallery__gol"'} data-slot="${s.fisier}">
-    ${LUCRARI.imagini
-      ? `<img src="${LUCRARI.cale}${s.fisier}" width="800" height="600" loading="lazy" decoding="async" alt="${esc(s.alt)}">`
-      : `<span class="gallery__semn" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="8.5" cy="10" r="1.4"/><path d="m4 17 4.5-4.5a2 2 0 0 1 2.8 0L15 16"/><path d="m13.5 14.5 2-2a2 2 0 0 1 2.8 0L20 14"/></svg>
-    </span>`}
-    <figcaption>${s.titlu}</figcaption>
-  </figure>`).join('\n')}
-</div>`;
+/* Aici au stat sloturile pentru fotografiile din teren (`LUCRARI`) și galeria
+   construită din ele (`GALERIE`), folosite de secțiunea 06 „Din teren”.
+   Secțiunea a fost ștearsă la cerere, deci amândouă au rămas fără niciun
+   consumator. Regulile de stil `.gallery` din `components.css` sunt lăsate pe
+   loc: nu strică nimic și sunt de folos dacă secțiunea se întoarce. */
 
 const contactHTML = (base) => `<div class="contact-grid">
   <div class="contact-cta reveal">
@@ -397,23 +370,16 @@ ${COMUTATOR}
   </div>
 </section>
 
-<section class="section">
-  <div class="wrap">
-    ${rubrica('06', 'Din teren', 'Lucrări executate', '')}
-    ${GALERIE}
-  </div>
-</section>
-
 <section class="section section--alt" id="intrebari">
   <div class="wrap">
-    ${rubrica('07', 'Înainte să comandați', 'Întrebări frecvente', '')}
+    ${rubrica('06', 'Înainte să comandați', 'Întrebări frecvente', '')}
     ${faqHTML()}
   </div>
 </section>
 
 <section class="section" id="contact">
   <div class="wrap">
-    ${rubrica('08', 'Stăm de vorbă', 'Contact și date de identificare',
+    ${rubrica('07', 'Stăm de vorbă', 'Contact și date de identificare',
       'Spuneți-ne dimensiunile golului și culoarea dorită, iar noi vă răspundem cu varianta potrivită din catalog sau cu o ofertă la comandă.', '', 'h2')}
     ${contactHTML('')}
   </div>
