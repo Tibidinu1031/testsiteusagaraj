@@ -381,3 +381,55 @@ add_action( 'template_redirect', function () {
 	wp_redirect( UG_VITRINA, 301 );
 	exit;
 }, 1 );
+
+/* ==========================================================================
+   5. Cursul BNR, servit către vitrină
+   ========================================================================== */
+
+/**
+ * Vitrina nu poate cere cursul direct de la BNR: fluxul oficial de la
+ * `curs.bnr.ro` NU trimite antetul `Access-Control-Allow-Origin`, deci
+ * browserul refuză să dea răspunsul paginii. Serverul însă poate — el iese în
+ * internet fără politica de origini a browserului.
+ *
+ * Răspunsul se ține în cache douăsprezece ore. BNR publică un singur curs pe zi
+ * lucrătoare, deci mai des n-ar aduce nimic, iar fără cache fiecare vizitator ar
+ * declanșa o cerere externă din pagina noastră de start.
+ *
+ * Dacă BNR nu răspunde, endpointul întoarce 503 fără să inventeze o cifră.
+ * Calculatorul rămâne atunci pe cursul copt la generarea site-ului, care are
+ * data lui scrisă alături.
+ */
+add_action( 'rest_api_init', function () {
+	register_rest_route( 'ug/v1', '/curs', array(
+		'methods'             => 'GET',
+		'permission_callback' => '__return_true',
+		'callback'            => 'ug_curs_bnr',
+	) );
+} );
+
+function ug_curs_bnr() {
+	$cache = get_transient( 'ug_curs_bnr' );
+	if ( $cache ) {
+		return rest_ensure_response( $cache );
+	}
+
+	$r = wp_remote_get( 'https://curs.bnr.ro/nbrfxrates.xml', array( 'timeout' => 12 ) );
+	if ( is_wp_error( $r ) || 200 !== wp_remote_retrieve_response_code( $r ) ) {
+		return new WP_Error( 'ug_curs_indisponibil', 'Cursul BNR nu este disponibil.', array( 'status' => 503 ) );
+	}
+
+	$xml = wp_remote_retrieve_body( $r );
+	if ( ! preg_match( '/<Rate currency="EUR">([\d.]+)<\/Rate>/', $xml, $m ) ) {
+		return new WP_Error( 'ug_curs_format', 'Răspunsul BNR nu conține cursul EUR.', array( 'status' => 503 ) );
+	}
+	preg_match( '/date="(\d{4}-\d{2}-\d{2})"/', $xml, $d );
+
+	$rezultat = array(
+		'eur'  => (float) $m[1],
+		'data' => isset( $d[1] ) ? $d[1] : '',
+	);
+
+	set_transient( 'ug_curs_bnr', $rezultat, 12 * HOUR_IN_SECONDS );
+	return rest_ensure_response( $rezultat );
+}

@@ -113,10 +113,10 @@ function verificaCoteImagini() {
 /* --- Datele firmei ------------------------------------------------------- */
 
 const FIRMA = {
-  nume: 'ABBA CONFORT SOLUTIONS HOMES S.R.L.',
+  nume: 'ABBA CONFORT DELIVERY SRL',
   marca: 'Usa-garaj.ro',
-  cui: '40437439',
-  j: 'J15/136/2019',
+  cui: '49968876',
+  j: 'J2024000637154',
   adresa: 'Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște',
   tel: '0731 366 613',
   telHref: '+40731366613',
@@ -284,6 +284,82 @@ const MAGAZIN = {
  * Când răspunsul conține „netopiapayments”, comutatorul poate trece pe `true`
  * și se rulează din nou `node build.js`.
  */
+/**
+ * Calculatorul de preț pentru uși la comandă.
+ *
+ * Cifrele vin din listele de preț ale furnizorului, nu din catalogul
+ * magazinului. Prețul de bază e în EURO, ca listele originale, iar echivalentul
+ * în lei se calculează la cursul BNR al zilei.
+ *
+ * Comutatorul a rămas din perioada de probă și e util în continuare: pus pe
+ * `false`, blocul dispare din pagină și scriptul nu se mai încarcă. Folosit dacă
+ * lista furnizorului se schimbă și calculatorul trebuie oprit până la
+ * actualizarea tabelelor — mai bine fără estimare decât cu una greșită.
+ */
+const CALCULATOR = true;
+
+/**
+ * Cursul BNR, adus la generare.
+ *
+ * DE CE NU DIRECT DIN BROWSER
+ * Fluxul oficial stă la `https://curs.bnr.ro/nbrfxrates.xml` și răspunde
+ * corect, dar NU trimite antetul `Access-Control-Allow-Origin`. Verificat cu o
+ * cerere care poartă `Origin`: răspunsul vine fără niciun antet CORS, deci
+ * browserul refuză să dea conținutul paginii noastre. O încercare de `fetch`
+ * direct din pagină ar eșua mereu, tăcut.
+ *
+ * Se aduce deci aici, la generare, și se coace în pagini împreună cu DATA lui.
+ * Data e afișată lângă preț: un curs fără ziua lui nu poate fi verificat de
+ * nimeni.
+ *
+ * Pentru cursul chiar din ziua vizitatorului, `calculator.js` mai încearcă o
+ * dată prin backendul magazinului, care are voie să iasă în internet și trimite
+ * CORS către vitrină. Dacă backendul nu răspunde, rămâne cursul copt la
+ * generare — o cifră puțin veche, dar niciodată una lipsă.
+ */
+const CURS_IMPLICIT = { eur: 5.2535, data: '2026-08-20', sursa: 'implicit' };
+
+/**
+ * Aducerea e SINCRONĂ, deși rețeaua e prin firea ei asincronă.
+ *
+ * Motivul e ordinea din `build-pagini.js`: paginile se scriu la încărcarea
+ * modulului, sincron. Un `await` aici ar termina prea târziu — paginile ar
+ * pleca deja tipărite cu cursul implicit, iar cel proaspăt n-ar prinde pe
+ * nicăieri. Eșecul ar fi tăcut și greu de observat: cifra tot apare, doar că e
+ * mereu cea veche.
+ *
+ * Se rulează deci un proces Node separat, care aduce cursul și îl scrie la
+ * ieșire; procesul principal îl așteaptă. Nu se folosește `curl`: nu există pe
+ * toate mașinile, iar Node e oricum acolo — chiar el rulează generatorul.
+ */
+function adaCursBNR() {
+  const script = `
+    fetch('https://curs.bnr.ro/nbrfxrates.xml', { signal: AbortSignal.timeout(15000) })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+      .then(function (x) {
+        var e = x.match(/<Rate currency="EUR">([\\d.]+)<\\/Rate>/);
+        var d = x.match(/date="(\\d{4}-\\d{2}-\\d{2})"/);
+        if (!e) throw new Error('lipseste cursul EUR');
+        process.stdout.write(JSON.stringify({ eur: Number(e[1]), data: d ? d[1] : '' }));
+      })
+      .catch(function (err) { process.stderr.write(String(err.message)); process.exit(1); });
+  `;
+
+  try {
+    const brut = require('child_process')
+      .execFileSync(process.execPath, ['-e', script], { timeout: 20000, encoding: 'utf8' });
+    const c = JSON.parse(brut);
+    console.log(`  · curs BNR ${c.data}: 1 EUR = ${c.eur} lei`);
+    return { eur: c.eur, data: c.data, sursa: 'BNR' };
+  } catch (e) {
+    console.warn(`  ! cursul BNR nu a putut fi adus; rămâne ` +
+      `${CURS_IMPLICIT.eur} lei din ${CURS_IMPLICIT.data}`);
+    return CURS_IMPLICIT;
+  }
+}
+
+const CURS = adaCursBNR();
+
 const PLATI = {
   /**
    * OPRIT LA CERERE — 16 august 2026. Magazinul rămâne pe ramburs.
@@ -343,7 +419,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=70';
+const VER = 'v=72';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -367,8 +443,8 @@ function scrie(rel, html) {
    ochiul mai mult decât ajută; rămân șase, toate distincte între ele.
    Legăturile există în continuare în subsol și în harta site-ului. */
 const NAV = [
-  { href: 'categorie/usi-garaj-rulou-55-mm.html',  text: 'Rulou 55 mm' },
-  { href: 'categorie/usi-garaj-rulou-77-mm.html',  text: 'Rulou 77 mm' },
+  { href: 'categorie/usi-garaj-rulou-55-mm.html',  text: 'Uși Rulou 55 mm' },
+  { href: 'categorie/usi-garaj-rulou-77-mm.html',  text: 'Uși Rulou 77 mm' },
   { href: 'categorie/promotii.html',               text: 'Promoții' },
   { href: 'tehnic.html',                           text: 'Tehnic' },
   { href: 'intrebari-frecvente.html',              text: 'Întrebări' },
@@ -649,7 +725,8 @@ ${subsol}
 </button>
 
 <script>window.UG_BASE = ${JSON.stringify(base)};
-window.UG_MAGAZIN = ${JSON.stringify({ store: MAGAZIN.store, activ: MAGAZIN.activ, card: PLATI.card, tel: FIRMA.tel })};</script>
+window.UG_MAGAZIN = ${JSON.stringify({ store: MAGAZIN.store, activ: MAGAZIN.activ, card: PLATI.card, tel: FIRMA.tel })};
+window.UG_CURS = ${JSON.stringify(CURS)};</script>
 <script src="${base}assets/js/catalog.js?${VER}"></script>
 <script src="${base}assets/js/door.js?${VER}"></script>
 <script src="${base}assets/js/switcher.js?${VER}"></script>
@@ -736,7 +813,7 @@ const FILTRE = `<div class="filters reveal">
   </div>
 </div>`;
 
-module.exports = { pagina, cardHTML, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV, verificaCoteImagini, butoaneSocial };
+module.exports = { pagina, cardHTML, CALCULATOR, CURS, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, NAV, verificaCoteImagini, butoaneSocial };
 
 /* Restul generatorului este în build-pagini.js, încărcat mai jos, ca fișierul
    acesta să rămână la o dimensiune citibilă. */

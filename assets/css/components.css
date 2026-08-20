@@ -28,21 +28,49 @@
   align-items: center;
   gap: var(--s-2) var(--s-4);
 }
+/**
+ * Bara citește ca o listă de perechi: eticheta în verde, valoarea în portocaliu.
+ *
+ * Cele două culori ale siglei împart rolurile — verdele numește, portocaliul
+ * spune. Denumirea firmei e o valoare fără etichetă scrisă, deci merge tot pe
+ * portocaliu: e datul, nu numele datului.
+ *
+ * Portocaliul folosit e `--orange-txt`, nu cel de marcă: bara are corp de
+ * literă mic pe fond stins, iar portocaliul siglei ar cădea sub pragul de
+ * lizibilitate acolo.
+ */
 .idbar__legal b {
-  color: var(--ink-muted);
-  font-weight: 500;
+  color: var(--orange-txt);
+  font-weight: 700;
   letter-spacing: 0.04em;
 }
 /* Codurile fiscale sunt evidențiate — cerință explicită a clientului. */
 .idbar__code {
-  color: var(--ink);
-  font-weight: 600;
+  color: var(--orange-txt);
+  font-weight: 700;
   letter-spacing: 0.02em;
   white-space: nowrap;
 }
-.idbar__code span { color: var(--acc); }
+.idbar__code span { color: var(--acc); font-weight: 600; }
 .idbar__sep { color: var(--line-strong); }
-.idbar__tel { color: var(--ink); font-weight: 600; text-decoration: none; white-space: nowrap; }
+
+/**
+ * Telefonul, mărit ca să sară în ochi.
+ *
+ * `font-size` crește, dar `line-height` este fixat în `rem`, nu lăsat relativ:
+ * altfel rândul s-ar fi înălțat odată cu litera și ar fi împins toată bara în
+ * jos. Valoarea e cea a barei la corpul dinainte, deci înălțimea rândului
+ * rămâne exact aceeași.
+ */
+.idbar__tel {
+  color: var(--orange-txt);
+  font-size: var(--t-0);
+  font-weight: 700;
+  line-height: 1.05rem;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
 .idbar__tel:hover { color: var(--acc); }
 
 /* Numărul de ordine + telefonul. Grupul ia restul rândului, iar marginea
@@ -2348,3 +2376,199 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 @media (max-width: 520px) {
   .fb-grup--erou { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* ==========================================================================
+   Calculatorul de preț — FUNCȚIONALITATE ÎN TESTARE
+   Toate regulile sunt sub `.calc`. Retragerea blocului din pagină le lasă fără
+   obiect, deci pot fi șterse dintr-o bucată, fără să se caute dependențe.
+   ========================================================================== */
+
+.calc {
+  margin-block-start: var(--s-7);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-4);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+  padding: clamp(var(--s-5), 3vw, var(--s-7));
+  display: grid;
+  gap: var(--s-5);
+}
+
+/* Insigna spune din prima că e o probă. Portocaliul o desparte de verdele
+   folosit pentru lucruri stabilite. */
+.calc__insigna {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--r-1);
+  background: color-mix(in oklab, var(--brand-orange) 18%, transparent);
+  border: 1px solid color-mix(in oklab, var(--brand-orange) 45%, transparent);
+  color: var(--orange-txt);
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.calc__titlu { font-size: var(--t-2); margin-block-start: var(--s-3); }
+.calc__lede { color: var(--ink-muted); font-size: var(--t--1); max-inline-size: 56ch; margin-block-start: var(--s-2); }
+
+.calc__form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--s-4);
+  align-items: end;
+}
+.calc__camp { display: grid; gap: var(--s-2); border: 0; padding: 0; margin: 0; min-inline-size: 0; }
+.calc__camp--lat { grid-column: 1 / -1; }
+.calc__camp > label,
+.calc__camp > legend {
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+  padding: 0;
+}
+
+.calc__chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.calc__chips label { position: relative; }
+/* Butonul radio rămâne în pagină, doar nevăzut: ascuns cu `display:none` ar
+   ieși din ordinea de tabulare și n-ar mai putea fi ales de la tastatură. */
+.calc__chips input {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.calc__chips span {
+  display: block;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-2);
+  font-size: var(--t--1);
+  font-weight: 600;
+  color: var(--ink-muted);
+  transition: background var(--d-1), border-color var(--d-1), color var(--d-1);
+}
+.calc__chips input:checked + span {
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--acc-ink);
+}
+.calc__chips input:focus-visible + span { outline: 2px solid var(--acc); outline-offset: 2px; }
+
+.calc__intrare {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-2);
+  background: var(--bg-raised);
+  padding-inline-end: var(--s-3);
+}
+.calc__intrare input {
+  flex: 1;
+  min-inline-size: 0;
+  padding: 0.7rem 0.8rem;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: var(--t-0);
+}
+.calc__intrare input:focus { outline: none; }
+.calc__intrare:focus-within { border-color: var(--acc); box-shadow: 0 0 0 2px color-mix(in oklab, var(--acc) 22%, transparent); }
+.calc__intrare span { font-family: var(--font-mono); font-size: var(--t--2); color: var(--ink-faint); }
+
+.calc__rezultat {
+  border-radius: var(--r-3);
+  background: color-mix(in oklab, var(--acc) 7%, transparent);
+  border: 1px solid color-mix(in oklab, var(--acc) 28%, transparent);
+  padding: var(--s-5);
+}
+.calc-gol { color: var(--ink-faint); font-size: var(--t--1); margin: 0; }
+.calc-nu { color: var(--ink); font-size: var(--t--1); margin: 0; }
+.calc-nu a { color: var(--acc); font-weight: 600; }
+.calc-eticheta {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0;
+}
+.calc-suma {
+  font-family: var(--font-mono);
+  font-size: var(--t-4);
+  font-weight: 600;
+  color: var(--acc);
+  letter-spacing: -0.03em;
+  margin: var(--s-1) 0 0;
+}
+.calc-nota { font-size: var(--t--2); color: var(--ink-muted); margin: var(--s-2) 0 0; }
+
+/* --- Calculul pas cu pas ------------------------------------------------- */
+
+.calc__detaliu {
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--r-3);
+  padding: var(--s-4) var(--s-5);
+}
+.calc__detaliu__titlu,
+.calc-detaliu__titlu {
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--ink-faint);
+  margin: 0 0 var(--s-3);
+}
+.calc-pas {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding-block: var(--s-2);
+  font-size: var(--t--1);
+  color: var(--ink-muted);
+  border-block-end: 1px solid color-mix(in oklab, var(--line) 60%, transparent);
+}
+.calc-pas small { display: block; font-size: var(--t--2); color: var(--ink-faint); }
+.calc-pas b {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--ink);
+}
+.calc-pas--minus b { color: var(--acc); }
+.calc-pas--total { color: var(--ink); font-weight: 600; }
+.calc-pas--final {
+  border-block-end: 0;
+  border-block-start: 2px solid var(--acc);
+  margin-block-start: var(--s-2);
+  padding-block-start: var(--s-3);
+  color: var(--ink);
+  font-weight: 700;
+}
+.calc-pas--final b { font-size: var(--t-1); color: var(--acc); }
+
+.calc__disclaimer {
+  font-size: var(--t--2);
+  color: var(--ink-faint);
+  margin: 0;
+  max-inline-size: 72ch;
+}
+.calc__disclaimer a { color: var(--acc); font-weight: 600; }
+
+/* Prețul din calculator: leii sunt cifra principală, euro rămâne dedesubt ca
+   referință — lista furnizorului e în euro, dar clientul plătește în lei. */
+.calc-suma-eur {
+  font-family: var(--font-mono);
+  font-size: var(--t-1);
+  color: var(--ink-muted);
+  margin: var(--s-1) 0 0;
+}
+.calc-curs { font-size: var(--t--2); color: var(--ink-faint); margin: var(--s-2) 0 0; }
+.calc__actiuni { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
+.calc__actiuni .cantitate { flex: none; }

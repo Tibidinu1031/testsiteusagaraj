@@ -6,7 +6,7 @@
 'use strict';
 
 const B = require('./build.js');
-const { pagina, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, esc, scrie, UG, butoaneSocial } = B;
+const { pagina, grilaHTML, FILTRE, FIRMA, PLATI, MAGAZIN, CALCULATOR, esc, scrie, UG, butoaneSocial } = B;
 const { PRODUSE, RAL, LAMELA, CATEGORII } = UG;
 const lei = UG.lei;
 
@@ -177,6 +177,81 @@ const TICKER = `<div class="ticker">
     <ul class="sr-only">${MOTIVE.map((t) => `<li>${t}</li>`).join('')}</ul>
   </div>`;
 
+/**
+ * Calculatorul de preț — FUNCȚIONALITATE ÎN TESTARE.
+ *
+ * Se generează doar dacă `CALCULATOR` este adevărat în `build.js`. Blocul e
+ * de sine stătător: nu împrumută nimic de la restul paginii și nu-i împrumută
+ * nimic, deci retragerea lui înseamnă un comutator și un fișier șters.
+ *
+ * Cifrele sunt din listele furnizorului, în EURO, și sunt estimative. Pagina o
+ * spune de două ori — o dată în insignă, o dată în nota de la bază — fiindcă un
+ * preț afișat fără avertisment devine, în mintea cumpărătorului, o promisiune.
+ *
+ * Calculul pas cu pas de dedesubt e cerut explicit cât timp funcționalitatea e
+ * în probă: cine verifică estimarea trebuie să vadă de unde vine fiecare leu,
+ * nu doar rezultatul.
+ */
+const CALCULATOR_HTML = `
+    <div class="calc reveal" id="calculator">
+      <div class="calc__cap">
+        <div>
+          <p class="calc__insigna">Preț estimativ</p>
+          <h3 class="calc__titlu">Calculator de preț</h3>
+          <p class="calc__lede">Introduceți cotele golului și alegeți lamela.
+          Estimarea include ușa, motorul cu telecomandă, accesoriile de
+          deblocare, montajul și transportul.</p>
+        </div>
+      </div>
+
+      <div class="calc__form">
+        <fieldset class="calc__camp calc__camp--lat">
+          <legend>Lamelă</legend>
+          <div class="calc__chips">
+            <label><input type="radio" name="calc-lamela" value="55" checked><span>55 mm</span></label>
+            <label><input type="radio" name="calc-lamela" value="77"><span>77 mm</span></label>
+          </div>
+        </fieldset>
+
+        <div class="calc__camp">
+          <label for="calc-l">Lățimea golului</label>
+          <div class="calc__intrare">
+            <input id="calc-l" type="number" inputmode="numeric" min="1300" max="4800" step="10"
+                   placeholder="2500" data-calc-latime>
+            <span>mm</span>
+          </div>
+        </div>
+
+        <div class="calc__camp">
+          <label for="calc-h">Înălțimea golului</label>
+          <div class="calc__intrare">
+            <input id="calc-h" type="number" inputmode="numeric" min="1500" max="4800" step="10"
+                   placeholder="2200" data-calc-inaltime>
+            <span>mm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="calc__rezultat" data-calc-rezultat aria-live="polite"></div>
+
+      <div class="calc__actiuni" data-calc-actiuni hidden>
+        <div class="cantitate">
+          <label class="sr-only" for="calc-buc">Cantitate</label>
+          <input id="calc-buc" type="number" min="1" max="99" value="1" inputmode="numeric" data-calc-bucati>
+        </div>
+        <button type="button" class="btn btn--primary btn--lg" data-calc-cos>Adaugă în coș</button>
+      </div>
+
+      <div class="calc__detaliu" data-calc-detaliu hidden></div>
+
+      <p class="calc__disclaimer">
+        <b>Estimare, nu ofertă fermă.</b> Cifrele pornesc din lista de prețuri a
+        producătorului și sunt în euro. Prețul final depinde de culoare, de
+        condițiile de montaj și de cursul valutar din ziua comenzii. Pentru o
+        ofertă fermă, <a href="contact.html">scrieți-ne cotele exacte</a>.
+      </p>
+    </div>`;
+
 const HERO = `<section class="hero">
   <div class="wrap wrap--wide hero__grid">
     <div>
@@ -186,6 +261,10 @@ const HERO = `<section class="hero">
           Răsfoiește produsele noastre
           <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
         </button>
+        ${CALCULATOR ? `<a class="btn btn--ghost btn--lg" href="#calculator">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M7.5 6.5h9v3.2h-9z"/><path d="M8 13.4h.01M12 13.4h.01M16 13.4h.01M8 17.4h.01M12 17.4h.01M16 17.4h.01"/></svg>
+          Calculator
+        </a>` : ''}
       </div>
 
       <!-- Paginile de Facebook stau SUB chemarea principală, nu lângă ea: sunt
@@ -282,6 +361,16 @@ ${FIRMA.emailuri.map((e) => `      <a class="contact-line" href="mailto:${e.adre
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
         <div><small>${e.rol}</small><b>${e.adresa}</b></div>
       </a>`).join('\n')}
+      <!-- Adresa e o legătură către hartă, nu text mort. Interogarea folosește
+           chiar adresa din datele firmei, deci o mutare a sediului schimbă și
+           pinul, nu doar rândul scris. Forma maps.google.com/?q= merge pe orice
+           dispozitiv: pe telefon deschide aplicația instalată, pe desktop
+           pagina web. -->
+      <a class="contact-line" href="https://maps.google.com/?q=${encodeURIComponent(FIRMA.adresa)}"
+         target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+        <div><small>Sediu · vezi în Google Maps</small><b>${FIRMA.adresa}</b></div>
+      </a>
       <a class="contact-line" href="magazin.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16l-1.2 12.2a2 2 0 0 1-2 1.8H7.2a2 2 0 0 1-2-1.8Z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg>
         <div><small>Comandă online</small><b>Vezi catalogul și comandă</b></div>
@@ -306,6 +395,10 @@ S('index.html', pagina({
   titlu: 'Uși de garaj tip rulou ABBA — lamele de 55 mm și 77 mm | Usa-garaj.ro',
   descriere: `Uși de garaj tip rulou ABBA, cu lamele de 55 mm și 77 mm, acționare automată cu telecomandă. ${s.total} de configurații, de la ${lei(s.pretMin)}, transport gratuit și montaj asigurat. ${FIRMA.nume}, CUI ${FIRMA.cui}, ${FIRMA.j}.`,
   ld: faqLd(),
+  /* Scriptul calculatorului se încarcă DOAR pe prima pagină, fiindcă doar
+     acolo există blocul. Cât timp funcționalitatea e în probă, celelalte 42 de
+     pagini nu plătesc pentru ea nici măcar o cerere. */
+  scripturi: CALCULATOR ? ['calculator.js'] : [],
   corp: `${HERO}
 
 ${COMUTATOR}
@@ -406,6 +499,7 @@ ${COMUTATOR}
         <a class="btn btn--orange btn--lg" href="contact.html">Solicitați o ofertă</a>
       </aside>
     </div>
+${CALCULATOR ? CALCULATOR_HTML : ''}
   </div>
 </section>
 
@@ -486,7 +580,7 @@ const CATEGORII_PAGINI = [
     lede: 'Lamelă de 55 mm, 14 mm grosime, masă a tabliei de 4 kg/m², ax de Ø60 mm și ghidaje de 75 × 30 mm. Varianta potrivită pentru garaje de locuință.' },
   { fisier: 'usi-garaj-rulou-77-mm', cat: CATEGORII.C77, n: '01',
     h1: 'Uși garaj rulou 77 mm', supra: 'Categorie',
-    lede: 'Lamelă de 77 mm, 18,5 mm grosime, masă a tabliei de 6 kg/m², ax de Ø70 mm și ghidaje de 90 × 35 mm. Pentru deschideri mari și utilizare intensă.' },
+    lede: 'Lamelă de 77 mm, 20 mm grosime, masă a tabliei de 6 kg/m², ax de Ø70 mm și ghidaje de 90 × 35 mm. Pentru deschideri mari și utilizare intensă.' },
   { fisier: 'promotii', cat: CATEGORII.PRO, n: '01',
     h1: 'Promoții', supra: 'Preț redus',
     lede: 'Produsele aflate în categoria „PROMOȚII” a magazinului. Prețul tăiat și cel curent sunt cele din magazin, neschimbate.' },
@@ -663,7 +757,7 @@ const SPEC_55 = [
 
 const SPEC_77 = [
   ['Capace laterale din aluminiu', '300 sau 350 mm'],
-  ['Lamele din aluminiu cu spumă poliuretanică', '77 mm, grosime 18,5 mm'],
+  ['Lamele din aluminiu cu spumă poliuretanică', '77 mm, grosime 20 mm'],
   ['Greutate covor lamelă', '6 kg/m²'],
   ['Lamelă finală', 'din aluminiu'],
   ['Ax metalic zincat', 'Ø 70 mm'],
@@ -1086,6 +1180,34 @@ ${CAMPURI.map(campHTML).join('')}
   }));
 }
 
+/**
+ * Actualizează datele firmei în textele preluate de pe WordPress.
+ *
+ * Paginile legale — termeni, confidențialitate, cookie-uri — sunt aduse la
+ * generare de pe magazin și NU sunt scrise aici: sunt angajamente juridice ale
+ * firmei. Textul lor rămâne neatins.
+ *
+ * Se înlocuiesc doar DATELE DE IDENTIFICARE, care s-au schimbat efectiv:
+ * denumirea, codul fiscal, numărul din registrul comerțului și o adresă de
+ * e-mail care nu mai există. Nu e o rescriere a documentului, ci corectarea
+ * unor identificatori — un document care trimite la o adresă moartă sau la o
+ * firmă cu alt CUI e mai rău decât unul netradus.
+ *
+ * Lista e explicită, pereche cu pereche, tocmai ca fiecare schimbare să poată
+ * fi văzută dintr-o privire. Sursa adevărată rămâne WordPress-ul: dacă textele
+ * sunt actualizate acolo, perechile de aici devin fără efect și pot fi șterse.
+ */
+const DATE_INLOCUITE = [
+  [/ABBA\s+CONFORT\s+SOLUTIONS\s+HOMES\s+S\.?R\.?L\.?/gi, FIRMA.nume],
+  [/\bJ15\s*\/\s*136\s*\/\s*2019\b/gi, FIRMA.j],
+  [/\b40437439\b/g, FIRMA.cui],
+  [/bestroll\.eu@gmail\.com/gi, FIRMA.email]
+];
+
+function actualizeazaDatele(text) {
+  return DATE_INLOCUITE.reduce((t, [tipar, nou]) => t.replace(tipar, nou), text);
+}
+
 async function paginiContinut() {
   for (const [slug, titlu] of PAGINI_CONTINUT) {
     let corpText = '';
@@ -1093,7 +1215,7 @@ async function paginiContinut() {
       const r = await fetch(`${ORIGINE}/wp-json/wp/v2/pages?slug=${slug}&_fields=content`);
       const d = await r.json();
       if (Array.isArray(d) && d[0] && d[0].content && d[0].content.rendered) {
-        corpText = curata(d[0].content.rendered);
+        corpText = actualizeazaDatele(curata(d[0].content.rendered));
       }
     } catch (e) {
       console.warn(`  ! nu am putut prelua „${slug}”: ${e.message}`);

@@ -39,7 +39,7 @@
      pe verdele #c2dcb1 numerele de rubrică — corp de 12 px — cădeau la 3,92:1,
      sub pragul AA. Valoarea de acum trece pe TOATE cele patru fundaluri ale
      paginii: 4,97 pe verde, 4,86 pe portocaliu, 7,18 pe alb, 6,58 pe hârtie. */
-  --orange-txt: #854507;
+  --orange-txt: #7a3f06;
 
   /* --- Benzile paginii, numărate de jos în sus ---
      Subsolul e portocaliu, secțiunea de deasupra verde, următoarea albă, și tot
@@ -62,8 +62,8 @@
      ca fundalul să concureze cu produsul. Verificarea de contrast e mai jos, la
      `--ink-faint`: o bandă mai saturată cere cerneală mai închisă. */
   --band-alb:        #fdfcfa;
-  --band-verde:      #c2dcb1;
-  --band-portocaliu: #f8ca92;
+  --band-verde:      #b3d29e;
+  --band-portocaliu: #f5bd79;
 
   /* --- Reducerile: verdele mărcii, nu roșu ---
      Fondul insignei de reducere. A fost cărămiziu (#b8401d) — culoarea prin
@@ -94,7 +94,7 @@
      supratitlurile cădeau la 3,9:1, iar titlurile din subsol la 4,5 fix, adică
      pe muchie. O bandă mai saturată cere cerneală mai închisă — altfel textul
      mic e primul care se pierde. */
-  --ink-faint:   #545a5d;
+  --ink-faint:   #484e51;
   --acc:         var(--brand-green);
   --acc-ink:     #f4fbf6;
   --acc-2:       var(--brand-orange);
@@ -108,26 +108,26 @@
   --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);
   --shadow-3: 0 24px 60px -20px rgb(20 23 26 / 0.22), 0 4px 12px rgb(20 23 26 / 0.08);
 
-  /* Unelte de construcții, în contur, pentru fundalul paginii: dubiță de
-     livrare, bormașină, boloboc și șurubelniță — meseria, pe scurt.
-     Dala are 420 px și cuprinde patru desene, fiecare pornit dintr-o casetă de
-     24 × 24 și mărit de cinci ori, adică de circa 2,5 ori față de varianta
-     anterioară. Grosimea conturului e dată la 0,4, ca după scalare să rămână
-     în jur de 2 px; altfel liniile s-ar fi îngroșat odată cu desenul.
-     Fiecare grup se rotește în jurul propriului centru — de aceea apare
-     `translate(-12 -12)` la capătul listei de transformări, unde se aplică
-     primul.
+  /* Emblema de livrare, repetată pe fundalul paginii.
 
-     Uneltele alternează cele două culori ale siglei: dubița și bolobocul sunt
-     verzi, bormașina și șurubelnița portocalii. Culoarea se pune pe fiecare
-     grup, nu pe rădăcina SVG-ului, tocmai ca să poată diferi între ele.
+     Înlocuiește cele patru unelte de dinainte — dubiță, bormașină, boloboc,
+     șurubelniță. Motivul e de identitate, nu de estetică: uneltele descriau o
+     firmă de montaj oarecare, iar emblema ABBA CONFORT DELIVERY spune chiar
+     ce face firma. Un singur semn, repetat, se citește ca un tipar de marcă;
+     patru obiecte diferite se citesc ca o colecție.
 
-     Opacitatea este 0,45 și grosimea conturului 0,55. Prima încercare le-a pus
-     la 0,20 și 0,4, „ca să nu fure atenția” — rezultatul a fost că uneltele
-     ieșeau cenușii: culorile erau corecte în cod, dar atât de diluate pe hârtie
-     încât nu se distingea nici verdele, nici portocaliul. O textură care nu se
-     vede nu e discretă, e degeaba. */
-  --unelte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420' fill='none' stroke-width='0.55' stroke-linecap='round' stroke-linejoin='round' opacity='0.45'%3E%3Cg stroke='%230d5c4e' transform='translate(100 88) rotate(-8) scale(5) translate(-12 -12)'%3E%3Cpath d='M2 16.1V8.7c0-.7.5-1.2 1.2-1.2h10.2l3.5 3.3H21c.6 0 1 .5 1 1.1v4.2'/%3E%3Cpath d='M2 16.1h2.4M9.6 16.1h5.4M19.6 16.1H22'/%3E%3Ccircle cx='7' cy='16.1' r='2.3'/%3E%3Ccircle cx='17.3' cy='16.1' r='2.3'/%3E%3Cpath d='M13.7 8.6v2.2h2.9'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(310 150) rotate(14) scale(5) translate(-12 -12)'%3E%3Cpath d='M3 6.4h8.8c.9 0 1.6.7 1.6 1.6v3.2c0 .9-.7 1.6-1.6 1.6H3c-.9 0-1.6-.7-1.6-1.6V8c0-.9.7-1.6 1.6-1.6z'/%3E%3Cpath d='M13.4 8.3h2.8v2.6h-2.8z'/%3E%3Cpath d='M16.2 9.6h4.6'/%3E%3Cpath d='M5.4 12.8l-.7 4.9c-.1.9.6 1.7 1.5 1.7h2.9c.9 0 1.6-.8 1.5-1.7l-.7-4.9'/%3E%3Cpath d='M5.3 19.4h5.4v2.2H5.3z'/%3E%3C/g%3E%3Cg stroke='%230d5c4e' transform='translate(120 300) rotate(-12) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.4 9.6h21.2v4.8H1.4z'/%3E%3Crect x='8.4' y='10.5' width='7.2' height='3' rx='1.5'/%3E%3Cpath d='M10.4 10.5v3M13.6 10.5v3'/%3E%3Ccircle cx='12' cy='12' r='.85'/%3E%3Cpath d='M4.4 10.7v2.6M19.6 10.7v2.6'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(325 330) rotate(22) scale(5) translate(-12 -12)'%3E%3Cpath d='M9.1 4.6c0-1.7 1.3-2.8 2.9-2.8s2.9 1.1 2.9 2.8v3.8c0 1.2-.7 2-1.6 2.4v1.1h-2.6v-1.1c-.9-.4-1.6-1.2-1.6-2.4z'/%3E%3Cpath d='M10.5 4.4v3.6M12 4v4M13.5 4.4v3.6'/%3E%3Cpath d='M10.8 11.9h2.4v1.2h-2.4z'/%3E%3Cpath d='M12 13.1V19.2'/%3E%3Cpath d='M12 19.2V21.8' stroke-width='1'/%3E%3C/g%3E%3C/svg%3E");
+     Dala are 420 px și cuprinde patru exemplare, fiecare pornit dintr-o casetă
+     de 24 × 24 și mărit de cinci ori, rotite diferit ca repetiția să nu apară
+     ca o grilă. `translate(-12 -12)` la capătul listei se aplică primul și
+     mută centrul de rotație în mijlocul desenului.
+
+     Alternează cele două culori ale siglei: două exemplare verzi, două
+     portocalii. Culoarea stă pe fiecare grup, nu pe rădăcina SVG-ului, tocmai
+     ca să poată diferi între ele.
+
+     Opacitatea 0,45 și conturul 0,55 sunt cele găsite prin încercare: la 0,20
+     desenul ieșea cenușiu, cu ambele culori diluate până la nedistingere. */
+  --unelte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420' fill='none' stroke-width='0.55' stroke-linecap='round' stroke-linejoin='round' opacity='0.45'%3E%3Cg stroke='%230d5c4e' transform='translate(100 88) rotate(-8) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(310 150) rotate(14) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3Cg stroke='%230d5c4e' transform='translate(120 300) rotate(-12) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(325 330) rotate(22) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3C/svg%3E");
 
   /* Textura peliculei — sparge planurile plate fără să ceară o imagine. */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");

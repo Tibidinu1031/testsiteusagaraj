@@ -66,9 +66,24 @@ window.UG = window.UG || {};
    */
   var PREFIX = 'ug-cos:';
 
+  /**
+   * Coșul ține DOUĂ feluri de rânduri.
+   *
+   * Cele de catalog păstrează doar `id` și cantitatea; denumirea și prețul se
+   * iau la fiecare randare din `catalog.js`, deci o schimbare de preț în
+   * magazin se vede imediat în coș.
+   *
+   * Cele la comandă (`custom`) nu au corespondent în catalog: ușa nu există
+   * până nu o comanzi. Ele își poartă cu ele denumirea și prețul ÎN LEI,
+   * fiindcă n-au de unde altundeva să le ia. Prețul e fixat la momentul
+   * adăugării, cu cursul BNR de atunci — de aceea rândul reține și cursul, ca
+   * cifra să poată fi explicată mai târziu.
+   */
   function curata(brut) {
     return Array.isArray(brut) ? brut.filter(function (r) {
-      return r && typeof r.id === 'number' && r.bucati > 0;
+      if (!r || !(r.bucati > 0)) return false;
+      if (r.custom) return typeof r.lei === 'number' && r.lei > 0 && typeof r.nume === 'string';
+      return typeof r.id === 'number';
     }) : [];
   }
 
@@ -151,6 +166,20 @@ window.UG = window.UG || {};
     var suma = 0;
 
     stare.articole = randuri.map(function (r) {
+      if (r.custom) {
+        suma += r.lei * r.bucati;
+        return {
+          cheie: r.cheie,
+          custom: true,
+          nume: r.nume,
+          bucati: r.bucati,
+          maxim: 99,
+          pretBucata: UG.lei(r.lei),
+          pretTotal: UG.lei(r.lei * r.bucati),
+          detaliu: r.detaliu || '',
+          fisier: null
+        };
+      }
       var p = produs(r.id);
       if (!p) return null;
       suma += p.pret * r.bucati;
@@ -171,7 +200,7 @@ window.UG = window.UG || {};
     /* Un produs scos din catalog nu are ce căuta în coș. Se elimină tăcut:
        alternativa e un rând care arată o denumire goală și un preț zero. */
     if (stare.articole.length !== randuri.length) {
-      randuri = randuri.filter(function (r) { return produs(r.id); });
+      randuri = randuri.filter(function (r) { return r.custom || produs(r.id); });
       scrie();
     }
 
@@ -218,12 +247,49 @@ window.UG = window.UG || {};
     return Promise.resolve(stare);
   };
 
+  /** Potrivește un rând după cheie, indiferent dacă e de catalog sau la comandă. */
+  function potrivit(r, cheie) {
+    return r.custom ? r.cheie === cheie : r.id === Number(cheie);
+  }
+
+  /**
+   * Adaugă o ușă la comandă, cu prețul FIXAT ÎN LEI.
+   *
+   * Prețul nu se recalculează niciodată după adăugare. Calculatorul lucrează în
+   * euro și convertește la cursul BNR al zilei; dacă rândul ar păstra euro și
+   * ar reconverti la fiecare afișare, suma din coș s-ar schimba singură de la o
+   * zi la alta — clientul ar vedea alt total decât cel pe care l-a acceptat.
+   * Se reține și cursul folosit, ca diferența să fie explicabilă.
+   *
+   * Fiecare adăugare face un rând nou, cu cheie proprie: două uși la comandă cu
+   * aceleași cote pot fi comenzi diferite, iar contopirea lor ar ascunde una.
+   */
+  UG.cosAdaugăLaComandă = function (spec) {
+    if (!spec || !(spec.lei > 0)) {
+      return Promise.reject(new Error('Prețul comenzii lipsește.'));
+    }
+
+    randuri.push({
+      custom: true,
+      cheie: 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      nume: spec.nume,
+      detaliu: spec.detaliu || '',
+      lei: Math.round(spec.lei),
+      eur: spec.eur || null,
+      curs: spec.curs || null,
+      bucati: Math.max(1, Math.min(99, Number(spec.bucati) || 1))
+    });
+
+    scrie();
+    anunta();
+    return Promise.resolve(stare);
+  };
+
   UG.cosModifică = function (cheie, bucati) {
-    var id = Number(cheie);
     if (bucati <= 0) return UG.cosȘterge(cheie);
 
     randuri.forEach(function (r) {
-      if (r.id === id) r.bucati = Math.min(99, Math.max(1, bucati));
+      if (potrivit(r, cheie)) r.bucati = Math.min(99, Math.max(1, bucati));
     });
 
     scrie();
@@ -232,8 +298,7 @@ window.UG = window.UG || {};
   };
 
   UG.cosȘterge = function (cheie) {
-    var id = Number(cheie);
-    randuri = randuri.filter(function (r) { return r.id !== id; });
+    randuri = randuri.filter(function (r) { return !potrivit(r, cheie); });
     scrie();
     anunta();
     return Promise.resolve(stare);

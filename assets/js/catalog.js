@@ -78,7 +78,7 @@ window.UG = window.UG || {};
   /** Cote constructive din pagina „Tehnic”. */
   var LAMELA = {
     55: { pas: 55, caseta: 250, ghidaj: 75, grosime: 14,   masa: 4, ax: 60 },
-    77: { pas: 77, caseta: 300, ghidaj: 90, grosime: 18.5, masa: 6, ax: 70 }
+    77: { pas: 77, caseta: 300, ghidaj: 90, grosime: 20,   masa: 6, ax: 70 }
   };
 
   /** Fotografiile magazinului, descărcate local. */
@@ -168,7 +168,7 @@ window.UG = window.UG || {};
         ['Dimensiune', 'L3000 H2500'],
         ['Casetă aluminiu', '300 sau 350 mm, grosime 0,95 mm'],
         ['Ghidaje din aluminiu', '90 mm × 35 mm'],
-        ['Grosime lamele', '19 mm'],
+        ['Grosime lamele', '20 mm'],
         ['Timp deschidere/închidere', '25 secunde'],
         ['Culoare', 'maro închis sau maro deschis']
       ],
@@ -194,7 +194,7 @@ window.UG = window.UG || {};
         ['Dimensiune', 'L3200 H2500'],
         ['Casetă aluminiu', '300 mm, grosime 0,95 mm'],
         ['Ghidaje din aluminiu', '75 mm × 30 mm'],
-        ['Grosime lamele', '19 mm'],
+        ['Grosime lamele', '20 mm'],
         ['Capace laterale din aluminiu', '300 mm']
       ],
       colet: COLET_A,
@@ -214,7 +214,7 @@ window.UG = window.UG || {};
       spec: [
         ['Dimensiune', 'L3000 H3000'],
         ['Casetă aluminiu', '300 sau 350 mm, grosime 0,95 mm'],
-        ['Grosime lamele', '19 mm'],
+        ['Grosime lamele', '20 mm'],
         ['Timp deschidere/închidere', '10 secunde'],
         ['Culoare', 'maro închis sau maro deschis']
       ],
@@ -337,7 +337,7 @@ window.UG = window.UG || {};
       spec: [
         ['Dimensiune', 'L3000 H2500'],
         ['Casetă aluminiu', '300 sau 350 mm, grosime 0,95 mm'],
-        ['Grosime lamele', '19 mm'],
+        ['Grosime lamele', '20 mm'],
         ['Timp deschidere/închidere', '25 secunde'],
         ['Culoare', 'Gri Antracit']
       ],
@@ -359,7 +359,7 @@ window.UG = window.UG || {};
         ['Dimensiune', 'L3200 H2500'],
         ['Casetă aluminiu', '300 sau 350 mm, grosime 0,95 mm'],
         ['Ghidaje din aluminiu', '90 mm × 35 mm'],
-        ['Grosime lamele', '19 mm'],
+        ['Grosime lamele', '20 mm'],
         ['Timp deschidere/închidere', '25 secunde'],
         ['Culoare', 'Gri Antracit']
       ],
@@ -384,7 +384,7 @@ window.UG = window.UG || {};
       ],
       spec: [
         ['Spațiu util de trecere', 'L2820 mm H2700'],
-        ['Lamele', '77 mm injectate cu spumă poliuretanică, 18 mm grosime'],
+        ['Lamele', '77 mm injectate cu spumă poliuretanică, 20 mm grosime'],
         ['Casetă și capace laterale', 'aluminiu, 300 / 350 mm'],
         ['Ghidaje din aluminiu', '90 mm × 35 mm'],
         ['Lamela terminală', 'aluminiu extrudat'],
