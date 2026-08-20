@@ -693,9 +693,21 @@ window.UG = window.UG || {};
   /** Codul RAL folosit ca etichetă, când e nevoie de unul singur. */
   UG.ralProdus = function (p) { return p.raluri[0] || 'maro'; };
 
-  /** Toate codurile RAL declarate de magazin, în ordinea din denumire. */
+  /**
+   * Culorile produsului, în ordinea din denumire, scrise cu NUMELE lor.
+   *
+   * Se afișează „Gri antracit”, nu „RAL 7016”. Codul RAL este o referință de
+   * vopsitorie: îi spune ceva unui montator, dar unui cumpărător care caută o
+   * ușă maro nu-i spune nimic — trebuie să caute codul ca să afle ce culoare a
+   * cerut. Numele e chiar cuvântul din denumirea produsului, deci cartela și
+   * titlul spun același lucru.
+   *
+   * Codurile rămân în `RAL[…].ral` și continuă să fie folosite acolo unde chiar
+   * contează: fișa tehnică și pastilele de culoare din comutator, unde stau
+   * lângă eșantion.
+   */
   UG.culoriProdus = function (p) {
-    return p.raluri.length ? p.raluri.map(function (r) { return RAL[r].ral; }).join(' / ')
+    return p.raluri.length ? p.raluri.map(function (r) { return RAL[r].nume; }).join(' / ')
                            : RAL[UG.ralProdus(p)].nume;
   };
 

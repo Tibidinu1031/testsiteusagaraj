@@ -343,7 +343,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=67';
+const VER = 'v=69';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -682,7 +682,7 @@ function cardHTML(p, base, nivel) {
   <div class="card__figure plate">
     <div class="card__badges">
       <span class="badge">lamelă ${p.lamela} mm</span>
-      ${red ? `<span class="badge badge--sale">−${red}%</span>` : ''}
+      ${red ? `<span class="badge badge--sale">Reducere −${red}%</span>` : ''}
     </div>
     ${UG.doorSVG(p, { titlu: `${p.nume}, ${c.nume}` })}
     <img class="card__photo" src="${base}${UG.fotoProdus(p)}" alt="Fotografie ${p.familie === 'antracit' ? 'ușă gri antracit' : 'ușă maro'}" loading="lazy" decoding="async">

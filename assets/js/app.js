@@ -190,7 +190,7 @@
         '<div class="card__figure plate">' +
           '<div class="card__badges">' +
             '<span class="badge">lamelă ' + p.lamela + ' mm</span>' +
-            (red ? '<span class="badge badge--sale">−' + red + '%</span>' : '') +
+            (red ? '<span class="badge badge--sale">Reducere −' + red + '%</span>' : '') +
           '</div>' +
           UG.doorSVG(p, { titlu: p.nume + ', ' + c.nume }) +
           // Fotografia reală a magazinului, dezvăluită la trecerea cursorului.

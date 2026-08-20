@@ -98,10 +98,13 @@ window.UG = window.UG || {};
 
       elName.textContent = p.nume;
 
-      // Se afișează toate codurile RAL declarate, nu doar cel folosit la desen.
+      /* Se afișează toate nuanțele declarate, nu doar cea folosită la desen,
+         iar fiecare poartă NUMELE culorii, nu codul RAL — la fel ca pe cartele
+         și în fișa produsului. Pastila colorată de alături arată deja nuanța;
+         un cod de vopsitorie lângă ea nu-i spune nimic cumpărătorului. */
       var culori = p.raluri.length
         ? p.raluri.map(function (r) {
-            return '<i class="switcher__swatch" style="background:' + RAL[r].hex + '"></i>' + RAL[r].ral;
+            return '<i class="switcher__swatch" style="background:' + RAL[r].hex + '"></i>' + RAL[r].nume;
           }).join(' / ')
         : '<i class="switcher__swatch" style="background:' + c.hex + '"></i>' + c.nume;
 
