@@ -86,6 +86,38 @@
 }
 .idbar__reg .idbar__tel { margin-inline-start: auto; }
 
+/* Comutatorul de limba. Trei legaturi de doua litere, nu un meniu: la trei
+   optiuni, un meniu ascunde exact ce trebuie sa fie vizibil — in ce limba esti
+   si ce alternative ai. Limba curenta ramane in rand, marcata cu fundal, nu
+   scoasa din lista; altfel dispare reperul. */
+.limbi {
+  display: flex;
+  gap: 2px;
+  margin-inline-start: var(--s-3);
+  flex-shrink: 0;
+}
+
+.limbi a {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: var(--t--2);
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: var(--ink-faint);
+  text-decoration: none;
+  line-height: 1.05rem;      /* aceeasi ca telefonul, ca bara sa nu creasca */
+}
+
+.limbi a:hover { color: var(--acc); background: var(--surface); }
+
+.limbi a[aria-current="true"] {
+  color: var(--acc-ink);
+  background: var(--acc);
+}
+
+
 @media (max-width: 640px) {
   .idbar__inner { justify-content: center; text-align: center; }
   .idbar__legal,
@@ -95,6 +127,7 @@
   .idbar__reg .idbar__tel { margin-inline-start: 0; }
   /* Punctul despărțitor ar deschide rândul al doilea; pe lat rămâne. */
   .idbar__reg .idbar__sep { display: none; }
+  .limbi { margin-inline-start: 0; justify-content: center; }
 }
 
 /* ==========================================================================
@@ -2572,3 +2605,17 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 .calc-curs { font-size: var(--t--2); color: var(--ink-faint); margin: var(--s-2) 0 0; }
 .calc__actiuni { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
 .calc__actiuni .cantitate { flex: none; }
+
+/* Mențiunea de pe paginile juridice traduse: versiunea românească e cea care
+   produce efecte. Se vede, dar nu strigă — e o precizare, nu un avertisment. */
+.mentiune-traducere {
+  margin: 0 0 var(--s-1);
+  padding: var(--s-3) var(--s-2);
+  border-inline-start: 3px solid var(--acc);
+  background: var(--surface-hi);
+  color: var(--ink-muted);
+  font-size: var(--t--1);
+  line-height: 1.5;
+}
+
+.mentiune-traducere a { color: var(--acc); font-weight: 600; }

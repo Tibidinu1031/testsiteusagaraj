@@ -25,8 +25,8 @@
      pentru text mic pe hârtie. Portocaliul mărcii, pus sub un text de 12 px,
      ajunge pe la 2:1 — ilizibil. De aceea nu se folosește niciodată direct
      pentru text.                                                             */
-  --brand-green:  #0d5c4e;
-  --brand-orange: #f39c2c;
+  --brand-green:  #006054;
+  --brand-orange: #fc9c30;
 
   --green-hi:  #7ed9a6;
   --green:     #4fb783;
@@ -62,8 +62,8 @@
      ca fundalul să concureze cu produsul. Verificarea de contrast e mai jos, la
      `--ink-faint`: o bandă mai saturată cere cerneală mai închisă. */
   --band-alb:        #fdfcfa;
-  --band-verde:      #b3d29e;
-  --band-portocaliu: #f5bd79;
+  --band-verde:      #8dc4ae;
+  --band-portocaliu: #f0b26a;
 
   /* --- Reducerile: verdele mărcii, nu roșu ---
      Fondul insignei de reducere. A fost cărămiziu (#b8401d) — culoarea prin
@@ -89,12 +89,12 @@
   --line:        #dcd8ce;
   --line-strong: #c3beb1;
   --ink:         #14171a;
-  --ink-muted:   #4d5458;
+  --ink-muted:   #42494d;
   /* Închis de la #5f6669 odată cu adâncirea benzilor: pe verdele #c9d7d1
      supratitlurile cădeau la 3,9:1, iar titlurile din subsol la 4,5 fix, adică
      pe muchie. O bandă mai saturată cere cerneală mai închisă — altfel textul
      mic e primul care se pierde. */
-  --ink-faint:   #484e51;
+  --ink-faint:   #3d4448;
   --acc:         var(--brand-green);
   --acc-ink:     #f4fbf6;
   --acc-2:       var(--brand-orange);

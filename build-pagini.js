@@ -178,19 +178,22 @@ const TICKER = `<div class="ticker">
   </div>`;
 
 /**
- * Calculatorul de preț — FUNCȚIONALITATE ÎN TESTARE.
+ * Calculatorul de preț.
+ *
+ * A trecut proba și a rămas pe site — mențiunea „în testare” de aici a fost
+ * scoasă la cerere, 20 august 2026, împreună cu cea din pagină.
  *
  * Se generează doar dacă `CALCULATOR` este adevărat în `build.js`. Blocul e
  * de sine stătător: nu împrumută nimic de la restul paginii și nu-i împrumută
  * nimic, deci retragerea lui înseamnă un comutator și un fișier șters.
  *
  * Cifrele sunt din listele furnizorului, în EURO, și sunt estimative. Pagina o
- * spune de două ori — o dată în insignă, o dată în nota de la bază — fiindcă un
- * preț afișat fără avertisment devine, în mintea cumpărătorului, o promisiune.
+ * spune în insignă și în nota de la bază, fiindcă un preț afișat fără
+ * avertisment devine, în mintea cumpărătorului, o promisiune.
  *
- * Calculul pas cu pas de dedesubt e cerut explicit cât timp funcționalitatea e
- * în probă: cine verifică estimarea trebuie să vadă de unde vine fiecare leu,
- * nu doar rezultatul.
+ * Calculul pas cu pas de dedesubt RĂMÂNE, deși nu mai e o cerință de probă:
+ * cine cere o ofertă la comandă vrea să vadă de unde vine fiecare leu, nu doar
+ * rezultatul.
  */
 const CALCULATOR_HTML = `
     <div class="calc reveal" id="calculator">
@@ -1201,7 +1204,13 @@ const DATE_INLOCUITE = [
   [/ABBA\s+CONFORT\s+SOLUTIONS\s+HOMES\s+S\.?R\.?L\.?/gi, FIRMA.nume],
   [/\bJ15\s*\/\s*136\s*\/\s*2019\b/gi, FIRMA.j],
   [/\b40437439\b/g, FIRMA.cui],
-  [/bestroll\.eu@gmail\.com/gi, FIRMA.email]
+  [/bestroll\.eu@gmail\.com/gi, FIRMA.email],
+  [/contact@usa-garaj\.ro/gi, FIRMA.email],
+  /* Sediul din textele juridice era încă cel vechi, din Voinești. Virgula
+     dinaintea localității repetate e prinsă în tipar fiindcă apare o dată cu
+     spațiu înainte și o dată fără, iar altfel ar rămâne un „, ,” în frază. */
+  [/Sat\s+Voinesti\s+Com\.\s+Voinesti,\s*Str\.\s*Principala,\s*Nr\.\s*146,\s*Voinesti\s*,/gi,
+    FIRMA.adresa + ',']
 ];
 
 function actualizeazaDatele(text) {
@@ -1351,4 +1360,10 @@ async function paginiContinut() {
   console.log(`  ${PAGINI_CONTINUT.length} pagini de conținut preluate de pe usa-garaj.ro`);
 }
 
-paginiContinut();
+/* Versiunile de limba se construiesc din paginile romanesti gata scrise, deci
+   la sfarsit de tot — dupa paginile de continut, care se aduc prin retea.
+   Legate aici, nu intr-o comanda separata, ca `node build.js` sa ramana
+   singurul lucru de retinut si sa nu existe stare pe jumatate construita. */
+paginiContinut().then(() => {
+  require('./build-limbi.js').construieste(__dirname);
+});

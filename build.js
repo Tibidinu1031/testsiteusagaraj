@@ -419,7 +419,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=72';
+const VER = 'v=74';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -582,6 +582,11 @@ ${o.ld ? `<script type="application/ld+json">${o.ld}</script>` : ''}
       <span class="idbar__code"><span>Nr. Reg. Com.</span>&nbsp;${FIRMA.j}</span>
       <a class="idbar__tel" href="tel:${FIRMA.telHref}">${FIRMA.tel}</a>
     </p>
+
+    <!-- Comutatorul de limba il pune build-limbi.js, care stie in ce limba si
+         la ce adancime e pagina si poate scrie legaturi relative corecte.
+         Generatorul de aici nu stie decat continutul, nu si calea. -->
+    <!--UG-LIMBI-->
   </div>
 </div>
 
