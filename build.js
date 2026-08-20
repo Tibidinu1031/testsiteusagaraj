@@ -317,6 +317,9 @@ const CALCULATOR = true;
  * CORS către vitrină. Dacă backendul nu răspunde, rămâne cursul copt la
  * generare — o cifră puțin veche, dar niciodată una lipsă.
  */
+/* Ultimul curs adus cu succes, pastrat intre compilari. Vezi `adaCursBNR`. */
+const CURS_ULTIM = path.join(__dirname, 'curs-bnr.json');
+
 const CURS_IMPLICIT = { eur: 5.2535, data: '2026-08-20', sursa: 'implicit' };
 
 /**
@@ -350,9 +353,29 @@ function adaCursBNR() {
       .execFileSync(process.execPath, ['-e', script], { timeout: 20000, encoding: 'utf8' });
     const c = JSON.parse(brut);
     console.log(`  · curs BNR ${c.data}: 1 EUR = ${c.eur} lei`);
-    return { eur: c.eur, data: c.data, sursa: 'BNR' };
+
+    /* Se scrie pe disc ca REZERVĂ pentru zilele în care BNR nu răspunde.
+       Fișierul intră în git tocmai ca rezerva să fie ultimul curs ADEVĂRAT,
+       nu constanta din cod. Contează la recompilarea zilnică automată: fără
+       el, o zi proastă la BNR ar publica luni la rând cifra din august,
+       purtând o dată care pare proaspătă. */
+    const proaspat = { eur: c.eur, data: c.data, sursa: 'BNR' };
+    try { fs.writeFileSync(CURS_ULTIM, JSON.stringify(proaspat, null, 2) + String.fromCharCode(10)); }
+    catch (err) { console.warn(`  ! nu am putut scrie ${CURS_ULTIM}: ${err.message}`); }
+    return proaspat;
   } catch (e) {
-    console.warn(`  ! cursul BNR nu a putut fi adus; rămâne ` +
+    /* Rezerva de pe disc are întâietate în fața constantei: e un curs real,
+       cu ziua lui, chiar dacă nu e din ziua de azi. */
+    try {
+      const salvat = JSON.parse(fs.readFileSync(CURS_ULTIM, 'utf8'));
+      if (salvat && salvat.eur > 0) {
+        console.warn(`  ! cursul BNR nu a putut fi adus; rămâne ultimul cunoscut, ` +
+          `${salvat.eur} lei din ${salvat.data}`);
+        return { eur: salvat.eur, data: salvat.data, sursa: 'BNR' };
+      }
+    } catch (err) { /* nu există încă rezervă */ }
+
+    console.warn(`  ! cursul BNR nu a putut fi adus și nu există rezervă; rămâne ` +
       `${CURS_IMPLICIT.eur} lei din ${CURS_IMPLICIT.data}`);
     return CURS_IMPLICIT;
   }
@@ -731,7 +754,9 @@ ${subsol}
 
 <script>window.UG_BASE = ${JSON.stringify(base)};
 window.UG_MAGAZIN = ${JSON.stringify({ store: MAGAZIN.store, activ: MAGAZIN.activ, card: PLATI.card, tel: FIRMA.tel })};
-window.UG_CURS = ${JSON.stringify(CURS)};</script>
+${(o.scripturi || []).includes('calculator.js')
+  ? `
+window.UG_CURS = ${JSON.stringify(CURS)};` : ''}</script>
 <script src="${base}assets/js/catalog.js?${VER}"></script>
 <script src="${base}assets/js/door.js?${VER}"></script>
 <script src="${base}assets/js/switcher.js?${VER}"></script>

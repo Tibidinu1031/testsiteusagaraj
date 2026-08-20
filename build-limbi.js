@@ -236,6 +236,15 @@ function versiune(radacina, rel, htmlRo, cod, raport) {
     html = html.replace(/(<meta property="og:locale" content=")[^"]*"/, `$1${L.locale}"`);
   }
 
+  /* Legaturile de limba existente se SCOT inainte de a fi puse la loc.
+
+     Fara asta, o a doua rulare peste aceleasi fisiere le adauga inca o data.
+     Functia porneste de la pagina romana de pe disc, iar daca acolo au ramas
+     etichete dintr-o rulare anterioara, ele nu se inlocuiesc, ci se dubleaza.
+     Se vede atunci cand compilarea principala NU a rescris pagina - de pilda
+     cand o pagina de continut nu a putut fi preluata de pe magazin. */
+  html = html.replace(/\n?[ \t]*<link rel="alternate" hreflang="[^"]*"[^>]*>/g, '');
+
   html = html.replace(/<meta name="theme-color"[^>]*>/,
     (tot) => tot + '\n' + alternate(rel, cod));
   html = html.replace('<!--UG-LIMBI-->', comutator(cod, rel));

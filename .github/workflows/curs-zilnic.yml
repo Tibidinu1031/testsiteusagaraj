@@ -1,0 +1,67 @@
+# Recompilare zilnică, ca prețul în lei din calculator să folosească cursul BNR
+# al zilei, nu pe cel din ziua ultimei compilări.
+#
+# DE CE AICI, ȘI NU ÎN BROWSER
+# BNR publică fluxul la https://curs.bnr.ro/nbrfxrates.xml, dar fără antete
+# CORS: o cerere din pagină ar eșua mereu, tăcut. Adus la compilare, cursul se
+# coace în pagină împreună cu ziua lui. Deci singurul mod ca cifra să fie
+# proaspătă e ca site-ul să se recompileze des — de aici sarcina asta.
+#
+# CE SE ÎNTÂMPLĂ CÂND CEVA NU RĂSPUNDE
+#   · BNR tace  → `build.js` folosește ultimul curs ADEVĂRAT, din curs-bnr.json,
+#                 nu o constantă din cod. Se publică, cu ziua lui alături.
+#   · WordPress tace → `build-pagini.js` iese cu cod de eroare și NU rescrie
+#                 paginile de conținut. Pasul pică, deci nu se comite nimic, iar
+#                 termenii și confidențialitatea rămân cele bune.
+# Alt fel spus: o zi proastă la BNR trece; una la magazin oprește publicarea.
+
+name: Curs BNR zilnic
+
+on:
+  schedule:
+    # 11:30 UTC = 13:30 iarna și 14:30 vara, ora României. BNR publică în jurul
+    # orei 13:00 locale, deci ora asta e după publicare în ambele regimuri.
+    - cron: '30 11 * * *'
+  workflow_dispatch:
+
+# Sarcina scrie în depozit, deci are nevoie de drept de scriere.
+permissions:
+  contents: write
+
+# Două rulări suprapuse ar comite una peste alta.
+concurrency:
+  group: curs-zilnic
+  cancel-in-progress: false
+
+jobs:
+  recompilare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ia depozitul
+        uses: actions/checkout@v4
+
+      - name: Pregătește Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Dacă o pagină de conținut nu poate fi preluată, pasul iese cu eroare și
+      # sarcina se oprește aici — fără comitere.
+      - name: Recompilează site-ul
+        run: node build-pagini.js
+
+      - name: Publică, dacă s-a schimbat ceva
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Cursul e neschimbat față de ultima compilare. Nimic de publicat."
+            exit 0
+          fi
+
+          CURS=$(node -e "const c=require('./curs-bnr.json');console.log(c.eur+' lei din '+c.data)")
+          echo "Se publică: $CURS"
+
+          git config user.name  "recompilare automată"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Curs BNR: 1 EUR = $CURS"
+          git push

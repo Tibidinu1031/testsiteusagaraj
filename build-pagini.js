@@ -1218,11 +1218,20 @@ function actualizeazaDatele(text) {
 }
 
 async function paginiContinut() {
+  /* Paginile pentru care CEREREA a eșuat, nu cele întoarse goale. Distincția e
+     tot ce ține textul juridic în viață: o pagină goală pe magazin e un fapt și
+     se semnalează în pagină, dar o rețea căzută e un accident, iar tratarea lor
+     la fel ar publica termeni și confidențialitate fără text. */
+  const esuate = [];
+
   for (const [slug, titlu] of PAGINI_CONTINUT) {
     let corpText = '';
+    let adus = false;   // cererea a reușit, oricare ar fi răspunsul
     try {
       const r = await fetch(`${ORIGINE}/wp-json/wp/v2/pages?slug=${slug}&_fields=content`);
+      if (!r.ok) throw new Error(`răspuns HTTP ${r.status}`);
       const d = await r.json();
+      adus = true;
       if (Array.isArray(d) && d[0] && d[0].content && d[0].content.rendered) {
         corpText = actualizeazaDatele(curata(d[0].content.rendered));
       }
@@ -1259,6 +1268,12 @@ async function paginiContinut() {
       continue;
     }
 
+    /* Cererea a căzut: pagina de pe disc rămâne NEATINSĂ. A o rescrie cu textul
+       de rezervă ar înlocui termeni și condiții cu „pagina nu are încă text” —
+       exact greșeala pe care o recompilare automată ar face-o tăcut, în fiecare
+       zi în care serverul nu răspunde. */
+    if (!adus) { esuate.push(slug); continue; }
+
     const areText = corpText && corpText.replace(/<[^>]*>/g, '').trim().length > 80;
     const continut = areText ? corpText : `
       <p>Această pagină nu are încă text publicat pe site-ul magazinului.
@@ -1288,6 +1303,15 @@ async function paginiContinut() {
   </div>
 </section>`
     }));
+  }
+
+  /* Compilarea se încheie cu eroare, ca o recompilare automată să NU comită
+     un site din care lipsesc pagini. Fișierele vechi sunt încă pe disc. */
+  if (esuate.length) {
+    console.error(`
+  ! COMPILARE INCOMPLETĂ — ${esuate.length} pagini nu au putut fi preluate:`);
+    esuate.forEach((sl) => console.error(`      ${sl} (fișierul vechi a rămas neatins)`));
+    process.exitCode = 1;
   }
 
   /* --- paginile de cumpărare -------------------------------------------- */
