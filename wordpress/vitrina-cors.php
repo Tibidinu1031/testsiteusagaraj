@@ -102,39 +102,51 @@ add_filter('allowed_http_origins', function ($origini) {
 /**
  * Pasul 2 — `Cart-Token` devine vizibil pentru vitrină.
  *
- * Lista implicită a WordPress-ului nu-l conține, iar Store API nu-l adaugă:
- * a fost gândit pentru un magazin servit de pe aceeași origine, unde antetele
- * se citesc oricum.
+ * Lista implicită a WordPress-ului e „X-WP-Total, X-WP-TotalPages, Link”, iar
+ * `Cart-Token` nu apare în ea: Store API a fost gândit pentru un magazin servit
+ * de pe aceeași origine, unde antetele se citesc oricum.
  *
- * Se intervine numai pe rutele Store API și numai când cererea vine de la o
- * origine cunoscută — restul REST-ului rămâne exact cum era.
+ * Se folosesc DOUĂ căi, deliberat:
+ *
+ *   1. `rest_exposed_cors_headers` — filtrul din nucleul WordPress (5.5+),
+ *      calea corectă. O primă variantă scria antetul în obiectul răspunsului,
+ *      prin `rest_post_dispatch`; nucleul îl trimite însă cu `header()`,
+ *      direct, deci acea variantă n-ar fi avut niciun efect.
+ *
+ *   2. `rest_pre_serve_request`, la prioritate mare, care rescrie antetul cu
+ *      `header(..., true)`. Rulează după ce nucleul și WooCommerce și-au trimis
+ *      antetele, deci prinde și cazul în care versiunea instalată nu trece prin
+ *      filtrul de mai sus. `true` înseamnă „înlocuiește”, deci nu se dublează.
+ *
+ * A doua e o plasă de siguranță, nu o soluție paralelă: dacă prima funcționează,
+ * a doua scrie exact aceeași valoare.
  */
-add_filter('rest_post_dispatch', function ($raspuns, $server, $cerere) {
-    if (!($raspuns instanceof WP_REST_Response)) {
-        return $raspuns;
-    }
-
-    if (strpos($cerere->get_route(), '/wc/store/') !== 0) {
-        return $raspuns;
-    }
-
-    $origine = get_http_origin();
-    if (!$origine || !in_array($origine, UG_VITRINA_ORIGINI, true)) {
-        return $raspuns;
-    }
-
-    /* Se păstrează ce era deja expus și se adaugă ce lipsește, ca să nu se
-       piardă antete pe care le-ar aștepta alt cod. */
-    $expuse = $raspuns->get_headers()['Access-Control-Expose-Headers'] ?? '';
-    $lista  = array_filter(array_map('trim', explode(',', $expuse)));
-
-    foreach (['Cart-Token', 'Nonce', 'X-WP-Total', 'X-WP-TotalPages', 'Link'] as $antet) {
-        if (!in_array($antet, $lista, true)) {
-            $lista[] = $antet;
+function ug_vitrina_antete_expuse($expuse = array()) {
+    foreach (array('Cart-Token', 'Nonce', 'X-WP-Total', 'X-WP-TotalPages', 'Link') as $antet) {
+        if (!in_array($antet, $expuse, true)) {
+            $expuse[] = $antet;
         }
     }
+    return $expuse;
+}
 
-    $raspuns->header('Access-Control-Expose-Headers', implode(', ', $lista), true);
+/* Se intervine NUMAI când cererea vine de la o origine din listă. Pentru restul
+   lumii, magazinul răspunde exact ca înainte. */
+function ug_vitrina_origine_cunoscuta() {
+    $origine = get_http_origin();
+    return $origine && in_array($origine, UG_VITRINA_ORIGINI, true);
+}
 
-    return $raspuns;
-}, 20, 3);
+add_filter('rest_exposed_cors_headers', function ($expuse) {
+    return ug_vitrina_origine_cunoscuta() ? ug_vitrina_antete_expuse($expuse) : $expuse;
+});
+
+add_filter('rest_pre_serve_request', function ($servit, $raspuns, $cerere) {
+    if (!headers_sent()
+        && ug_vitrina_origine_cunoscuta()
+        && is_a($cerere, 'WP_REST_Request')
+        && strpos($cerere->get_route(), '/wc/store/') === 0) {
+        header('Access-Control-Expose-Headers: ' . implode(', ', ug_vitrina_antete_expuse()), true);
+    }
+    return $servit;
+}, 100, 3);
