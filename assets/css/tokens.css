@@ -65,10 +65,18 @@
   --band-verde:      #c2dcb1;
   --band-portocaliu: #f8ca92;
 
-  /* --- Secundar: portocaliu-cărămiziu pentru reduceri ---
-     Închis suficient cât textul alb de 10 px de pe eticheta de reducere să
-     treacă pragul WCAG AA (5,5:1). Nuanța deschisă cădea la 4,1:1. */
-  --rust: #b8401d;
+  /* --- Reducerile: verdele mărcii, nu roșu ---
+     Fondul insignei de reducere. A fost cărămiziu (#b8401d) — culoarea prin
+     care interfețele semnalează o eroare sau o pierdere. Pe o cartelă de
+     produs, o pată roșie e citită mai întâi ca avertisment și abia apoi ca
+     ofertă; verdele spune „câștigi”, ceea ce chiar se întâmplă.
+
+     Este exact verdele siglei, nu o nuanță apropiată: reducerea e un mesaj al
+     firmei, nu o categorie separată de informație.
+
+     Contrastul e mai bun decât înainte, nu doar acceptabil — textul alb de
+     10 px ajunge la 7,90:1, față de 5,54:1 cât dădea cărămiziul. */
+  --reducere: var(--brand-green);
 
   /* --- Roluri semantice ---
      Site-ul are o singură temă: hârtie caldă, nu alb clinic — se potrivește cu
@@ -91,7 +99,10 @@
   --acc-ink:     #f4fbf6;
   --acc-2:       var(--brand-orange);
   --acc-2-ink:   #3b2405;
-  --sale:        #a83718;
+  /* Procentul scris lângă preț și în comutator. Verde, ca insigna — aceeași
+     informație, deci aceeași culoare. Verificat pe toate cele patru benzi ale
+     paginii: cel mai slab caz e 5,21:1 pe banda portocalie, peste pragul AA. */
+  --sale:        var(--brand-green);
 
   --shadow-1: 0 1px 2px rgb(20 23 26 / 0.06);
   --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);

@@ -1071,7 +1071,7 @@ main > section.hero { background: none; border-block-start: 0; }
   border: 1px solid var(--line);
   color: var(--ink-muted);
 }
-.badge--sale { background: var(--rust); border-color: transparent; color: #fff; }
+.badge--sale { background: var(--reducere); border-color: transparent; color: #fff; }
 
 .card__body { display: grid; gap: var(--s-3); padding: var(--s-5); align-content: start; }
 .card__title {
