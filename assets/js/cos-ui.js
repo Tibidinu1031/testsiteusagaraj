@@ -148,12 +148,31 @@ window.UG = window.UG || {};
       '</div>';
   }
 
+  /**
+   * Comanda la comandă NU are pagină de produs și nu are lamelă în catalog.
+   *
+   * Înainte, șablonul le presupunea pe amândouă: numele ajungea într-o
+   * legătură către `produs/null.html`, iar sub el scria „lamelă undefined mm”.
+   * Rândul se vedea, dar arăta stricat — iar legătura chiar ducea în gol.
+   * Acum linia de sub nume e descrierea comenzii, cea scrisă de calculator:
+   * cotele cerute, prețul în euro și cursul la care a fost transformat.
+   */
+  function capRand(a) {
+    if (a.custom) {
+      return '<th scope="row">' +
+        '<span class="cos-nume">' + esc(a.nume) + '</span>' +
+        (a.detaliu ? '<small class="cos-detaliu">' + esc(a.detaliu) + '</small>' : '') +
+      '</th>';
+    }
+    return '<th scope="row">' +
+      '<a href="produs/' + esc(a.fisier) + '.html">' + esc(a.nume) + '</a>' +
+      '<small class="cos-detaliu">' + esc(a.dim) + ' · lamelă ' + a.lamela + ' mm</small>' +
+    '</th>';
+  }
+
   function rand(a) {
     return '<tr>' +
-      '<th scope="row">' +
-        '<a href="produs/' + esc(a.fisier) + '.html">' + esc(a.nume) + '</a>' +
-        '<small class="cos-detaliu">' + esc(a.dim) + ' · lamelă ' + a.lamela + ' mm</small>' +
-      '</th>' +
+      capRand(a) +
       '<td>' + esc(a.pretBucata) + '</td>' +
       '<td><div class="cantitate">' +
         '<button type="button" data-cos-minus="' + a.cheie + '" aria-label="Scade cantitatea">−</button>' +

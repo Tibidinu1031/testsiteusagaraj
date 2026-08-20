@@ -258,7 +258,10 @@
   font-size: 0.625rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink-faint);
+  /* Negru și aldin, la cerere: era gri șters, ca o notă de subsol, deși spune
+     din ce grup face parte marca — o informație pe care clientul o vrea citită. */
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .nav { display: flex; align-items: center; gap: var(--s-1); }
@@ -1525,12 +1528,15 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 .idrow dd a { text-decoration: none; }
 .idrow dd a:hover { color: var(--acc); }
 
-/* Rândurile fiscale sunt vizual ridicate — cerință a clientului. */
+/* Rândurile fiscale rămân ridicate prin FUNDAL și prin eticheta portocalie, nu
+   prin corp de literă. Aveau `--t-1` și greutate 600, deci CUI și numărul de
+   ordine ieșeau mai mari și mai groase decât „Sediu social” sau „Telefon”, iar
+   cartea de identitate arăta cu două tipografii în ea. Rămân la fel de vizibile
+   — cerința clientului era să se VADĂ, nu să fie scrise altfel. */
 .idrow--key { background: color-mix(in oklab, var(--acc) 7%, transparent); }
 .idrow--key dd {
   font-family: var(--font-mono);
-  font-size: var(--t-1);
-  font-weight: 600;
+  font-size: var(--t--1);
   letter-spacing: 0.01em;
   color: var(--ink);
 }

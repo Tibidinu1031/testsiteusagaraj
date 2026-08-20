@@ -442,7 +442,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=74';
+const VER = 'v=80';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -469,8 +469,13 @@ const NAV = [
   { href: 'categorie/usi-garaj-rulou-55-mm.html',  text: 'Uși Rulou 55 mm' },
   { href: 'categorie/usi-garaj-rulou-77-mm.html',  text: 'Uși Rulou 77 mm' },
   { href: 'categorie/promotii.html',               text: 'Promoții' },
+  /* Calculatorul trăiește pe prima pagină, la ancora `#calculator`. Legătura
+     poartă numele fișierului, nu doar ancora: din paginile de produs sau de
+     categorie o ancoră singură ar căuta o secțiune care nu există acolo. */
+  { href: 'index.html#calculator',                 text: 'Calculator' },
   { href: 'tehnic.html',                           text: 'Tehnic' },
   { href: 'intrebari-frecvente.html',              text: 'Întrebări' },
+  { href: 'despre-noi.html',                       text: 'Despre Noi' },
   { href: 'contact.html',                          text: 'Contact' }
 ];
 

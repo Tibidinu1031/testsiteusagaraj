@@ -264,10 +264,9 @@ const HERO = `<section class="hero">
           Răsfoiește produsele noastre
           <span class="btn__kbd"><kbd>⇧</kbd><kbd>Tab</kbd></span>
         </button>
-        ${CALCULATOR ? `<a class="btn btn--ghost btn--lg" href="#calculator">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="2.5"/><path d="M7.5 6.5h9v3.2h-9z"/><path d="M8 13.4h.01M12 13.4h.01M16 13.4h.01M8 17.4h.01M12 17.4h.01M16 17.4h.01"/></svg>
-          Calculator
-        </a>` : ''}
+        <!-- Butonul „Calculator” a fost mutat în bara de navigare, între
+             „Promoții” și „Tehnic”. Aici concura cu chemarea principală: două
+             butoane mari alăturate nu spun care e pasul întâi. -->
       </div>
 
       <!-- Paginile de Facebook stau SUB chemarea principală, nu lângă ea: sunt
@@ -790,6 +789,50 @@ const figuraProfil = (cheie, alt, legenda) => {
     <figcaption>${legenda}</figcaption>
   </figure>`;
 };
+
+/* --- despre-noi.html ------------------------------------------------------
+ *
+ * PRIMĂ VERSIUNE, cu conținut VERIFICABIL, nu inventat.
+ *
+ * Clientul a cerut pagina, dar textul și fotografiile nu au ajuns încă. Până
+ * sosesc, pagina spune numai lucruri pe care site-ul le susține deja în altă
+ * parte: serviciile din secțiunea 04 și datele de identificare ale firmei.
+ * Nu am scris o poveste de firmă în locul lor — ar fi fost o invenție pusă în
+ * gura clientului, exact genul de text pe care nimeni nu-l poate confirma.
+ *
+ * La primirea textului se înlocuiește `corp`, restul rămâne. */
+S('despre-noi.html', pagina({
+  base: '', activ: 'despre-noi.html',
+  titlu: `Despre noi — ${FIRMA.nume} | ${FIRMA.marca}`,
+  descriere: `${FIRMA.nume}, CUI ${FIRMA.cui}, ${FIRMA.j}. Proiectăm, producem și montăm uși de garaj tip rulou din aluminiu, cu acționare manuală sau prin telecomandă.`,
+  corp: `<section class="section">
+  <div class="wrap">
+    ${firimituri('', [['Acasă', 'index.html'], ['Despre noi', null]])}
+    ${rubrica('01', 'Cine suntem', 'Despre noi',
+      'Proiectăm, producem și montăm uși de garaj tip rulou din aluminiu, pentru locuințe și pentru spații comerciale sau industriale.', '', 'h1')}
+
+    <div class="stack-lg">
+      <div class="proza reveal">
+        <p>Lucrăm cu uși de garaj tip rulou cu lamele de aluminiu umplute cu spumă
+        poliuretanică, în două familii de lamelă — 55 mm și 77 mm — acționate manual
+        sau prin telecomandă. Ușa urcă pe verticală și se rulează într-o casetă
+        deasupra golului, așa că spațiul din garaj rămâne liber.</p>
+
+        <p>Sediul firmei este în Târgoviște, județul Dâmbovița, iar montajul se
+        poate face și în alte localități din țară, în funcție de lucrare.</p>
+      </div>
+
+      ${rubrica('02', 'Ce facem', 'Serviciile noastre', '')}
+      ${svcHTML()}
+
+      ${rubrica('03', 'Date oficiale', 'Cine răspunde de comandă', '')}
+      ${cardIdentitate('')}
+
+      <p><a class="btn btn--orange btn--lg" href="contact.html">Contactați-ne</a></p>
+    </div>
+  </div>
+</section>`
+}));
 
 S('tehnic.html', pagina({
   base: '', activ: 'tehnic.html',
