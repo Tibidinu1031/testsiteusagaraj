@@ -125,21 +125,42 @@ window.UG = window.UG || {};
       return curata(decodeURIComponent(m[1]).split('_').map(function (bucata) {
         var p = bucata.split('.');
         return { id: Number(p[0]), bucati: Number(p[1]) || 1 };
+      }).filter(function (r) {
+        /* `isFinite`, nu verificarea de tip: NaN trece de `typeof … === 'number'`. */
+        return isFinite(r.id);
       }));
     } catch (e) {
       return null;
     }
   }
 
+  /**
+   * Codul poartă DOAR rânduri de catalog.
+   *
+   * O comandă la comandă nu are identificator de produs, deci nu încape aici:
+   * ieșea `undefined.1`, iar la citire `Number('undefined')` dă NaN. Verificarea
+   * `typeof r.id === 'number'` îl lăsa să treacă — NaN chiar ESTE de tip număr —
+   * așa că rândul fals înlocuia comanda adevărată, care dispărea din coș.
+   */
   UG.cosCodat = function () {
-    return randuri.map(function (r) { return r.id + '.' + r.bucati; }).join('_');
+    return randuri
+      .filter(function (r) { return !r.custom && isFinite(r.id); })
+      .map(function (r) { return r.id + '.' + r.bucati; })
+      .join('_');
   };
 
   function citeste() {
     /* Adresa are întâietate: dacă cineva tocmai a fost trimis aici cu un coș în
        link, acela e coșul curent, oricât de vechi ar fi sertarul local. */
     var adresa = dinAdresa();
-    if (adresa && adresa.length) return adresa;
+    if (adresa && adresa.length) {
+      /* Comenzile la comandă NU pot călători prin adresă — n-au identificator de
+         produs — deci se recuperează din sertarul local și se pun înapoi. Fără
+         asta, un singur clic pe orice legătură internă golea comanda pe care
+         clientul tocmai o adăugase din calculator. */
+      var localCustom = (dinLocal() || []).filter(function (r) { return r.custom; });
+      return adresa.concat(localCustom);
+    }
 
     var local = dinLocal();
     if (local && local.length) return local;

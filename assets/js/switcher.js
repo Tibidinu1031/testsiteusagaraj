@@ -231,7 +231,7 @@ window.UG = window.UG || {};
          legăturilor din cos-ui.js, așa că se adaugă aici. */
       if (location.protocol === 'file:' && UG.cosCodat) {
         var cod = UG.cosCodat();
-        if (cod) url += '?c=' + encodeURIComponent(cod);
+        if (cod && location.protocol === 'file:') url += '?c=' + encodeURIComponent(cod);
       }
 
       window.location.assign(url);

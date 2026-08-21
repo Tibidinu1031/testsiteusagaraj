@@ -2625,3 +2625,22 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 }
 
 .mentiune-traducere a { color: var(--acc); font-weight: 600; }
+
+/* ==========================================================================
+   Despre noi
+   ========================================================================== */
+
+/* Listele din textul clientului își poartă propriul semn la început — bifă,
+   romb — deci punctul implicit al listei ar fi al doilea semn pe același rând. */
+.lista-semne { list-style: none; padding-inline-start: 0; display: grid; gap: var(--s-3); }
+.lista-semne li {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr;
+  gap: var(--s-2);
+  align-items: baseline;
+}
+.despre-final {
+  text-align: center;
+  font-size: var(--t-1);
+  margin-block-start: var(--s-6);
+}

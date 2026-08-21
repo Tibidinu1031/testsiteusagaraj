@@ -442,7 +442,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=80';
+const VER = 'v=90';
 
 /* --- Unelte -------------------------------------------------------------- */
 

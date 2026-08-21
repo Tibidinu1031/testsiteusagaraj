@@ -42,7 +42,12 @@ window.UG = window.UG || {};
   function poartaCosul() {
     if (!PE_DISC) return;
 
-    var cod = UG.cosCodat();
+    /* Coșul prin adresă are rost DOAR pe `file://`, unde fiecare fișier are
+       origine proprie și `localStorage` nu traversează paginile. Pe http și
+       https e curat pagubă: murdărește fiecare legătură cu un parametru și,
+       fiindcă adresa avea întâietate la citire, putea înlocui coșul adevărat
+       cu unul mai sărac — comenzile la comandă nu încap în cod. */
+    var cod = location.protocol === 'file:' ? UG.cosCodat() : '';
 
     toate('a[href]').forEach(function (a) {
       var href = a.getAttribute('href') || '';

@@ -792,40 +792,103 @@ const figuraProfil = (cheie, alt, legenda) => {
 
 /* --- despre-noi.html ------------------------------------------------------
  *
- * PRIMĂ VERSIUNE, cu conținut VERIFICABIL, nu inventat.
+ * Textul este PRELUAT VERBATIM de pe abbaconfort.ro/despre-noi, la cererea
+ * clientului, împreună cu fotografiile de acolo.
  *
- * Clientul a cerut pagina, dar textul și fotografiile nu au ajuns încă. Până
- * sosesc, pagina spune numai lucruri pe care site-ul le susține deja în altă
- * parte: serviciile din secțiunea 04 și datele de identificare ale firmei.
- * Nu am scris o poveste de firmă în locul lor — ar fi fost o invenție pusă în
- * gura clientului, exact genul de text pe care nimeni nu-l poate confirma.
- *
- * La primirea textului se înlocuiește `corp`, restul rămâne. */
+ * Ce NU am preluat, și de ce:
+ *   · pagina sursă conține de două ori aceeași idee — o variantă veche, fără
+ *     diacritice, urmată de una completă și îngrijită. Am păstrat-o pe a doua;
+ *     amândouă una sub alta ar fi arătat ca o scăpare de redactare.
+ *   · blocul de contact de pe acea pagină dă alt telefon (+40 799 443 094) și
+ *     altă formă a adresei decât datele din `FIRMA`. Nu le-am amestecat: două
+ *     numere diferite pe același site înseamnă un client care sună aiurea.
+ *     Contactul de aici vine, ca peste tot, din `FIRMA`.
+ */
+const GALERIE_DESPRE = `<div class="gallery reveal" data-galerie="despre">
+  <figure>
+    <img src="assets/img/despre/despre-01.jpeg" width="1600" height="777" loading="lazy" decoding="async" alt="Echipa ABBA Confort la o lucrare de montaj">
+  </figure>
+  <figure>
+    <img src="assets/img/despre/despre-02.jpeg" width="1600" height="777" loading="lazy" decoding="async" alt="Ușă de garaj tip rulou montată la o hală">
+  </figure>
+  <figure>
+    <img src="assets/img/despre/despre-03.jpeg" width="1600" height="777" loading="lazy" decoding="async" alt="Montaj de ușă de garaj tip rulou">
+  </figure>
+  <figure>
+    <img src="assets/img/despre/despre-04.jpeg" width="1600" height="777" loading="lazy" decoding="async" alt="Lucrare finalizată, ușă de garaj cu acționare electrică">
+  </figure>
+  <figure>
+    <img src="assets/img/despre/despre-05.jpeg" width="1600" height="777" loading="lazy" decoding="async" alt="Ușă de garaj tip rulou, vedere din exterior">
+  </figure>
+</div>`;
+
 S('despre-noi.html', pagina({
   base: '', activ: 'despre-noi.html',
   titlu: `Despre noi — ${FIRMA.nume} | ${FIRMA.marca}`,
-  descriere: `${FIRMA.nume}, CUI ${FIRMA.cui}, ${FIRMA.j}. Proiectăm, producem și montăm uși de garaj tip rulou din aluminiu, cu acționare manuală sau prin telecomandă.`,
+  descriere: 'ABBA Confort — partener de încredere pentru soluții eficiente, servicii de calitate și produse premium. Viziunea, misiunea și lucrările noastre.',
   corp: `<section class="section">
   <div class="wrap">
     ${firimituri('', [['Acasă', 'index.html'], ['Despre noi', null]])}
-    ${rubrica('01', 'Cine suntem', 'Despre noi',
-      'Proiectăm, producem și montăm uși de garaj tip rulou din aluminiu, pentru locuințe și pentru spații comerciale sau industriale.', '', 'h1')}
+    ${rubrica('01', 'Abba Confort', 'Despre noi', 'Problema ta, soluția noastră!', '', 'h1')}
 
     <div class="stack-lg">
       <div class="proza reveal">
-        <p>Lucrăm cu uși de garaj tip rulou cu lamele de aluminiu umplute cu spumă
-        poliuretanică, în două familii de lamelă — 55 mm și 77 mm — acționate manual
-        sau prin telecomandă. Ușa urcă pe verticală și se rulează într-o casetă
-        deasupra golului, așa că spațiul din garaj rămâne liber.</p>
+        <p>La <b>Abba Confort</b>, ne-am propus să devenim un partener de încredere
+        pentru toți clienții noștri, oferind soluții eficiente, servicii de calitate
+        și produse premium. Prin inovație, responsabilitate și profesionalism,
+        construim relații solide și durabile cu beneficiarii și partenerii noștri.</p>
 
-        <p>Sediul firmei este în Târgoviște, județul Dâmbovița, iar montajul se
-        poate face și în alte localități din țară, în funcție de lucrare.</p>
+        <h2>Viziunea noastră</h2>
+        <p>Ne dorim să fim recunoscuți ca un lider în domeniul nostru, un partener
+        care administrează eficient resursele, se dezvoltă constant și investește în
+        responsabilitate socială. Succesul nostru este strâns legat de succesul
+        clienților noștri, motiv pentru care ne angajăm să oferim cele mai bune
+        soluții personalizate pentru nevoile lor.</p>
+
+        <h2>Misiunea noastră</h2>
+        <p>Obiectivul principal al <b>Abba Confort</b> este să stabilim și să menținem
+        cele mai înalte standarde profesionale pe piața românească. Ne dorim să aducem
+        un plus de valoare prin:</p>
+        <ul class="lista-semne">
+          <li><span aria-hidden="true">✅</span> <b>Servicii moderne și inovatoare</b> — utilizăm tehnologie de ultimă generație pentru a oferi soluții eficiente și rapide.</li>
+          <li><span aria-hidden="true">✅</span> <b>Relații excelente cu beneficiarii și partenerii noștri</b> — punem accent pe colaborare și comunicare deschisă pentru a înțelege nevoile fiecărui client.</li>
+          <li><span aria-hidden="true">✅</span> <b>Flexibilitate și personalizare</b> — adaptăm produsele și serviciile noastre astfel încât să corespundă cerințelor specifice ale fiecărui partener.</li>
+        </ul>
+
+        <h2>Ce oferim?</h2>
+        <p>Ne adresăm atât companiilor, cât și persoanelor fizice care își doresc
+        servicii de calitate superioară. Prin colaborarea cu noi, clienții beneficiază de:</p>
+        <ul class="lista-semne">
+          <li><span aria-hidden="true">✔️</span> <b>O gamă completă de produse și servicii personalizate</b> — concepute pentru a optimiza activitatea și a crește eficiența operațională.</li>
+          <li><span aria-hidden="true">✔️</span> <b>Creșterea profitabilității</b> — prin soluții eficiente care ajută la reducerea costurilor și îmbunătățirea proceselor interne.</li>
+          <li><span aria-hidden="true">✔️</span> <b>Control administrativ îmbunătățit</b> — acces la tehnologii moderne pentru o mai bună gestionare a resurselor.</li>
+        </ul>
+
+        <h2>De ce să alegi Abba Confort?</h2>
+        <ul class="lista-semne">
+          <li><span aria-hidden="true">🔹</span> <b>Experiență și profesionalism</b> — echipa noastră are o vastă experiență în domeniu, oferind soluții inovatoare și eficiente.</li>
+          <li><span aria-hidden="true">🔹</span> <b>Investiții continue în modernizare</b> — ne actualizăm constant parcul logistic și tehnologiile pentru a asigura servicii de top.</li>
+          <li><span aria-hidden="true">🔹</span> <b>Calitate garantată</b> — fiecare produs și serviciu este testat și optimizat pentru a oferi cele mai bune rezultate.</li>
+          <li><span aria-hidden="true">🔹</span> <b>Transparență și încredere</b> — relațiile pe termen lung sunt fundamentul afacerii noastre.</li>
+        </ul>
+
+        <p>La <b>Abba Confort</b>, succesul nostru este construit pe <b>încrederea
+        clienților</b> și pe <b>angajamentul nostru față de excelență</b>. Investim
+        constant în dezvoltarea companiei și în îmbunătățirea serviciilor pentru a
+        oferi soluții de calitate superioară.</p>
+
+        <p class="despre-final"><span aria-hidden="true">🌟</span> <b>Alege Abba Confort —
+        partenerul tău de încredere pentru servicii moderne și soluții eficiente!</b>
+        <span aria-hidden="true">🌟</span></p>
       </div>
 
-      ${rubrica('02', 'Ce facem', 'Serviciile noastre', '')}
+      ${rubrica('02', 'Din teren', 'Lucrări executate', '')}
+      ${GALERIE_DESPRE}
+
+      ${rubrica('03', 'Ce facem', 'Serviciile noastre', '')}
       ${svcHTML()}
 
-      ${rubrica('03', 'Date oficiale', 'Cine răspunde de comandă', '')}
+      ${rubrica('04', 'Date oficiale', 'Cine răspunde de comandă', '')}
       ${cardIdentitate('')}
 
       <p><a class="btn btn--orange btn--lg" href="contact.html">Contactați-ne</a></p>

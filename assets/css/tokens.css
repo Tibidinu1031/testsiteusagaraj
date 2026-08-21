@@ -127,7 +127,15 @@
 
      Opacitatea 0,45 și conturul 0,55 sunt cele găsite prin încercare: la 0,20
      desenul ieșea cenușiu, cu ambele culori diluate până la nedistingere. */
-  --unelte: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='420' height='420' viewBox='0 0 420 420' fill='none' stroke-width='0.55' stroke-linecap='round' stroke-linejoin='round' opacity='0.45'%3E%3Cg stroke='%230d5c4e' transform='translate(100 88) rotate(-8) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(310 150) rotate(14) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3Cg stroke='%230d5c4e' transform='translate(120 300) rotate(-12) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3Cg stroke='%23f39c2c' transform='translate(325 330) rotate(22) scale(5) translate(-12 -12)'%3E%3Cpath d='M1.6 15.4V7.9c0-.6.5-1.1 1.1-1.1h10.9c.6 0 1.1.5 1.1 1.1v7.5'/%3E%3Cpath d='M14.7 9.2h3.1c.4 0 .8.2 1 .5l2.4 3.2c.2.2.3.5.3.8v1.7'/%3E%3Cpath d='M1.6 15.4h1.7M8.9 15.4h5.2M19.5 15.4h2'/%3E%3Ccircle cx='6.1' cy='15.6' r='2.2'/%3E%3Ccircle cx='16.8' cy='15.6' r='2.2'/%3E%3Cpath d='M4.2 9.1h6.4M4.2 10.9h6.4M4.2 12.7h4.3'/%3E%3Cpath d='M15.6 10.6h2.1l1.5 2h-3.6z'/%3E%3C/g%3E%3C/svg%3E");
+  /* Emblema firmei, ca filigran. Era un desen SVG cu dubițe, făcut de mine;
+     clientul a cerut emblema ADEVĂRATĂ, cea de pe materialele firmei.
+
+     Fișierul `fundal-emblema.png` NU e emblema pusă direct: aceea are fond
+     crem plin și, repetată, ar acoperi pagina în loc s-o filigraneze. E o
+     dală de 420 px cu emblema așezată de două ori, decalat, pe fond
+     transparent și cu alfa scăzut la 13 %. Se regenerează din
+     `assets/img/emblema-abba-delivery.png` dacă emblema se schimbă. */
+  --unelte: url("../img/fundal-emblema.png");
 
   /* Textura peliculei — sparge planurile plate fără să ceară o imagine. */
   --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
