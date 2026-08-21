@@ -62,8 +62,12 @@
      ca fundalul să concureze cu produsul. Verificarea de contrast e mai jos, la
      `--ink-faint`: o bandă mai saturată cere cerneală mai închisă. */
   --band-alb:        #fdfcfa;
-  --band-verde:      #509b7d;
-  --band-portocaliu: #dd8117;
+  /* Chiar culorile mărcii, la cerere. Verdele e destul de închis cât să ceară
+     text ALB — cu cerneala obișnuită dă 2,40, adică nelizibil. Portocaliul e
+     invers: text închis, 8,51; pe el albul ar da 2,11. De aceea cele două
+     benzi își aleg cerneala separat, mai jos în components.css. */
+  --band-verde:      var(--brand-green);
+  --band-portocaliu: var(--brand-orange);
 
   /* --- Reducerile: verdele mărcii, nu roșu ---
      Fondul insignei de reducere. A fost cărămiziu (#b8401d) — culoarea prin

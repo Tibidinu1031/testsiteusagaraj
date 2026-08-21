@@ -1101,27 +1101,59 @@ main > section:nth-last-of-type(4n + 3) { background: none; }
 main > section:nth-last-of-type(4n + 4) { background: var(--band-portocaliu); }
 
 /**
- * Pe benzile colorate, textul secundar se închide.
+ * Cerneala de pe benzi: fiecare bandă și-o alege singură.
  *
- * Nu e o preferință de stil, ci o reparație. `--ink-muted` și `--ink-faint`
- * sunt calibrate pentru fondul deschis al paginii; puse peste verde sau
- * portocaliu dădeau un contrast de 3,5–3,9, adică sub pragul de 4,5 cerut de
- * WCAG AA. Pica deja înainte de a închide benzile — închiderea doar a făcut
- * problema imposibil de ignorat.
+ * Verdele mărcii e închis, deci cere text ALB — cu cerneala obișnuită ar da 2,40,
+ * adică nelizibil. Portocaliul e deschis și cere exact invers: text închis, unde
+ * albul ar da 2,11. Nu există o singură culoare de text bună pentru amândouă.
  *
- * #21272b e cea mai DESCHISĂ nuanță care trece de 4,5 pe banda cea mai închisă
- * dintre cele două. Aleasă așa, nu mai închis, tocmai ca textul secundar să
- * rămână vizibil mai deschis decât cel principal — altfel dispare ierarhia și
- * totul arată la fel de important.
+ * Redefinirea se face pe TOKEN, nu pe `color`, ca să se propage la tot ce
+ * moștenește — titluri, supratitlu, text introductiv, proză.
  *
- * Tot de aici vine și limita benzilor: la o treaptă mai jos, nuanța admisă
- * ajunge la #1b2125, la șapte trepte de cerneala principală. Acolo nu mai
- * există ierarhie de tipărit.
+ * ATENȚIE la ce se pune ÎN interiorul unei benzi verzi: orice cutie cu fundal
+ * propriu deschis — cartelă de produs, carte de identitate, întrebări — trebuie
+ * să-și readucă cerneala închisă, altfel moștenește albul și textul dispare pe
+ * alb. Lista de mai jos face exact asta; dacă apare o componentă nouă cu fundal
+ * deschis, se adaugă acolo.
  */
-main > section:nth-last-of-type(4n + 1),
+/* `color` se declară AICI, nu doar tokenul.
+
+   Motivul e o capcană a proprietăților personalizate: `color` e scris o singură
+   dată, pe `body`, ca `var(--ink)`. Valoarea se calculează acolo și se
+   MOȘTENEȘTE mai departe deja rezolvată. Redefinind `--ink` pe secțiune, tokenul
+   chiar se schimbă — verificat, arăta #ffffff — dar `color` rămânea cel
+   moștenit, fiindcă nicio declarație de la acest nivel nu-l recitea. Titlurile
+   de pe verde erau negre pe verde închis, la 2,40. */
+main > section:nth-last-of-type(4n + 1) {
+  --ink: #ffffff;
+  --ink-muted: #dbe6e2;
+  --ink-faint: #dbe6e2;
+  /* Numărul de secțiune și butoanele fantomă folosesc cerneala portocalie, care
+     pe verde închis dă 1,1. Pe banda asta devine un ton deschis. */
+  --orange-txt: #ffc98a;
+  color: var(--ink);
+}
 main > section:nth-last-of-type(4n + 4) {
+  --ink: #14171a;
   --ink-muted: #21272b;
   --ink-faint: #21272b;
+  /* #7a3f06 dădea 3,91 pe portocaliul mărcii — sub prag. #5f3104 dă 5,16 și
+     rămâne aceeași cerneală, doar mai închisă. */
+  --orange-txt: #5f3104;
+  color: var(--ink);
+}
+
+/* Cutiile cu fundal propriu deschis, dinăuntrul benzii verzi, își iau cerneala
+   înapoi. Fără asta, textul lor ar fi alb pe alb. */
+/* `.note` NU e în listă, deși pare o cutie: fundalul ei are alfa 0,06, deci
+   verdele benzii se vede prin el. Trecută prin resetare, primea cerneală închisă
+   pe verde închis — 2,40. Rămâne pe cerneala benzii. */
+main > section:nth-last-of-type(4n + 1) :is(.card, .idcard, .svc, .faq, .calc, .contact-line, .gallery, .oferta, .filtre, .harta) {
+  --ink: #14171a;
+  --ink-muted: #42494d;
+  --ink-faint: #3d4448;
+  --orange-txt: #7a3f06;
+  color: var(--ink);
 }
 main > section + section { border-block-start: 1px solid var(--line); }
 /* Selectorul trebuie să fie la fel de specific ca regula de ritm de mai sus
@@ -1503,6 +1535,10 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: clamp(1.5rem, 1rem + 3vw, 3rem);
+  /* `start`, nu întinderea implicită: cartea de identitate e mai scurtă decât
+     coloana din stânga, iar întinsă își tot trăgea fundalul alb până jos —
+     un dreptunghi gol de câteva sute de pixeli sub ultimul rând. */
+  align-items: start;
 }
 @media (max-width: 860px) { .contact-grid { grid-template-columns: 1fr; } }
 
@@ -2713,3 +2749,35 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   border: 0;
 }
 @media (max-width: 560px) { .harta iframe { aspect-ratio: 4 / 3; } }
+
+/* Cartela de ofertă își poartă fundalul portocaliu cu ea, deci are nevoie de
+   aceeași cerneală ca banda portocalie — indiferent în ce secțiune stă. Textul
+   ei secundar dădea 4,34, iar numărul portocaliu 3,91. */
+.oferta {
+  --ink-muted: #21272b;
+  --ink-faint: #21272b;
+  --orange-txt: #5f3104;
+  color: var(--ink);
+}
+.oferta :is(p, span, small, b) { color: inherit; }
+.oferta .oferta__nota { color: var(--ink-muted); }
+
+/* Subsolul poartă același portocaliu ca banda, deci are nevoie de aceeași
+   cerneală. Cu tokenii impliciți, calibrați pentru fondul deschis al paginii,
+   textul lui dădea 4,34 — sub prag. `color` se declară explicit, altfel rămâne
+   cel moștenit de la `body` și redefinirea tokenului n-ar avea efect. */
+.ftr {
+  --ink-muted: #21272b;
+  --ink-faint: #21272b;
+  --orange-txt: #5f3104;
+  color: var(--ink);
+}
+.ftr :is(p, li, small, b, span, h2) { color: inherit; }
+.ftr a:not(.fb-btn):not(.btn) { color: var(--ink); }
+/* Butoanele sociale din subsol au fond alb propriu, deci își păstrează verdele. */
+.ftr .fb-btn { color: var(--acc); }
+
+/* În subsol, „.ro” din numele mărcii era verde pe portocaliu — 3,55. Verdele e
+   accentul paginii pe fond deschis; aici nu are contrast, deci ia cerneala
+   subsolului. Marca se citește la fel, doar fără sublinierea de culoare. */
+.ftr .brand__name b span { color: var(--ink); }
