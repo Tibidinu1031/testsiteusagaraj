@@ -45,7 +45,7 @@ body {
       transparent 46rem
     );
   background-repeat: repeat, repeat, no-repeat;
-  background-size: auto, 420px 420px, auto;
+  background-size: auto, 560px 560px, auto;
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans);

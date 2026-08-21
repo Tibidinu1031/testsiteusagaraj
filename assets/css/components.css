@@ -2630,14 +2630,28 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
    Despre noi
    ========================================================================== */
 
-/* Listele din textul clientului își poartă propriul semn la început — bifă,
-   romb — deci punctul implicit al listei ar fi al doilea semn pe același rând. */
+/**
+ * Listele din textul clientului își poartă propriul semn la început — bifă,
+ * romb — deci punctul implicit al listei ar fi al doilea semn pe același rând.
+ *
+ * Rândul NU e o grilă, deși așa a fost prima dată. Într-un container de grilă
+ * fiecare copil devine o celulă separată, iar rândurile au forma
+ * `<span>semn</span> <b>titlu</b> — text lung`: adică trei elemente, nu două.
+ * Titlul ajungea într-o celulă, textul în următoarea, iar textul primea o
+ * coloană îngustă în care se rupea câte un cuvânt pe rând.
+ *
+ * Aici semnul e scos din flux și așezat în retragerea rândului, deci restul —
+ * titlu și explicație — rămâne un singur șir de text, care curge normal.
+ */
 .lista-semne { list-style: none; padding-inline-start: 0; display: grid; gap: var(--s-3); }
 .lista-semne li {
-  display: grid;
-  grid-template-columns: 1.5rem 1fr;
-  gap: var(--s-2);
-  align-items: baseline;
+  position: relative;
+  padding-inline-start: 1.9rem;
+}
+.lista-semne li > span[aria-hidden] {
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0;
 }
 .despre-final {
   text-align: center;
