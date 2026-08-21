@@ -1057,12 +1057,20 @@ kbd {
   transform: scale(1.04);
   transition: opacity var(--d-3) var(--ease-out), transform var(--d-3) var(--ease-out);
   z-index: 1;
+
+  /* NU prinde clicul. Legătura care acoperă toată cartela e `::after`-ul din
+     titlu, la `z-index: auto`, deci sub fotografia asta. Peste zona desenului,
+     clicul lovea imaginea și nu se întâmpla nimic — chiar și când fotografia e
+     invizibilă, fiindcă `opacity: 0` ascunde un element, dar nu-l scoate din
+     calea indicatorului. */
+  pointer-events: none;
 }
 .card:hover .card__photo,
 .card:focus-within .card__photo { opacity: 1; transform: none; }
 
-/* Insigna cu lamela rămâne lizibilă peste fotografie. */
-.card__badges { z-index: 2; }
+/* Insigna cu lamela rămâne lizibilă peste fotografie. Nu e interactivă, deci
+   lasă clicul să treacă mai departe, la legătura cartelei. */
+.card__badges { z-index: 2; pointer-events: none; }
 
 .card__desc {
   font-size: var(--t--1);
