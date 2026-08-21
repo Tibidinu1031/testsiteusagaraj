@@ -202,13 +202,18 @@ const TICKER = `<div class="ticker">
  * produsele existente și se ordonează după câte produse le folosesc.
  */
 const CULORI_CALC = (() => {
+  /* Nuanțele se numără UNA CÂTE UNA, nu pe combinații.
+
+     Ușile din catalog vin în două tonuri — 8014 cu 8019 pe aceeași ușă — iar
+     prima variantă oferea perechea ca un singur buton, „Maro deschis / Maro
+     închis”. La comandă însă ușa se vopsește la RAL, deci fiecare nuanță poate
+     fi cerută separat; perechea nu e o culoare, e o alegere de produs standard. */
   const set = new Map();
   UG.PRODUSE.forEach((p) => {
-    if (!p.raluri || !p.raluri.length) return;
-    const chei = [...p.raluri].sort();
-    const id = chei.join("-");
-    if (!set.has(id)) set.set(id, { id, chei, n: 0 });
-    set.get(id).n++;
+    (p.raluri || []).forEach((k) => {
+      if (!set.has(k)) set.set(k, { id: k, chei: [k], n: 0 });
+      set.get(k).n++;
+    });
   });
   return [...set.values()].sort((a, b) => b.n - a.n);
 })();
@@ -225,7 +230,6 @@ const CALCULATOR_HTML = `
     <div class="calc reveal" id="calculator">
       <div class="calc__cap">
         <div>
-          <p class="calc__insigna">Preț estimativ</p>
           <h3 class="calc__titlu">Calculator de preț</h3>
           <p class="calc__lede">Introduceți cotele golului și alegeți lamela.
           Estimarea include ușa, motorul cu telecomandă, accesoriile de

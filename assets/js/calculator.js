@@ -313,7 +313,6 @@ window.UG = window.UG || {};
     var inLei = Math.round(r.final * curs.eur);
 
     iesire.innerHTML =
-      '<p class="calc-eticheta">Preț estimativ</p>' +
       '<p class="calc-suma">' + lei(inLei) + '</p>' +
       '<p class="calc-suma-eur">' + eur(r.final) + '</p>' +
       '<p class="calc-curs">Curs BNR ' + (curs.data ? dataRo(curs.data) : '') +
