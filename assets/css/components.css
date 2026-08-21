@@ -2658,3 +2658,19 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   font-size: var(--t-1);
   margin-block-start: var(--s-6);
 }
+
+/* Pastila de nuanță din calculator. Pentru o ușă în două tonuri se împarte în
+   două pe diagonală: e singurul mod în care se vede din start că are două
+   culori, fără să scrie asta nicăieri. */
+.calc-pastila {
+  inline-size: 0.95rem;
+  block-size: 0.95rem;
+  border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent);
+  flex: none;
+}
+.calc__chips--culori label span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}

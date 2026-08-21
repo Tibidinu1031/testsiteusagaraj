@@ -195,6 +195,33 @@ const TICKER = `<div class="ticker">
  * cine cere o ofertă la comandă vrea să vadă de unde vine fiecare leu, nu doar
  * rezultatul.
  */
+/**
+ * Nuanțele oferite de calculator se DERIVĂ din catalog, nu se scriu de mână.
+ *
+ * Altfel calculatorul ar putea oferi o culoare pe care firma n-o produce, sau
+ * ar rămâne fără una nou adăugată. Se iau combinațiile reale de RAL de pe
+ * produsele existente și se ordonează după câte produse le folosesc.
+ */
+const CULORI_CALC = (() => {
+  const set = new Map();
+  UG.PRODUSE.forEach((p) => {
+    if (!p.raluri || !p.raluri.length) return;
+    const chei = [...p.raluri].sort();
+    const id = chei.join("-");
+    if (!set.has(id)) set.set(id, { id, chei, n: 0 });
+    set.get(id).n++;
+  });
+  return [...set.values()].sort((a, b) => b.n - a.n);
+})();
+
+/* Pastila de culoare: pentru o combinație de două nuanțe se împarte în două,
+   ca omul să vadă din start că ușa are două tonuri, nu unul. */
+const pastilaCuloare = (chei) => chei.length > 1
+  ? `<i class="calc-pastila" style="background:linear-gradient(135deg, ${UG.RAL[chei[0]].hex} 0 50%, ${UG.RAL[chei[1]].hex} 50% 100%)"></i>`
+  : `<i class="calc-pastila" style="background:${UG.RAL[chei[0]].hex}"></i>`;
+
+const numeCuloare = (chei) => chei.map((k) => UG.RAL[k].nume).join(" / ");
+
 const CALCULATOR_HTML = `
     <div class="calc reveal" id="calculator">
       <div class="calc__cap">
@@ -213,6 +240,13 @@ const CALCULATOR_HTML = `
           <div class="calc__chips">
             <label><input type="radio" name="calc-lamela" value="55" checked><span>55 mm</span></label>
             <label><input type="radio" name="calc-lamela" value="77"><span>77 mm</span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="calc__camp calc__camp--lat">
+          <legend>Culoare</legend>
+          <div class="calc__chips calc__chips--culori">
+${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-culoare" value="${c.id}"${i === 0 ? " checked" : ""} data-nume="${esc(numeCuloare(c.chei))}" data-ral="${c.chei.map((k) => UG.RAL[k].ral).join(" / ")}"><span>${pastilaCuloare(c.chei)}${esc(numeCuloare(c.chei))}</span></label>`).join(String.fromCharCode(10))}
           </div>
         </fieldset>
 

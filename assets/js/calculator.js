@@ -263,6 +263,15 @@ window.UG = window.UG || {};
     return ales ? Number(ales.value) : 55;
   }
 
+  /* Nuanța NU schimbă prețul — la furnizor costă la fel — dar schimbă produsul
+     comandat, deci trebuie să ajungă în comandă. Fără ea, la atelier ar sosi o
+     ușă „la comandă” fără să se știe în ce culoare. */
+  function culoareAleasa() {
+    var ales = gazda.querySelector('[name="calc-culoare"]:checked');
+    if (!ales) return null;
+    return { nume: ales.dataset.nume || '', ral: ales.dataset.ral || '' };
+  }
+
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
@@ -319,6 +328,10 @@ window.UG = window.UG || {};
       '<p class="calc-detaliu__titlu">Cum a ieșit cifra</p>' +
       randDetaliu('Ușă ' + r.lamela + ' mm, ' + mm(r.folosit.l) + ' × ' + mm(r.folosit.h) +
                   ' <small>(preț de listă, fără acționare)</small>', eur(r.dinTabel)) +
+      (function () {
+        var c = culoareAleasa();
+        return c ? randDetaliu('Culoare <small>' + esc(c.ral) + '</small>', esc(c.nume)) : '';
+      })() +
       randDetaliu('Acționare <small>' + esc(r.actionareNume) + '</small>', '+ ' + eur(r.actionare)) +
       r.accesorii.map(function (a) {
         return randDetaliu(esc(a.nume), '+ ' + eur(a.pret));
@@ -347,11 +360,14 @@ window.UG = window.UG || {};
       var bucati = Math.max(1, Number(campBuc && campBuc.value) || 1);
       var inLei = Math.round(ultimul.final * curs.eur);
 
+      var c = culoareAleasa();
       var nume = 'Ușă de garaj la comandă, lamelă ' + ultimul.lamela + ' mm, ' +
-        ultimul.folosit.l + ' × ' + ultimul.folosit.h + ' mm';
+        ultimul.folosit.l + ' × ' + ultimul.folosit.h + ' mm' +
+        (c ? ', ' + c.nume : '');
 
       var detalii = 'Cotele cerute: ' + ultimul.cerut.l + ' × ' + ultimul.cerut.h + ' mm' +
         (ultimul.rotunjit ? ' (tarifat la ' + ultimul.folosit.l + ' × ' + ultimul.folosit.h + ' mm)' : '') +
+        (c && c.ral ? ' · ' + c.ral : '') +
         ' · ' + ultimul.final + ' € la cursul ' + String(curs.eur).replace('.', ',') +
         (curs.data ? ' din ' + dataRo(curs.data) : '');
 
