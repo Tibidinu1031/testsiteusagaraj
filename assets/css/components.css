@@ -1099,6 +1099,30 @@ main > section:nth-last-of-type(4n + 1) { background: var(--band-verde); }
 main > section:nth-last-of-type(4n + 2) { background: var(--band-alb); }
 main > section:nth-last-of-type(4n + 3) { background: none; }
 main > section:nth-last-of-type(4n + 4) { background: var(--band-portocaliu); }
+
+/**
+ * Pe benzile colorate, textul secundar se închide.
+ *
+ * Nu e o preferință de stil, ci o reparație. `--ink-muted` și `--ink-faint`
+ * sunt calibrate pentru fondul deschis al paginii; puse peste verde sau
+ * portocaliu dădeau un contrast de 3,5–3,9, adică sub pragul de 4,5 cerut de
+ * WCAG AA. Pica deja înainte de a închide benzile — închiderea doar a făcut
+ * problema imposibil de ignorat.
+ *
+ * #21272b e cea mai DESCHISĂ nuanță care trece de 4,5 pe banda cea mai închisă
+ * dintre cele două. Aleasă așa, nu mai închis, tocmai ca textul secundar să
+ * rămână vizibil mai deschis decât cel principal — altfel dispare ierarhia și
+ * totul arată la fel de important.
+ *
+ * Tot de aici vine și limita benzilor: la o treaptă mai jos, nuanța admisă
+ * ajunge la #1b2125, la șapte trepte de cerneala principală. Acolo nu mai
+ * există ierarhie de tipărit.
+ */
+main > section:nth-last-of-type(4n + 1),
+main > section:nth-last-of-type(4n + 4) {
+  --ink-muted: #21272b;
+  --ink-faint: #21272b;
+}
 main > section + section { border-block-start: 1px solid var(--line); }
 /* Selectorul trebuie să fie la fel de specific ca regula de ritm de mai sus
    (`main > section:nth-last-of-type()`), altfel eroul primește bandă albă.
@@ -2672,3 +2696,20 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   align-items: center;
   gap: var(--s-2);
 }
+
+/* Harta din pagina de contact. Raportul e fixat, ca locul ei să fie rezervat
+   înainte să se încarce cadrul — altfel pagina ar sări când sosește harta. */
+.harta {
+  margin-block-start: var(--s-5);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-3);
+  overflow: hidden;
+  background: var(--bg-sunken);
+}
+.harta iframe {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 16 / 10;
+  border: 0;
+}
+@media (max-width: 560px) { .harta iframe { aspect-ratio: 4 / 3; } }

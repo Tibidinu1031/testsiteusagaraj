@@ -132,7 +132,6 @@ function cardIdentitate(base) {
     <div class="idrow"><dt>Sediu social</dt><dd>${FIRMA.adresa}</dd></div>
     <div class="idrow"><dt>Telefon</dt><dd><a href="tel:${FIRMA.telHref}">${FIRMA.tel}</a></dd></div>
 ${FIRMA.emailuri.map((e) => `    <div class="idrow"><dt>${e.rol}</dt><dd><a href="mailto:${e.adresa}">${e.adresa}</a></dd></div>`).join('\n')}
-    <div class="idrow"><dt>Magazin</dt><dd><a href="${base}magazin.html">Catalogul nostru</a></dd></div>
   </dl>
 </div>`;
 }
@@ -407,11 +406,24 @@ ${FIRMA.emailuri.map((e) => `      <a class="contact-line" href="mailto:${e.adre
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
         <div><small>Sediu · vezi în Google Maps</small><b>${FIRMA.adresa}</b></div>
       </a>
-      <a class="contact-line" href="magazin.html">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 7h16l-1.2 12.2a2 2 0 0 1-2 1.8H7.2a2 2 0 0 1-2-1.8Z"/><path d="M9 7V5.5a3 3 0 0 1 6 0V7"/></svg>
-        <div><small>Comandă online</small><b>Vezi catalogul și comandă</b></div>
-      </a>
     </div>
+
+    <!-- Harta ÎNCĂRCATĂ, nu doar un buton. Forma de mai jos nu cere cheie de
+         API, deci nu depinde de un cont Google al firmei și nu poate expira.
+         E adresa CANONICĂ: varianta scurtă, maps.google.com/…&output=embed,
+         răspunde cu o redirectare 301 către exact aceasta.
+
+         „loading=lazy”: e un cadru străin, cu scripturile și cookie-urile lui.
+         Așa nu se încarcă până nu ajunge omul cu privirea la el, iar pagina de
+         contact pornește la fel de repede ca înainte. -->
+    <div class="harta">
+      <iframe
+        src="https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1s${encodeURIComponent(FIRMA.adresa)}"
+        title="Harta către sediul ${esc(FIRMA.nume)}"
+        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+        allowfullscreen></iframe>
+    </div>
+
     <p class="lede" style="font-size:var(--t--1)">
       Pentru o ofertă corectă, trimiteți-ne lățimea și înălțimea golului măsurate
       la zid, precum și spațiul disponibil deasupra golului, necesar pentru
