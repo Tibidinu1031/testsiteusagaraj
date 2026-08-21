@@ -201,10 +201,17 @@
   border-radius: 50%;
   border: 1px solid var(--line);
   background-color: var(--surface-hi);
-  background-image: url("../img/logo-abba-confort.jpeg");
+  /* Duba din emblema firmei, nu casa cu ciocanul de dinainte.
+
+     Se folosește duba SINGURĂ, nu emblema întreagă: pastila are 46 px, iar la
+     mărimea aia sloganul ar fi o mâzgălitură. Fișierul e decupat exact pe
+     contur și are fondul scos, deci `contain` îl așază întreg în cerc, fără
+     să taie nimic — spre deosebire de varianta veche, care mărea imaginea la
+     216 % ca să scoată din ea un detaliu. */
+  background-image: url("../img/logo-emblema-duba.png");
   background-repeat: no-repeat;
-  background-position: 50% 28%;
-  background-size: 216%;
+  background-position: 50% 50%;
+  background-size: 74%;
 }
 
 /* Sigla întreagă, în subsol: acolo are loc, deci se citește și numele firmei
@@ -219,23 +226,14 @@
    de aici umplutura de 15%, cu `contain` în loc de `cover`. Cercul rămâne
    cerc, sigla rămâne întreagă. */
 /**
- * Sigla din subsol.
+ * Sigla din subsol: emblema firmei, cu duba și sloganul.
  *
- * CERCUL E ÎN FIȘIER, nu aici. `logo-abba-rotund.png` e deja un disc alb pe
- * fond transparent, cu sigla micșorată la 84 % și așezată în centru; cea mai
- * depărtată cerneală stă la 90,5 % din rază, deci sloganul are spațiu liber de
- * jur împrejur.
+ * Fondul alb a fost scos din fișier și imaginea decupată la conturul
+ * cernelii, deci nu mai e nimic de potrivit din CSS — nici umplutură, nici
+ * decupaj rotund. Aici a stat înainte o siglă pătrată tăiată în cerc, iar
+ * regulile de atunci mâncau prima și ultima literă din slogan.
  *
- * Ce a fost înainte aici — `padding` + `object-fit: contain` + `border-radius`
- * peste fișierul pătrat — nu putea funcționa. CSS-ul taie un cerc dintr-un
- * pătrat, dar nu poate muta conținutul din interiorul lui: sloganul „PROBLEMA
- * TA, SOLUȚIA NOASTRĂ!” atinge marginile pătratului la circa 80 % din înălțime,
- * exact unde cercul e cel mai îngust, așa că „P” și „!” cădeau în afară. Orice
- * umplutură destul de mare cât să-l salveze făcea sigla mult prea mică.
- *
- * DECI: nu adăuga înapoi `padding`, `border-radius`, `object-fit` sau
- * `background` — nu mai au ce potrivi și pot doar strica ce e deja corect. Dacă
- * se schimbă sigla, se regenerează fișierul, nu se reglează stilul.
+ * `logo-abba-rotund.png` a rămas în dosar, dar nu mai e folosit de nicăieri.
  */
 .ftr__sigla {
   display: block;

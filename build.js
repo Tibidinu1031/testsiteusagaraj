@@ -442,7 +442,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=100';
+const VER = 'v=105';
 
 /* --- Unelte -------------------------------------------------------------- */
 
@@ -575,7 +575,9 @@ ${o.noindex ? `<meta name="robots" content="noindex, nofollow">
 <meta property="og:title" content="${esc(o.titlu)}">
 <meta property="og:description" content="${esc(o.descriere)}">
 
-<link rel="icon" href="${base}assets/img/logo-abba-confort.jpeg" type="image/jpeg">
+<!-- Pictograma filei poartă aceeași dubă ca sigla din antet. Rămăsese casa cu
+     ciocanul, care nu mai apare nicăieri altundeva pe site. -->
+<link rel="icon" href="${base}assets/img/logo-emblema-duba.png?${VER}" type="image/png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -678,9 +680,12 @@ ${o.corp}
              eșecul și nu mai încercau — sigla rămânea goală oricâte reîncărcări
              normale s-ar fi făcut. Cu versiune în adresă, un fișier nou vine cu
              adresă nouă și nu poate moșteni un eșec vechi. -->
-        <img class="ftr__sigla" src="${base}assets/img/logo-abba-rotund.png?${VER}"
-             alt="ABBA CONFORT — problema ta, soluția noastră"
-             width="512" height="512" decoding="async">
+        <!-- Emblema întreagă: în subsol e lățime, deci se citește și numele
+             firmei, și sloganul. Fondul alb a fost scos din fișier, deci
+             cerneala bleumarin stă direct pe portocaliul subsolului. -->
+        <img class="ftr__sigla" src="${base}assets/img/logo-emblema.png?${VER}"
+             alt="ABBA CONFORT DELIVERY SRL — mereu mai devreme"
+             width="1192" height="532" decoding="async">
       </div>
 ${subsol}
     </div>
