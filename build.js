@@ -132,9 +132,15 @@ const FIRMA = {
    * `emailuri` este lista completă, folosită acolo unde chiar încap amândouă:
    * pagina de contact și cartea de identitate. Rolul e scris lângă fiecare, ca
    * omul să nu trimită o reclamație la comenzi și o comandă la birou.
+   *
+   * Amândouă sunt scrise cu literă mică, la cerere. Partea dinaintea lui `@` e
+   * tratată insensibil la literă de orice server de mail folosit în practică,
+   * deci majuscula nu schimba unde ajunge mesajul — dar se vedea. Schimbate
+   * amândouă, nu doar prima: stau una sub alta pe pagina de contact și în
+   * subsol, iar una cu majusculă lângă una fără ar fi părut greșeală de tipar.
    */
-  email: 'Office@abbaconfort.ro',
-  emailComenzi: 'Comenzi@abbaconfort.ro',
+  email: 'office@abbaconfort.ro',
+  emailComenzi: 'comenzi@abbaconfort.ro',
 
   /* Lista, pentru locurile unde încap amândouă. Se construiește din câmpurile
      de mai sus, ca o adresă schimbată într-un loc să nu rămână veche în altul. */
@@ -442,7 +448,7 @@ const PLATI = {
 
 const ORIGINE = 'https://usa-garaj.ro';
 const IESIRE = __dirname;
-const VER = 'v=130';
+const VER = 'v=131';
 
 /* --- Unelte -------------------------------------------------------------- */
 

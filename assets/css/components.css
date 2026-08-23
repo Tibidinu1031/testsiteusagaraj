@@ -413,10 +413,13 @@ kbd {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    /* 7,5rem, nu 6,5: măsurat în pagină, bara de identificare plus antetul
-       ocupă 119 px, nu 104 cât presupunea valoarea veche. Diferența de 15 px
-       era exact cât lipsea ca banda să intre pe primul ecran. */
-    min-block-size: calc(100svh - 7.5rem);
+    /* `--sus` e înălțimea reală a barei de identificare plus a antetului,
+       măsurată de app.js la încărcare, la redimensionare și după ce sosesc
+       fonturile. A fost scrisă de mână, cu cifră fixă, și a rămas în urmă de
+       fiecare dată când se schimba ceva deasupra: ultima oară se scădeau
+       7,5rem în loc de 6,5, iar cele 16 px în plus se vedeau ca o fâșie albă
+       sub banda verde. 6,5rem rămâne doar ca valoare de rezervă. */
+    min-block-size: calc(100svh - var(--sus, 6.5rem));
   }
   /* Banda e împinsă la bază, indiferent cât de scund e conținutul de deasupra. */
   .hero .ticker { margin-block-start: auto; }
@@ -789,15 +792,9 @@ kbd {
   white-space: nowrap;
   z-index: 1;
 }
-/* Linia portocalie de sub etichetă, ca în siglă: verdele e masa, portocaliul
-   e semnul. */
-.ticker__eticheta::after {
-  content: "";
-  inline-size: 1.5rem;
-  block-size: 2px;
-  background: var(--brand-orange);
-  flex: none;
-}
+/* Aici a stat o liniuță portocalie după „De ce noi?”. A fost scoasă la cerere:
+   între întrebare și primul răspuns de pe șină arăta ca o legătură între ele,
+   deși eticheta e un cap de rubrică, nu începutul frazei. Rămâne doar textul. */
 
 .ticker__fereastra {
   flex: 1;
@@ -1631,7 +1628,17 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   text-transform: uppercase;
   color: var(--ink-faint);
 }
-.contact-line b { font-size: var(--t-1); font-weight: 600; letter-spacing: -0.02em; }
+/* Aceeași tipografie ca valorile din cartea de identitate (`.idrow dd`):
+   același corp de literă și aceeași greutate. Erau `--t-1` și 600, deci
+   telefonul și adresele de e-mail din stânga ieșeau mai mari și mai groase
+   decât aceleași date scrise în chenarul din dreapta — două scrieri pentru
+   aceeași informație, pe același ecran. `b` rămâne eticheta potrivită: e
+   informația importantă din rând, doar că nu mai e și îngroșată. */
+.contact-line b {
+  font-size: var(--t--1);
+  font-weight: 400;
+  color: var(--ink);
+}
 
 /* ==========================================================================
    12b. Firimituri, pagina de produs, proză
@@ -2743,8 +2750,16 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 
 /* Harta din pagina de contact. Raportul e fixat, ca locul ei să fie rezervat
    înainte să se încarce cadrul — altfel pagina ar sări când sosește harta. */
+/* Harta ține toată lățimea grilei de contact, sub amândouă chenarele, și stă
+   centrată. `1 / -1` merge și pe o coloană, deci nu are nevoie de o regulă
+   separată pentru telefon. Lățimea e plafonată ca pe ecrane foarte late să nu
+   se întindă într-o panglică joasă. */
 .harta {
-  margin-block-start: var(--s-5);
+  grid-column: 1 / -1;
+  inline-size: 100%;
+  max-inline-size: 56rem;
+  margin-inline: auto;
+  margin-block-start: var(--s-4);
   border: 1px solid var(--line-strong);
   border-radius: var(--r-3);
   overflow: hidden;

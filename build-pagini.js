@@ -412,22 +412,6 @@ ${FIRMA.emailuri.map((e) => `      <a class="contact-line" href="mailto:${e.adre
       </a>
     </div>
 
-    <!-- Harta ÎNCĂRCATĂ, nu doar un buton. Forma de mai jos nu cere cheie de
-         API, deci nu depinde de un cont Google al firmei și nu poate expira.
-         E adresa CANONICĂ: varianta scurtă, maps.google.com/…&output=embed,
-         răspunde cu o redirectare 301 către exact aceasta.
-
-         „loading=lazy”: e un cadru străin, cu scripturile și cookie-urile lui.
-         Așa nu se încarcă până nu ajunge omul cu privirea la el, iar pagina de
-         contact pornește la fel de repede ca înainte. -->
-    <div class="harta">
-      <iframe
-        src="https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1s${encodeURIComponent(FIRMA.adresa)}"
-        title="Harta către sediul ${esc(FIRMA.nume)}"
-        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen></iframe>
-    </div>
-
     <p class="lede" style="font-size:var(--t--1)">
       Pentru o ofertă corectă, trimiteți-ne lățimea și înălțimea golului măsurate
       la zid, precum și spațiul disponibil deasupra golului, necesar pentru
@@ -435,11 +419,37 @@ ${FIRMA.emailuri.map((e) => `      <a class="contact-line" href="mailto:${e.adre
     </p>
   </div>
   ${cardIdentitate(base)}
+
+  <!-- Harta stă SUB amândouă chenarele, pe toată lățimea grilei, nu înghesuită
+       în coloana din stânga. Adresa e una singură pentru toată pagina, nu ține
+       de coloana cu legături mai mult decât de cartea de identitate, iar lată
+       se citește ca o hartă, nu ca o miniatură.
+
+       Harta e ÎNCĂRCATĂ, nu doar un buton. Forma de mai jos nu cere cheie de
+       API, deci nu depinde de un cont Google al firmei și nu poate expira.
+       E adresa CANONICĂ: varianta scurtă, maps.google.com/…&output=embed,
+       răspunde cu o redirectare 301 către exact aceasta.
+
+       „loading=lazy”: e un cadru străin, cu scripturile și cookie-urile lui.
+       Așa nu se încarcă până nu ajunge omul cu privirea la el, iar pagina de
+       contact pornește la fel de repede ca înainte. -->
+  <div class="harta reveal">
+    <iframe
+      src="https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1s${encodeURIComponent(FIRMA.adresa)}"
+      title="Harta către sediul ${esc(FIRMA.nume)}"
+      loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+      allowfullscreen></iframe>
+  </div>
 </div>`;
 
 /* --- index.html ---------------------------------------------------------- */
 
-const recomandate = [396, 401, 388, 180, 386, 161, 397, 178]
+/* Nouă, nu opt: grila are trei coloane pe ecran lat, deci opt lăsau ultimul
+   rând pe jumătate gol. Al nouălea e 393 — 77 mm, gri antracit — ales și ca
+   să iasă 6 uși cu lamelă de 55 mm și 3 cu 77, nu 6 și 2.
+
+   Numărul trebuie să rămână multiplu de 3 dacă lista se mai schimbă. */
+const recomandate = [396, 401, 388, 180, 386, 161, 397, 178, 393]
   .map((id) => PRODUSE.filter((p) => p.id === id)[0]).filter(Boolean);
 
 S('index.html', pagina({

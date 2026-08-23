@@ -40,6 +40,37 @@
   })();
 
   /* ==========================================================================
+     Înălțimea barei de sus și a antetului, măsurată
+     ========================================================================== */
+
+  /* Eroul umple exact restul primului ecran, deci trebuie să știe cât ocupă ce
+     stă deasupra lui. Valoarea era scrisă de mână în CSS și a rămas în urmă de
+     două ori — bara de identificare și-a schimbat înălțimea, constanta nu —,
+     iar rezultatul se vedea ca o fâșie albă sub banda verde.
+
+     Aici se măsoară, deci nu mai are cum să rămână în urmă. CSS-ul păstrează
+     6,5rem ca valoare de rezervă, pentru cazul în care scriptul nu rulează. */
+  (function inaltimeaDeSus() {
+    var radacina = document.documentElement;
+
+    function masoara() {
+      var bara = document.querySelector('.idbar');
+      var antet = document.querySelector('.hdr');
+      if (!antet) return;
+      /* offsetHeight, nu getBoundingClientRect: vrem înălțimea așezată în
+         pagină, nu una micșorată de vreo transformare de la derulare. */
+      var sus = (bara ? bara.offsetHeight : 0) + antet.offsetHeight;
+      radacina.style.setProperty('--sus', sus + 'px');
+    }
+
+    masoara();
+    /* La redimensionare se poate rupe altfel pe rânduri, deci se remăsoară. */
+    window.addEventListener('resize', masoara);
+    /* Fonturile web sosesc după primul calcul și schimbă înălțimile. */
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(masoara);
+  })();
+
+  /* ==========================================================================
      Erou
      ========================================================================== */
 

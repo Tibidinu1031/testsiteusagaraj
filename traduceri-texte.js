@@ -143,8 +143,8 @@ const en = {
   'Vom dezvalui informatii daca acest lucru este justificat in scopul de a ne proteja impotriva fraudelor, a ne apara drepturile sau proprietatea. De asemenea, este posibil sa fie necesar sa dezvaluim informatiile dvs. pentru a ne conforma obligatiei legale de a raspunde la cererile legale ale autoritatilor. Datele dvs. cu caracter personal vor fi comunicate doar atunci cand consideram, cu buna credinta, ca avem obligatia de a face acest lucru in conformitate cu legea.':
     'We will disclose information where this is justified in order to protect ourselves against fraud or to defend our rights or property. It may also be necessary to disclose your information in order to comply with our legal obligation to respond to lawful requests from the authorities. Your personal data will be disclosed only when we consider, in good faith, that we are obliged to do so under the law.',
 
-  'Vom stoca informatiile dvs. atat timp cat ni se cere prin lege. Daca nu exista nicio cerinta legala, le vom stoca doar atat timp cat este necesar pentru a va putea oferi serviciile noastre. Pe baza unei solicitari trimise catre Usi Garaj Online (usa-garaj.ro) prin email la adresa Office@abbaconfort.ro sau utilizand optiunile disponibile in contul de utilizator de pe site, ne puteti solicita anularea contului de utilizator si stergerea sau anonimizarea datelor.':
-    'We will store your information for as long as the law requires us to. Where there is no legal requirement, we will store it only for as long as is necessary to provide you with our services. By sending a request to Usi Garaj Online (usa-garaj.ro) by e-mail at Office@abbaconfort.ro, or using the options available in your user account on the site, you can ask us to close your user account and to delete or anonymise your data.',
+  'Vom stoca informatiile dvs. atat timp cat ni se cere prin lege. Daca nu exista nicio cerinta legala, le vom stoca doar atat timp cat este necesar pentru a va putea oferi serviciile noastre. Pe baza unei solicitari trimise catre Usi Garaj Online (usa-garaj.ro) prin email la adresa office@abbaconfort.ro sau utilizand optiunile disponibile in contul de utilizator de pe site, ne puteti solicita anularea contului de utilizator si stergerea sau anonimizarea datelor.':
+    'We will store your information for as long as the law requires us to. Where there is no legal requirement, we will store it only for as long as is necessary to provide you with our services. By sending a request to Usi Garaj Online (usa-garaj.ro) by e-mail at office@abbaconfort.ro, or using the options available in your user account on the site, you can ask us to close your user account and to delete or anonymise your data.',
 
   'Site-ul Usa Garaj (usa-garaj.ro) este operat de societatea ABBA CONFORT DELIVERY SRL, cu sediul in Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște, inscrisa in Registrul Comertului cu numarul J2024000637154.':
     'The Usa Garaj site (usa-garaj.ro) is operated by ABBA CONFORT DELIVERY SRL, with its registered office at Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște, entered in the Trade Register under number J2024000637154.',
@@ -152,11 +152,11 @@ const en = {
   'Orice date cu caracter personal pe care le detinem in scop de marketing le vom pastra pana in momentul in care ne anuntati ca nu mai doriti sa primiti aceste informari.':
     'Any personal data we hold for marketing purposes will be kept until you tell us that you no longer wish to receive such communications.',
 
-  'In cazul in care considerati ca orice date cu caracter personal ale dvs. pe care noi le detinem sunt incorecte sau incomplete, aveti posibilitatea sa solicitati consultarea, rectificarea sau stergerea acestor informatii. Ne puteti contacta in acest sens prin email la adresa Office@abbaconfort.ro.':
-    'If you believe that any personal data of yours that we hold is inaccurate or incomplete, you may ask to see, correct or delete that information. You can contact us about this by e-mail at Office@abbaconfort.ro.',
+  'In cazul in care considerati ca orice date cu caracter personal ale dvs. pe care noi le detinem sunt incorecte sau incomplete, aveti posibilitatea sa solicitati consultarea, rectificarea sau stergerea acestor informatii. Ne puteti contacta in acest sens prin email la adresa office@abbaconfort.ro.':
+    'If you believe that any personal data of yours that we hold is inaccurate or incomplete, you may ask to see, correct or delete that information. You can contact us about this by e-mail at office@abbaconfort.ro.',
 
-  'In cazul in care doriti sa reclamati modul in care am gestionat datele dvs., va rugam sa ne contactati pe email la adresa Office@abbaconfort.ro. Vom analiza reclamatia dvs. si vom colabora cu dvs. pentru rezolvarea problemei.':
-    'If you wish to complain about the way we have handled your data, please contact us by e-mail at Office@abbaconfort.ro. We will examine your complaint and work with you to resolve the matter.',
+  'In cazul in care doriti sa reclamati modul in care am gestionat datele dvs., va rugam sa ne contactati pe email la adresa office@abbaconfort.ro. Vom analiza reclamatia dvs. si vom colabora cu dvs. pentru rezolvarea problemei.':
+    'If you wish to complain about the way we have handled your data, please contact us by e-mail at office@abbaconfort.ro. We will examine your complaint and work with you to resolve the matter.',
 
   'In momentul in care ati gasit un produs pe care doriti sa il achizitionati, apasati pe butonul Adauga in cos. Veti fi apoi directionat automat catre pagina de vizualizare a Cosului de cumparaturi, unde aveti optiunea sa vizualizati lista de produse existente in cos, sa modificati cantitatile pe care doriti sa le achizitionati sau sa renuntati la unul, mai multe sau toate produsele introduse in cos. Pentru a va intoarce din nou la site si a adauga alte produse in cos, actionati butonul Continua cumparaturile.':
     'Once you have found a product you wish to buy, press the Add to cart button. You will then be taken automatically to the Shopping cart page, where you can see the list of products in the cart, change the quantities you wish to buy, or remove one, several or all of the products you have added. To return to the site and add other products to the cart, use the Continue shopping button.',
@@ -352,8 +352,8 @@ const en = {
     'Offers: 16 products in the Usa-garaj.ro catalogue. The products in the shop’s “OFFERS” category. The struck-through price and the current one are the shop’s own, unchanged.',
   'Produsele aflate în categoria „PROMOȚII” a magazinului. Prețul tăiat și cel curent sunt cele din magazin, neschimbate.':
     'The products in the shop’s “OFFERS” category. The struck-through price and the current one are the shop’s own, unchanged.',
-  'Contact Usa-garaj.ro: telefon 0731 366 613, e-mail Office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, CUI 49968876, J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.':
-    'Contact Usa-garaj.ro: telephone 0731 366 613, e-mail Office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, Tax ID 49968876, Reg. No. J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.',
+  'Contact Usa-garaj.ro: telefon 0731 366 613, e-mail office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, CUI 49968876, J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.':
+    'Contact Usa-garaj.ro: telephone 0731 366 613, e-mail office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, Tax ID 49968876, Reg. No. J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.',
   'Spuneți-ne dimensiunile golului și culoarea dorită, iar noi vă răspundem cu varianta potrivită din catalog sau cu o ofertă la comandă.':
     'Tell us the dimensions of the opening and the colour you want, and we will come back to you with the right option from the catalogue or a made-to-order quote.',
   'Pentru o ofertă corectă, trimiteți-ne lățimea și înălțimea golului măsurate\n      la zid, precum și spațiul disponibil deasupra golului, necesar pentru\n      montarea casetei.':
@@ -459,8 +459,8 @@ const en = {
     'Your personal data is processed at the company’s registered office. Your data is hosted and stored on Romanian territory.',
   'Informatiile prezentate in continuare au scopul de a aduce la cunostinta utilizatorului mai multe detalii despre plasarea, utilizarea si administrarea cookie-urilor utilizate de site-ul usa-garaj.ro.':
     'The information that follows is intended to tell the user more about how the cookies used by the usa-garaj.ro site are placed, used and managed.',
-  'In cazul in care aveti nevoie de mai multe informatii, si ele nu se regasesc mai jos, ne puteti contacta la adresa de email Office@abbaconfort.ro.':
-    'If you need more information and it is not set out below, you can contact us at the e-mail address Office@abbaconfort.ro.',
+  'In cazul in care aveti nevoie de mai multe informatii, si ele nu se regasesc mai jos, ne puteti contacta la adresa de email office@abbaconfort.ro.':
+    'If you need more information and it is not set out below, you can contact us at the e-mail address office@abbaconfort.ro.',
   'Deoarece va respectam dreptul la confidentialitate, puteti opta pentru blocarea anumitor tipuri de cookie-uri provenite de la acest site.':
     'Because we respect your right to privacy, you can choose to block certain types of cookie coming from this site.',
   'Cookie-urile joaca un rol important in facilitarea accesului si livrarii multiplelor servicii de care utilizatorul se bucura pe internet, cum ar fi:':
@@ -518,8 +518,8 @@ const en = {
     'The standard delivery time is 3–5 working days from confirmation of the order. This period may be extended for unusual orders or where circumstances of force majeure arise. In certain cases, and at the customer’s express request, an order may also be handled as urgent and delivered within 24 hours at most. When any order is taken, the customer will receive notification and/or confirmation by e-mail and/or by telephone.',
   'Administratorul Usa-Garaj.ro (usa-garaj.ro) isi rezerva dreptul de a modifica structura si interfata oricarei pagini sau subpagini a site-ului Usa-Garaj.ro (usa-garaj.ro) in orice moment si la orice interval de timp liber ales, avand dreptul de a intrerupe temporar sau permanent, partial sau in totalitate serviciile puse la dispozitia publicului prin intermediul acestui website fara vreo notificare prealabila individuala sau generala.':
     'The administrator of Usa-Garaj.ro (usa-garaj.ro) reserves the right to change the structure and interface of any page or sub-page of the Usa-Garaj.ro site (usa-garaj.ro) at any time and at any interval of its choosing, and has the right to suspend, temporarily or permanently, in part or in full, the services made available to the public through this website, without any prior individual or general notice.',
-  'Daca aveti intrebari sau nelamuriri in legatura cu acesti termeni de utilizare, nu ezitati sa ne contactati prin intermediul formularului dedicat de contact sau la adresa de email Office@abbaconfort.ro':
-    'If you have questions or anything is unclear about these terms of use, do not hesitate to contact us through the dedicated contact form or at the e-mail address Office@abbaconfort.ro'
+  'Daca aveti intrebari sau nelamuriri in legatura cu acesti termeni de utilizare, nu ezitati sa ne contactati prin intermediul formularului dedicat de contact sau la adresa de email office@abbaconfort.ro':
+    'If you have questions or anything is unclear about these terms of use, do not hesitate to contact us through the dedicated contact form or at the e-mail address office@abbaconfort.ro'
 };
 
 const hu = {
@@ -654,8 +654,8 @@ const hu = {
   'Vom dezvalui informatii daca acest lucru este justificat in scopul de a ne proteja impotriva fraudelor, a ne apara drepturile sau proprietatea. De asemenea, este posibil sa fie necesar sa dezvaluim informatiile dvs. pentru a ne conforma obligatiei legale de a raspunde la cererile legale ale autoritatilor. Datele dvs. cu caracter personal vor fi comunicate doar atunci cand consideram, cu buna credinta, ca avem obligatia de a face acest lucru in conformitate cu legea.':
     'Adatokat akkor adunk ki, ha ez a csalás elleni védekezés, illetve jogaink vagy tulajdonunk megóvása érdekében indokolt. Szükség lehet adatainak kiadására azért is, hogy eleget tegyünk a hatóságok jogszerű megkereséseire való válaszadási kötelezettségünknek. Személyes adatait csak akkor közöljük, ha jóhiszeműen úgy ítéljük meg, hogy erre a törvény alapján kötelesek vagyunk.',
 
-  'Vom stoca informatiile dvs. atat timp cat ni se cere prin lege. Daca nu exista nicio cerinta legala, le vom stoca doar atat timp cat este necesar pentru a va putea oferi serviciile noastre. Pe baza unei solicitari trimise catre Usi Garaj Online (usa-garaj.ro) prin email la adresa Office@abbaconfort.ro sau utilizand optiunile disponibile in contul de utilizator de pe site, ne puteti solicita anularea contului de utilizator si stergerea sau anonimizarea datelor.':
-    'Adatait addig őrizzük, ameddig a törvény ezt előírja. Ha nincs ilyen jogszabályi előírás, csak addig tároljuk, ameddig szolgáltatásaink nyújtásához szükséges. A Usi Garaj Online (usa-garaj.ro) címére az Office@abbaconfort.ro e-mail-címen küldött kéréssel, vagy a webhelyen a felhasználói fiókban elérhető beállításokkal kérheti felhasználói fiókja törlését, valamint adatai törlését vagy anonimizálását.',
+  'Vom stoca informatiile dvs. atat timp cat ni se cere prin lege. Daca nu exista nicio cerinta legala, le vom stoca doar atat timp cat este necesar pentru a va putea oferi serviciile noastre. Pe baza unei solicitari trimise catre Usi Garaj Online (usa-garaj.ro) prin email la adresa office@abbaconfort.ro sau utilizand optiunile disponibile in contul de utilizator de pe site, ne puteti solicita anularea contului de utilizator si stergerea sau anonimizarea datelor.':
+    'Adatait addig őrizzük, ameddig a törvény ezt előírja. Ha nincs ilyen jogszabályi előírás, csak addig tároljuk, ameddig szolgáltatásaink nyújtásához szükséges. A Usi Garaj Online (usa-garaj.ro) címére az office@abbaconfort.ro e-mail-címen küldött kéréssel, vagy a webhelyen a felhasználói fiókban elérhető beállításokkal kérheti felhasználói fiókja törlését, valamint adatai törlését vagy anonimizálását.',
 
   'Site-ul Usa Garaj (usa-garaj.ro) este operat de societatea ABBA CONFORT DELIVERY SRL, cu sediul in Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște, inscrisa in Registrul Comertului cu numarul J2024000637154.':
     'A Usa Garaj webhelyet (usa-garaj.ro) az ABBA CONFORT DELIVERY SRL üzemelteti, székhelye: Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște, cégjegyzékszáma: J2024000637154.',
@@ -663,11 +663,11 @@ const hu = {
   'Orice date cu caracter personal pe care le detinem in scop de marketing le vom pastra pana in momentul in care ne anuntati ca nu mai doriti sa primiti aceste informari.':
     'A marketingcélból tárolt személyes adatokat addig őrizzük, amíg Ön nem jelzi, hogy a továbbiakban nem kíván ilyen tájékoztatást kapni.',
 
-  'In cazul in care considerati ca orice date cu caracter personal ale dvs. pe care noi le detinem sunt incorecte sau incomplete, aveti posibilitatea sa solicitati consultarea, rectificarea sau stergerea acestor informatii. Ne puteti contacta in acest sens prin email la adresa Office@abbaconfort.ro.':
-    'Ha úgy véli, hogy az általunk tárolt személyes adatai pontatlanok vagy hiányosak, kérheti ezek megtekintését, helyesbítését vagy törlését. Ez ügyben az Office@abbaconfort.ro e-mail-címen veheti fel velünk a kapcsolatot.',
+  'In cazul in care considerati ca orice date cu caracter personal ale dvs. pe care noi le detinem sunt incorecte sau incomplete, aveti posibilitatea sa solicitati consultarea, rectificarea sau stergerea acestor informatii. Ne puteti contacta in acest sens prin email la adresa office@abbaconfort.ro.':
+    'Ha úgy véli, hogy az általunk tárolt személyes adatai pontatlanok vagy hiányosak, kérheti ezek megtekintését, helyesbítését vagy törlését. Ez ügyben az office@abbaconfort.ro e-mail-címen veheti fel velünk a kapcsolatot.',
 
-  'In cazul in care doriti sa reclamati modul in care am gestionat datele dvs., va rugam sa ne contactati pe email la adresa Office@abbaconfort.ro. Vom analiza reclamatia dvs. si vom colabora cu dvs. pentru rezolvarea problemei.':
-    'Ha panasszal kíván élni azzal kapcsolatban, ahogyan az adatait kezeltük, kérjük, írjon nekünk az Office@abbaconfort.ro címre. Megvizsgáljuk a panaszát, és Önnel együttműködve rendezzük az ügyet.',
+  'In cazul in care doriti sa reclamati modul in care am gestionat datele dvs., va rugam sa ne contactati pe email la adresa office@abbaconfort.ro. Vom analiza reclamatia dvs. si vom colabora cu dvs. pentru rezolvarea problemei.':
+    'Ha panasszal kíván élni azzal kapcsolatban, ahogyan az adatait kezeltük, kérjük, írjon nekünk az office@abbaconfort.ro címre. Megvizsgáljuk a panaszát, és Önnel együttműködve rendezzük az ügyet.',
 
   'In momentul in care ati gasit un produs pe care doriti sa il achizitionati, apasati pe butonul Adauga in cos. Veti fi apoi directionat automat catre pagina de vizualizare a Cosului de cumparaturi, unde aveti optiunea sa vizualizati lista de produse existente in cos, sa modificati cantitatile pe care doriti sa le achizitionati sau sa renuntati la unul, mai multe sau toate produsele introduse in cos. Pentru a va intoarce din nou la site si a adauga alte produse in cos, actionati butonul Continua cumparaturile.':
     'Amint megtalálta a megvásárolni kívánt terméket, nyomja meg a Kosárba gombot. Ezután automatikusan a Bevásárlókosár oldalra kerül, ahol megtekintheti a kosárban lévő termékek listáját, módosíthatja a megvásárolni kívánt mennyiségeket, illetve eltávolíthat egy, több vagy az összes kosárba tett terméket. Ha vissza szeretne térni a webhelyre és további termékeket tenne a kosárba, használja a Vásárlás folytatása gombot.',
@@ -863,8 +863,8 @@ const hu = {
     'Akciók: 16 termék a Usa-garaj.ro katalógusában. Az üzlet „AKCIÓK” kategóriájában szereplő termékek. Az áthúzott és az aktuális ár az üzletből származik, változatlanul.',
   'Produsele aflate în categoria „PROMOȚII” a magazinului. Prețul tăiat și cel curent sunt cele din magazin, neschimbate.':
     'Az üzlet „AKCIÓK” kategóriájában szereplő termékek. Az áthúzott és az aktuális ár az üzletből származik, változatlanul.',
-  'Contact Usa-garaj.ro: telefon 0731 366 613, e-mail Office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, CUI 49968876, J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.':
-    'Kapcsolat — Usa-garaj.ro: telefon 0731 366 613, e-mail Office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, adószám 49968876, cégjegyzékszám J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.',
+  'Contact Usa-garaj.ro: telefon 0731 366 613, e-mail office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, CUI 49968876, J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.':
+    'Kapcsolat — Usa-garaj.ro: telefon 0731 366 613, e-mail office@abbaconfort.ro. ABBA CONFORT DELIVERY SRL, adószám 49968876, cégjegyzékszám J2024000637154, Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște.',
   'Spuneți-ne dimensiunile golului și culoarea dorită, iar noi vă răspundem cu varianta potrivită din catalog sau cu o ofertă la comandă.':
     'Adja meg a nyílás méreteit és a kívánt színt, mi pedig a katalógus megfelelő változatával vagy egyedi ajánlattal válaszolunk.',
   'Pentru o ofertă corectă, trimiteți-ne lățimea și înălțimea golului măsurate\n      la zid, precum și spațiul disponibil deasupra golului, necesar pentru\n      montarea casetei.':
@@ -972,8 +972,8 @@ const hu = {
     'Személyes adatait a társaság székhelyén kezeljük. Adatainak tárhelyszolgáltatása és tárolása Románia területén történik.',
   'Informatiile prezentate in continuare au scopul de a aduce la cunostinta utilizatorului mai multe detalii despre plasarea, utilizarea si administrarea cookie-urilor utilizate de site-ul usa-garaj.ro.':
     'Az alábbi tájékoztatás célja, hogy a felhasználó részletesebben megismerje a usa-garaj.ro webhely által használt sütik elhelyezését, használatát és kezelését.',
-  'In cazul in care aveti nevoie de mai multe informatii, si ele nu se regasesc mai jos, ne puteti contacta la adresa de email Office@abbaconfort.ro.':
-    'Ha további tájékoztatásra van szüksége, és az alább nem szerepel, írjon nekünk az Office@abbaconfort.ro e-mail-címre.',
+  'In cazul in care aveti nevoie de mai multe informatii, si ele nu se regasesc mai jos, ne puteti contacta la adresa de email office@abbaconfort.ro.':
+    'Ha további tájékoztatásra van szüksége, és az alább nem szerepel, írjon nekünk az office@abbaconfort.ro e-mail-címre.',
   'Deoarece va respectam dreptul la confidentialitate, puteti opta pentru blocarea anumitor tipuri de cookie-uri provenite de la acest site.':
     'Mivel tiszteletben tartjuk az Ön magánélethez való jogát, dönthet úgy, hogy letiltja a webhelyről származó sütik bizonyos típusait.',
   'Cookie-urile joaca un rol important in facilitarea accesului si livrarii multiplelor servicii de care utilizatorul se bucura pe internet, cum ar fi:':
@@ -1031,8 +1031,8 @@ const hu = {
     'A szokásos szállítási határidő a rendelés visszaigazolásától számított 3–5 munkanap. Ez a határidő rendhagyó rendelések esetén, illetve vis maior helyzetek felmerülésekor meghosszabbodhat. Bizonyos esetekben, a vásárló kifejezett kérésére, a rendelés sürgősséggel is teljesíthető és legfeljebb 24 órán belül kiszállítható. Minden rendelés felvételekor a vásárló e-mailben és/vagy telefonon értesítést, illetve visszaigazolást kap.',
   'Administratorul Usa-Garaj.ro (usa-garaj.ro) isi rezerva dreptul de a modifica structura si interfata oricarei pagini sau subpagini a site-ului Usa-Garaj.ro (usa-garaj.ro) in orice moment si la orice interval de timp liber ales, avand dreptul de a intrerupe temporar sau permanent, partial sau in totalitate serviciile puse la dispozitia publicului prin intermediul acestui website fara vreo notificare prealabila individuala sau generala.':
     'A Usa-Garaj.ro (usa-garaj.ro) üzemeltetője fenntartja a jogot, hogy a Usa-Garaj.ro webhely (usa-garaj.ro) bármely oldalának vagy aloldalának felépítését és felületét bármikor és tetszőleges időközönként módosítsa, és jogosult a webhelyen keresztül a nyilvánosság számára elérhetővé tett szolgáltatásokat ideiglenesen vagy véglegesen, részben vagy egészben felfüggeszteni, előzetes egyedi vagy általános értesítés nélkül.',
-  'Daca aveti intrebari sau nelamuriri in legatura cu acesti termeni de utilizare, nu ezitati sa ne contactati prin intermediul formularului dedicat de contact sau la adresa de email Office@abbaconfort.ro':
-    'Ha kérdése vagy bizonytalansága merül fel ezekkel a felhasználási feltételekkel kapcsolatban, forduljon hozzánk bátran az erre szolgáló kapcsolatfelvételi űrlapon vagy az Office@abbaconfort.ro e-mail-címen'
+  'Daca aveti intrebari sau nelamuriri in legatura cu acesti termeni de utilizare, nu ezitati sa ne contactati prin intermediul formularului dedicat de contact sau la adresa de email office@abbaconfort.ro':
+    'Ha kérdése vagy bizonytalansága merül fel ezekkel a felhasználási feltételekkel kapcsolatban, forduljon hozzánk bátran az erre szolgáló kapcsolatfelvételi űrlapon vagy az office@abbaconfort.ro e-mail-címen'
 };
 
 module.exports = { en, hu };
