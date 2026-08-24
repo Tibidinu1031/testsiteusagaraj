@@ -2848,32 +2848,32 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   .cantitate { min-block-size: 2.75rem; }
   .cantitate input { min-block-size: 2.5rem; }
 
+  /* --- Emblema din fundal ------------------------------------------------
+     Dala are 560 px. Pe un ecran de 375 nu încape: se vedea două treimi din
+     ea, deci un camion întreg pe un rând și unul tăiat pe următorul, cu
+     spațiile dintre ele nepotrivite de la un rând la altul — se citea ca o
+     imagine decupată prost, nu ca un tipar.
+
+     Legată de LĂȚIMEA ecranului, dala se așază exact o dată pe rând, oricât
+     de lat ar fi telefonul: cele două camioane cad la o treime și la două
+     treimi pe diagonală, iar niciunul nu mai e tăiat de marginea ecranului.
+     Camionul iese la circa 84 px pe un ecran de 375 — destul cât să se vadă
+     ce e, fără să concureze cu textul.
+
+     Se rescriu toate trei straturile fiindcă `background-size` nu poate fi
+     schimbat doar pentru unul din ele; primul și al treilea rămân `auto`, ca
+     în base.css. */
+  body { background-size: auto, 100vw 100vw, auto; }
+
   /* --- Bara de identificare ---------------------------------------------
-     Numărul de telefon și comutatorul de limbă sunt singurele lucruri de
-     apăsat de acolo; restul barei e text de citit.
+     Aici a stat o grilă care muta comutatorul de limbă pe rândul numărului de
+     ordine și alinia bara la stânga, ca telefonul și limbile să poată fi
+     ridicate la 40 px fără ca bara să crească.
 
-     Aici e și un compromis de spațiu. Ridicate pur și simplu la 40 px, cele
-     două cădeau pe rânduri separate și bara creștea de la 86 la 129 px —
-     16 % din ecranul unui telefon, pentru date de firmă. Grila de mai jos le
-     pune pe ACELAȘI rând: numărul de ordine plus telefonul în stânga, limbile
-     în dreapta. Bara rămâne cât era, iar ce se apasă a crescut. */
-  .idbar__inner {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    row-gap: 0.25rem;
-    column-gap: var(--s-4);
-    text-align: start;
-  }
-  .idbar__legal { grid-column: 1 / -1; justify-content: flex-start; }
-  .idbar__reg { grid-column: 1; justify-content: flex-start; }
-  .limbi { grid-column: 2; margin-inline-start: 0; }
-
-  .idbar__tel,
-  .limbi a {
-    min-block-size: 2.5rem;                  /* 40 px */
-    display: inline-flex;
-    align-items: center;
-  }
-  .limbi a { padding-inline: 0.6rem; }
+     Scoasă la cerere: schimba aranjarea. Bara se întoarce la trei rânduri
+     centrate, cum era — numele și CUI-ul, numărul de ordine și telefonul,
+     apoi limbile. Consecința e că cele două legături rămân la înălțimea
+     textului, sub pragul de 44 px al unei ținte de deget; e o alegere de
+     aspect, luată în cunoștință de cauză. Butoanele propriu-zise, coșul și
+     câmpurile de mai sus rămân la 44 px. */
 }

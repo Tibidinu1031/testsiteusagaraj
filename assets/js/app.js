@@ -52,11 +52,11 @@
      6,5rem ca valoare de rezervă, pentru cazul în care scriptul nu rulează. */
   (function inaltimeaDeSus() {
     var radacina = document.documentElement;
+    var bara = document.querySelector('.idbar');
+    var antet = document.querySelector('.hdr');
+    if (!antet) return;
 
     function masoara() {
-      var bara = document.querySelector('.idbar');
-      var antet = document.querySelector('.hdr');
-      if (!antet) return;
       /* offsetHeight, nu getBoundingClientRect: vrem înălțimea așezată în
          pagină, nu una micșorată de vreo transformare de la derulare. */
       var sus = (bara ? bara.offsetHeight : 0) + antet.offsetHeight;
@@ -64,9 +64,31 @@
     }
 
     masoara();
-    /* La redimensionare se poate rupe altfel pe rânduri, deci se remăsoară. */
+
+    /* Se urmăresc CHIAR elementele, nu evenimentul de redimensionare a
+       ferestrei. Diferența nu e teoretică: la o schimbare de lățime, `resize`
+       poate ajunge înainte ca bara să se fi rearanjat pe rânduri, iar
+       măsurătoarea rămâne cea veche — s-a întâmplat, iar `--sus` a rămas la
+       155 px (valoarea de pe telefon) pe o fereastră lată, lăsând o fâșie
+       albă de 51 px sub banda verde.
+
+       `ResizeObserver` se declanșează după ce cutia și-a schimbat efectiv
+       mărimea, deci prinde și ruperea pe rânduri, și sosirea fonturilor, și
+       rotirea telefonului. */
+    if (window.ResizeObserver) {
+      var obs = new ResizeObserver(masoara);
+      if (bara) obs.observe(bara);
+      obs.observe(antet);
+    }
+
+    /* Și calea veche, PE LÂNGĂ observator, nu în locul lui. Cele două prind
+       lucruri diferite și niciuna nu le prinde pe toate: observatorul vede
+       ruperea pe rânduri, dar callback-ul lui e livrat înaintea unui cadru
+       desenat, deci nu vine deloc într-un browser care nu desenează; iar
+       `resize` vine sigur, dar poate sosi înaintea rearanjării. Împreună nu
+       lasă `--sus` învechit, iar de măsurat de două ori nu strică nimic:
+       funcția doar citește două înălțimi și scrie o proprietate. */
     window.addEventListener('resize', masoara);
-    /* Fonturile web sosesc după primul calcul și schimbă înălțimile. */
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(masoara);
   })();
 
