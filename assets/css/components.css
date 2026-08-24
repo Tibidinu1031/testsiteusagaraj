@@ -2804,3 +2804,76 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
    accentul paginii pe fond deschis; aici nu are contrast, deci ia cerneala
    subsolului. Marca se citește la fel, doar fără sublinierea de culoare. */
 .ftr .brand__name b span { color: var(--ink); }
+
+/* ==========================================================================
+   20. Telefon — dimensionare și ținte de atins
+   ==========================================================================
+
+   Blocul stă la FINALUL fișierului dinadins. Două motive:
+     · regulile care dimensionează titlul eroului sunt scrise pe înălțimea
+       ferestrei (`max-height`), iar pe telefon trebuie să câștige lățimea;
+     · mărimea câmpurilor e fixată pe clase (`.calc__intrare input`), deci o
+       regulă pe `input` gol din base.css n-avea cum s-o bată.
+   La specificitate egală decide ordinea, deci ce e scris aici se aplică peste. */
+
+@media (max-width: 640px) {
+
+  /* --- Titlul eroului ---------------------------------------------------
+     Se dimensiona după ÎNĂLȚIMEA ferestrei — `6.4vh`, din regula de la
+     `max-height: 860px`. Pe un telefon de 375 × 812 asta dădea 52 px: corect
+     ca proporție pe un laptop lat, dar pe 375 px de lățime titlul se rupea în
+     opt rânduri și ocupa 53 % din ecran, împingând tot restul sub pliu.
+
+     Pe telefon mărimea se ia din LĂȚIME, singura dimensiune care spune câte
+     litere încap pe un rând: la 375 px iese 31 px și titlul intră în patru
+     rânduri, adică 16 % din ecran. */
+  .hero__title { font-size: clamp(1.75rem, 8.4vw, 2.5rem); }
+
+  /* --- Câmpuri de introducere -------------------------------------------
+     Nu coboară sub 16 px. Nu e o chestiune de lizibilitate, ci de comportament:
+     Safari pe iOS MĂREȘTE pagina când se atinge un câmp scris mai mic de
+     16 px, iar utilizatorul rămâne pe urmă cu pagina mărită. `--t-0` dă
+     15,08 px la 375 px lățime, adică exact sub prag — se vedea la calculatorul
+     de preț, unde se introduc două cote una după alta. */
+  .calc__intrare input,
+  .cantitate input,
+  input, textarea, select { font-size: max(16px, var(--t-0)); }
+
+  /* --- Ținte de atins ---------------------------------------------------
+     Degetul are nevoie de mai mult decât cursorul: 44 px e pragul de la care
+     o apăsare nimerește din prima. Butoanele veneau la 34–36 px, iar câmpul de
+     cantitate la 26. */
+  .btn { min-block-size: 2.75rem; padding-block: 0.6rem; }
+  .icon-btn { inline-size: 2.75rem; block-size: 2.75rem; }
+  .cantitate { min-block-size: 2.75rem; }
+  .cantitate input { min-block-size: 2.5rem; }
+
+  /* --- Bara de identificare ---------------------------------------------
+     Numărul de telefon și comutatorul de limbă sunt singurele lucruri de
+     apăsat de acolo; restul barei e text de citit.
+
+     Aici e și un compromis de spațiu. Ridicate pur și simplu la 40 px, cele
+     două cădeau pe rânduri separate și bara creștea de la 86 la 129 px —
+     16 % din ecranul unui telefon, pentru date de firmă. Grila de mai jos le
+     pune pe ACELAȘI rând: numărul de ordine plus telefonul în stânga, limbile
+     în dreapta. Bara rămâne cât era, iar ce se apasă a crescut. */
+  .idbar__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    row-gap: 0.25rem;
+    column-gap: var(--s-4);
+    text-align: start;
+  }
+  .idbar__legal { grid-column: 1 / -1; justify-content: flex-start; }
+  .idbar__reg { grid-column: 1; justify-content: flex-start; }
+  .limbi { grid-column: 2; margin-inline-start: 0; }
+
+  .idbar__tel,
+  .limbi a {
+    min-block-size: 2.5rem;                  /* 40 px */
+    display: inline-flex;
+    align-items: center;
+  }
+  .limbi a { padding-inline: 0.6rem; }
+}

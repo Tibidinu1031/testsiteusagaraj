@@ -112,33 +112,23 @@
   --shadow-2: 0 4px 16px -4px rgb(20 23 26 / 0.1), 0 1px 2px rgb(20 23 26 / 0.06);
   --shadow-3: 0 24px 60px -20px rgb(20 23 26 / 0.22), 0 4px 12px rgb(20 23 26 / 0.08);
 
-  /* Emblema de livrare, repetată pe fundalul paginii.
+  /* Emblema firmei, ca filigran pe fundalul întregii pagini.
 
-     Înlocuiește cele patru unelte de dinainte — dubiță, bormașină, boloboc,
-     șurubelniță. Motivul e de identitate, nu de estetică: uneltele descriau o
-     firmă de montaj oarecare, iar emblema ABBA CONFORT DELIVERY spune chiar
-     ce face firma. Un singur semn, repetat, se citește ca un tipar de marcă;
-     patru obiecte diferite se citesc ca o colecție.
+     Era un desen SVG cu unelte, făcut de mine; clientul a cerut emblema
+     ADEVĂRATĂ, cea de pe materialele firmei. Un singur semn, repetat, se
+     citește ca un tipar de marcă; patru obiecte diferite se citeau ca o
+     colecție.
 
-     Dala are 420 px și cuprinde patru exemplare, fiecare pornit dintr-o casetă
-     de 24 × 24 și mărit de cinci ori, rotite diferit ca repetiția să nu apară
-     ca o grilă. `translate(-12 -12)` la capătul listei se aplică primul și
-     mută centrul de rotație în mijlocul desenului.
+     Dala are 560 px și poartă DOAR camionul, de două ori, decalat pe
+     diagonală. Textul „ABBA CONFORT DELIVERY SRL / MEREU MAI DEVREME” a fost
+     scos la cerere: la mărimea la care se repetă în fundal era oricum
+     nelizibil, iar pe telefon cădea sub titlul eroului și se citeau două
+     texte suprapuse. Opacitatea e 0,5, coaptă în canalul alfa — în CSS nu se
+     poate da opacitate unui singur strat de fundal, iar `opacity` pe `body`
+     ar estompa toată pagina.
 
-     Alternează cele două culori ale siglei: două exemplare verzi, două
-     portocalii. Culoarea stă pe fiecare grup, nu pe rădăcina SVG-ului, tocmai
-     ca să poată diferi între ele.
-
-     Opacitatea 0,45 și conturul 0,55 sunt cele găsite prin încercare: la 0,20
-     desenul ieșea cenușiu, cu ambele culori diluate până la nedistingere. */
-  /* Emblema firmei, ca filigran. Era un desen SVG cu dubițe, făcut de mine;
-     clientul a cerut emblema ADEVĂRATĂ, cea de pe materialele firmei.
-
-     Fișierul `fundal-emblema.png` NU e emblema pusă direct: aceea are fond
-     crem plin și, repetată, ar acoperi pagina în loc s-o filigraneze. E o
-     dală de 420 px cu emblema așezată de două ori, decalat, pe fond
-     transparent și cu alfa scăzut la 13 %. Se regenerează din
-     `assets/img/emblema-abba-delivery.png` dacă emblema se schimbă. */
+     Se REGENEREAZĂ, nu se editează de mână:  node build-fundal.js
+     Sursa neatinsă, cu text cu tot, e `fundal-emblema-sursa.png`. */
   --unelte: url("../img/fundal-emblema.png");
 
   /* Textura peliculei — sparge planurile plate fără să ceară o imagine. */
