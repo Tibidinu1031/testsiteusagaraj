@@ -93,6 +93,14 @@
   --line:        #dcd8ce;
   --line-strong: #c3beb1;
   --ink:         #14171a;
+
+  /* Cerneala pentru elementele care își poartă PROPRIUL fundal alb — câmpuri
+     de formular, mai ales. `--ink` se redefinește pe benzile colorate, ca
+     titlurile să se vadă pe verde închis; un `<input>` însă rămâne alb
+     indiferent de bandă, deci trebuie să primească cerneala potrivită
+     fundalului LUI, nu al secțiunii. Fără asta, textul scris de client în
+     formularul de comandă era alb pe alb — invizibil până îl selecta. */
+  --ink-pe-surface: #14171a;
   --ink-muted:   #42494d;
   /* Închis de la #5f6669 odată cu adâncirea benzilor: pe verdele #c9d7d1
      supratitlurile cădeau la 3,9:1, iar titlurile din subsol la 4,5 fix, adică

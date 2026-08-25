@@ -1167,7 +1167,13 @@ main > section:nth-last-of-type(4n + 4) {
 /* `.note` NU e în listă, deși pare o cutie: fundalul ei are alfa 0,06, deci
    verdele benzii se vede prin el. Trecută prin resetare, primea cerneală închisă
    pe verde închis — 2,40. Rămâne pe cerneala benzii. */
-main > section:nth-last-of-type(4n + 1) :is(.card, .idcard, .svc, .faq, .calc, .contact-line, .gallery, .oferta, .filtre, .harta) {
+/* Lista se completează când apare o cutie nouă cu fundal propriu deschis, iar
+   asta se uită ușor — `.rezumat` și `.cantitate` lipseau, deci pe pagina de
+   finalizare rezumatul comenzii era alb pe alb, la fel ca formularul.
+   Verificare, când se adaugă ceva: orice regulă care pune `background:
+   var(--surface)` sau `var(--bg-sunken)` pe un element din `main` trebuie să
+   aibă clasa în lista de mai jos. */
+main > section:nth-last-of-type(4n + 1) :is(.card, .idcard, .svc, .faq, .calc, .contact-line, .gallery, .oferta, .filtre, .harta, .rezumat, .cantitate, .spec-panel, .produs__spec, .mentiune-traducere) {
   --ink: #14171a;
   --ink-muted: #42494d;
   --ink-faint: #3d4448;
@@ -2010,7 +2016,15 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
   gap: var(--s-4);
 }
-.camp { display: grid; gap: var(--s-2); }
+/* `align-content: start` — rândurile NU se întind.
+   `.camp` e o grilă de trei rânduri: etichetă, câmp, mesaj de eroare. Mesajul
+   e ascuns până apare o eroare. Când apărea, câmpul acela devenea cel mai înalt
+   din rând, iar `.form-grid` întindea celelalte `.camp` ca să-l egaleze —
+   rândurile lor auto creșteau, deci câmpurile lor coborau, iar cel cu eroarea
+   rămânea sus. Se vedea exact așa: e-mailul nealiniat cu prenumele și numele.
+   Împachetate la început, toate câmpurile stau pe aceeași linie, cu eroare sau
+   fără. */
+.camp { display: grid; gap: var(--s-2); align-content: start; }
 .camp--lat { grid-column: 1 / -1; }
 .camp label { font-size: var(--t--1); color: var(--ink-muted); }
 .camp input, .camp select, .camp textarea {
@@ -2018,9 +2032,15 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   border: 1px solid var(--line);
   border-radius: var(--r-2);
   background: var(--surface);
-  color: var(--ink);
+  /* NU `var(--ink)`: acela se schimbă odată cu banda secțiunii, iar pe banda
+     verde ajunge alb. Fundalul câmpului rămâne însă alb, deci textul devenea
+     invizibil. Cerneala se ia după fundalul PROPRIU al câmpului. */
+  color: var(--ink-pe-surface);
   font: inherit;
   font-size: var(--t--1);
+}
+.camp input::placeholder, .camp textarea::placeholder {
+  color: color-mix(in oklab, var(--ink-pe-surface) 55%, transparent);
 }
 .camp input:focus-visible, .camp select:focus-visible, .camp textarea:focus-visible {
   outline: 2px solid var(--acc);
@@ -2826,6 +2846,7 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
      de preț, unde se introduc două cote una după alta. */
   .calc__intrare input,
   .cantitate input,
+  .camp input, .camp select, .camp textarea,
   input, textarea, select { font-size: max(16px, var(--t-0)); }
 
   /* --- Ținte de atins ---------------------------------------------------
