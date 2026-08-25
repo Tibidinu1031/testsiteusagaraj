@@ -1207,6 +1207,8 @@ ${cardActiv ? `      <h2>Plata cu cardul</h2>
    ========================================================================== */
 
 /** Câmpurile cerute de Store API la `billing_address`, în ordinea de completat. */
+/* Județul stă ÎNAINTEA localității, nu după: lista de localități se filtrează
+   după județ, deci întrebarea care restrânge trebuie pusă prima. */
 const CAMPURI = [
   ['first_name', 'Prenume',  'text',  'given-name',        true],
   ['last_name',  'Nume',     'text',  'family-name',       true],
@@ -1214,17 +1216,45 @@ const CAMPURI = [
   ['phone',      'Telefon',  'tel',   'tel',               true],
   ['address_1',  'Adresă (stradă, număr)', 'text', 'address-line1', true],
   ['address_2',  'Bloc, scară, apartament', 'text', 'address-line2', false],
-  ['city',       'Localitate', 'text', 'address-level2',   true],
-  ['state',      'Județ',    'text',  'address-level1',    true],
+  ['state',      'Județ',    'judet', 'address-level1',    true],
+  ['city',       'Localitate', 'localitate', 'address-level2', true],
   ['postcode',   'Cod poștal', 'text', 'postal-code',      true]
 ];
 
-const campHTML = ([nume, eticheta, tip, autocomplete, obligatoriu]) => `
+/**
+ * Un câmp din formularul de comandă.
+ *
+ * Două tipuri ies din tipar:
+ *
+ *   `judet` — listă ÎNCHISĂ. WooCommerce acceptă doar codurile auto; un client
+ *   care scria „DAMBOVITA” primea „The provided state is not valid” și nu putea
+ *   trimite comanda. Opțiunile le pune `checkout.js` din `UG.JUDETE`, ca lista
+ *   să nu fie scrisă în două locuri.
+ *
+ *   `localitate` — câmp scriibil CU sugestii, nu listă închisă. Sugestiile se
+ *   filtrează după județul ales. Rămâne scriibil dinadins: datele au 13.251 de
+ *   localități, dar sunt din nomenclatorul de la 2002, iar o comună lipsă n-are
+ *   voie să blocheze o comandă. WooCommerce nu validează localitatea.
+ */
+const campHTML = ([nume, eticheta, tip, autocomplete, obligatoriu]) => {
+  const cerut = obligatoriu ? ' required' : '';
+  const control =
+    tip === 'judet'
+      ? `<select id="f-${nume}" name="${nume}" autocomplete="${autocomplete}"${cerut}>
+            <option value="">Alegeți județul</option>
+          </select>`
+      : tip === 'localitate'
+        ? `<input id="f-${nume}" name="${nume}" type="text" autocomplete="${autocomplete}"${cerut}
+                 list="lista-localitati" placeholder="Alegeți întâi județul">`
+        : `<input id="f-${nume}" name="${nume}" type="${tip}" autocomplete="${autocomplete}"${cerut}>`;
+
+  return `
         <div class="camp${nume === 'address_1' || nume === 'address_2' ? ' camp--lat' : ''}">
           <label for="f-${nume}">${eticheta}${obligatoriu ? '' : ' <span style="opacity:.6">(opțional)</span>'}</label>
-          <input id="f-${nume}" name="${nume}" type="${tip}" autocomplete="${autocomplete}"${obligatoriu ? ' required' : ''}>
+          ${control}
           <p class="camp__eroare" hidden></p>
         </div>`;
+};
 
 function paginiCumparare() {
   /* --- cos.html --------------------------------------------------------- */
@@ -1268,7 +1298,9 @@ function paginiCumparare() {
     titlu: `Finalizarea comenzii | ${FIRMA.marca}`,
     descriere: 'Datele de facturare și livrare, apoi plata.',
     noindex: true,
-    scripturi: ['checkout.js'],
+    /* `localitati.js` are 149 KB si e nevoie de el DOAR aici. Se incarca
+       inaintea lui `checkout.js`, care il citeste la pornire. */
+    scripturi: ['localitati.js', 'checkout.js'],
     corp: `<section class="section">
   <div class="wrap">
     ${firimituri('', [['Acasă', 'index.html'], ['Coș', 'cos.html'], ['Finalizare', null]])}
@@ -1280,6 +1312,11 @@ function paginiCumparare() {
         <div class="form-grid">
 ${CAMPURI.map(campHTML).join('')}
         </div>
+
+        <!-- Sugestiile de localitate. Lista se umple din JavaScript, la fiecare
+             schimbare de judet: un <datalist> cu toate cele 13.251 de nume ar fi
+             inutilizabil, iar filtrat dupa judet ramane de ordinul sutelor. -->
+        <datalist id="lista-localitati"></datalist>
       </div>
 
       <div>

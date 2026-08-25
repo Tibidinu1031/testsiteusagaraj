@@ -2042,6 +2042,20 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 .camp input::placeholder, .camp textarea::placeholder {
   color: color-mix(in oklab, var(--ink-pe-surface) 55%, transparent);
 }
+/* Lista de județe arată ca celelalte câmpuri, nu ca un control de sistem.
+   `appearance: none` scoate stilul implicit al browserului; săgeata e desenată
+   în fundal, ca să rămână aceeași pe Windows, macOS și Android. */
+.camp select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-inline-end: 2.2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2314171a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+  background-size: 1.1em;
+  cursor: pointer;
+}
+
 .camp input:focus-visible, .camp select:focus-visible, .camp textarea:focus-visible {
   outline: 2px solid var(--acc);
   outline-offset: 1px;

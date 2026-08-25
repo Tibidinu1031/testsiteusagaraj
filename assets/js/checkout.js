@@ -80,7 +80,6 @@ window.UG = window.UG || {};
     try { localStorage.removeItem(CHEIE_DATE); } catch (e) { /* nimic */ }
   };
 
-  incarcaDate();
 
   /* --- Validarea ----------------------------------------------------------- */
 
@@ -127,12 +126,78 @@ window.UG = window.UG || {};
     return true;
   }
 
-  Array.prototype.forEach.call(form.querySelectorAll('input'), function (c) {
+  Array.prototype.forEach.call(form.querySelectorAll('input, select'), function (c) {
     c.addEventListener('blur', function () { verifica(c); });
-    c.addEventListener('input', function () {
+    c.addEventListener(c.tagName === 'SELECT' ? 'change' : 'input', function () {
       if (c.closest('.camp') && c.closest('.camp').dataset.eroare) verifica(c);
     });
   });
+
+  /* --- Județul și localitatea ---------------------------------------------
+   *
+   * Județul e o listă ÎNCHISĂ, cu valorile chiar codurile auto pe care le cere
+   * WooCommerce (`DB`, `B`, `CJ`…). Scris de mână, ajungea „DAMBOVITA”, iar
+   * magazinul respingea comanda cu „The provided state is not valid”.
+   *
+   * Localitatea rămâne un câmp scriibil, cu sugestii filtrate după județ.
+   * Închisă ar fi fost o capcană: lista are 13.251 de nume, dar din
+   * nomenclatorul de la 2002, iar o comună lipsă ar bloca o comandă adevărată.
+   * WooCommerce nu validează localitatea, deci nu riscăm nimic.
+   */
+  (function judeteSiLocalitati() {
+    var selJudet = form.elements.state;
+    var campOras = form.elements.city;
+    var lista = document.getElementById('lista-localitati');
+    if (!selJudet || selJudet.tagName !== 'SELECT') return;
+
+    var JUDETE = (UG && UG.JUDETE) || {};
+    var LOCALITATI = (UG && UG.LOCALITATI) || {};
+
+    /* Ordonate după NUME, nu după cod: omul caută „Dâmbovița”, nu „DB”. */
+    Object.keys(JUDETE)
+      .sort(function (a, b) { return JUDETE[a].localeCompare(JUDETE[b], 'ro'); })
+      .forEach(function (cod) {
+        var o = document.createElement('option');
+        o.value = cod;
+        o.textContent = JUDETE[cod];
+        selJudet.appendChild(o);
+      });
+
+    function umpleLocalitati() {
+      if (!lista) return;
+      lista.innerHTML = '';
+      var nume = LOCALITATI[selJudet.value] || [];
+      nume.forEach(function (n) {
+        var o = document.createElement('option');
+        o.value = n;
+        lista.appendChild(o);
+      });
+      if (campOras) {
+        campOras.placeholder = selJudet.value
+          ? 'Scrieți sau alegeți din listă'
+          : 'Alegeți întâi județul';
+      }
+    }
+
+    selJudet.addEventListener('change', function () {
+      /* Localitatea aleasă pentru județul dinainte nu mai are sens aici. */
+      if (campOras && campOras.value && (LOCALITATI[selJudet.value] || []).indexOf(campOras.value) === -1) {
+        campOras.value = '';
+      }
+      umpleLocalitati();
+    });
+
+    umpleLocalitati();
+  }());
+
+  /* Restaurarea vine ABIA ACUM, după ce lista de județe are opțiuni: pusă mai
+     sus, `select.value = "DB"` nu avea ce selecta și județul salvat se pierdea
+     tăcut, iar clientul îl relua de la zero după o plată eșuată. */
+  incarcaDate();
+  (function () {
+    var s = form.elements.state, o = form.elements.city;
+    if (s && s.value && o) o.placeholder = 'Scrieți sau alegeți din listă';
+  }());
 
   /* --- Trimiterea ---------------------------------------------------------- */
 
@@ -156,7 +221,7 @@ window.UG = window.UG || {};
        care n-are ce căuta acolo și care s-ar putea lovi de o validare mai
        strictă la o actualizare. */
     var adresa = {};
-    Array.prototype.forEach.call(form.querySelectorAll('.camp input[name]'), function (c) {
+    Array.prototype.forEach.call(form.querySelectorAll('.camp input[name], .camp select[name]'), function (c) {
       adresa[c.name] = (c.value || '').trim();
     });
     adresa.country = 'RO';
