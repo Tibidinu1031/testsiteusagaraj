@@ -1,9 +1,14 @@
 <?php
 /**
- * Plugin Name: Vitrină statică — acces la Store API
- * Description: Permite vitrinei găzduite pe alt domeniu să vorbească cu Store API: adaugă originea în lista permisă și expune antetul „Cart-Token”. Fără el, comanda eșuează cu „NetworkError”.
+ * Plugin Name: UG Vitrina - acces la Store API
+ * Description: Permite vitrinei gazduite pe alt domeniu sa vorbeasca cu Store API: adauga originea in lista permisa si expune antetul Cart-Token.
  * Version: 1.0
  * Author: ABBA CONFORT DELIVERY SRL
+ *
+ * Antetul e scris FARA diacritice dinadins. Restul fisierului le pastreaza:
+ * doar liniile de aici sunt citite de WordPress cu get_file_data() ca sa
+ * construiasca lista de module, iar o despachetare care strica encodarea
+ * exact acolo lasa modulul listat, dar negasibil la activare.
  *
  * ---------------------------------------------------------------------------
  * DE CE EXISTĂ
