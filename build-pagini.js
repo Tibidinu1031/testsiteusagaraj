@@ -274,12 +274,82 @@ ${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-c
 
       <div class="calc__rezultat" data-calc-rezultat aria-live="polite"></div>
 
+      <!-- „Cere ofertă”, nu „Adaugă în coș”.
+           O ușă la comandă nu poate trece prin coș: WooCommerce adaugă acolo
+           numai produse care există la el, iar un preț venit din browser n-ar
+           fi de crezut — oricine poate schimba cifra înainte s-o trimită.
+           Cererea pleacă pe e-mail la firmă, care răspunde cu prețul ferm. -->
       <div class="calc__actiuni" data-calc-actiuni hidden>
         <div class="cantitate">
           <label class="sr-only" for="calc-buc">Cantitate</label>
           <input id="calc-buc" type="number" min="1" max="99" value="1" inputmode="numeric" data-calc-bucati>
         </div>
-        <button type="button" class="btn btn--primary btn--lg" data-calc-cos>Adaugă în coș</button>
+        <button type="button" class="btn btn--primary btn--lg" data-calc-cere>Cere ofertă pentru această ușă</button>
+      </div>
+
+      <form class="calc-cerere" data-calc-formular hidden novalidate>
+        <p class="calc-cerere__titlu">Unde vă trimitem oferta</p>
+
+        <div class="form-grid">
+          <div class="camp">
+            <label for="co-nume">Nume și prenume</label>
+            <input id="co-nume" name="nume" type="text" autocomplete="name" required>
+            <p class="camp__eroare" hidden></p>
+          </div>
+          <div class="camp">
+            <label for="co-telefon">Telefon</label>
+            <input id="co-telefon" name="telefon" type="tel" autocomplete="tel" required>
+            <p class="camp__eroare" hidden></p>
+          </div>
+          <div class="camp">
+            <label for="co-email">E-mail</label>
+            <input id="co-email" name="email" type="email" autocomplete="email" required>
+            <p class="camp__eroare" hidden></p>
+          </div>
+          <div class="camp">
+            <label for="co-judet">Județ <span style="opacity:.6">(opțional)</span></label>
+            <select id="co-judet" name="judet" autocomplete="address-level1">
+              <option value="">Alegeți județul</option>
+            </select>
+            <p class="camp__eroare" hidden></p>
+          </div>
+          <div class="camp">
+            <label for="co-localitate">Localitate <span style="opacity:.6">(opțional)</span></label>
+            <input id="co-localitate" name="localitate" type="text" autocomplete="address-level2"
+                   list="lista-localitati-cerere" placeholder="Alegeți întâi județul">
+            <p class="camp__eroare" hidden></p>
+          </div>
+          <div class="camp">
+            <label for="co-adresa">Adresă <span style="opacity:.6">(opțional)</span></label>
+            <input id="co-adresa" name="adresa" type="text" autocomplete="street-address">
+            <p class="camp__eroare" hidden></p>
+          </div>
+          <div class="camp camp--lat">
+            <label for="co-mesaj">Alte detalii <span style="opacity:.6">(opțional)</span></label>
+            <textarea id="co-mesaj" name="mesaj" rows="3"
+                      placeholder="Condiții de montaj, termen dorit, orice altceva ne ajută să vă dăm un preț corect."></textarea>
+            <p class="camp__eroare" hidden></p>
+          </div>
+        </div>
+
+        <datalist id="lista-localitati-cerere"></datalist>
+
+        <!-- Câmp-capcană pentru roboți: ascuns de ochi ȘI de cititoarele de
+             ecran, iar tabindex negativ îl scoate din drumul tastaturii. Un om
+             n-are cum să-l completeze; un robot care umple tot ce găsește, da. -->
+        <div aria-hidden="true" style="position:absolute;left:-9999px" >
+          <label for="co-website">Nu completați acest câmp</label>
+          <input id="co-website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <p class="calc-cerere__eroare" data-calc-cerere-eroare hidden></p>
+
+        <button type="submit" class="btn btn--primary btn--lg" data-calc-trimite>Trimite cererea</button>
+      </form>
+
+      <div class="calc-cerere__reusit" data-calc-cerere-reusit hidden>
+        <p><b>Cererea a plecat.</b> Vă răspundem cu prețul ferm, de obicei în aceeași zi lucrătoare.</p>
+        <p>Dacă vă grăbiți, sunați la <a href="tel:${FIRMA.telHref}">${FIRMA.tel}</a>.</p>
       </div>
 
     </div>`;
@@ -465,7 +535,9 @@ S('index.html', pagina({
   /* Scriptul calculatorului se încarcă DOAR pe prima pagină, fiindcă doar
      acolo există blocul. Cât timp funcționalitatea e în probă, celelalte 42 de
      pagini nu plătesc pentru ea nici măcar o cerere. */
-  scripturi: CALCULATOR ? ['calculator.js'] : [],
+  /* `localitati.js` alimentează lista de județe din cererea de ofertă, deci
+     merge împreună cu calculatorul, nu separat. */
+  scripturi: CALCULATOR ? ['localitati.js', 'calculator.js'] : [],
   corp: `${HERO}
 
 ${COMUTATOR}

@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: UG Vitrina - acces la Store API
- * Description: Permite vitrinei gazduite pe alt domeniu sa vorbeasca cu Store API: adauga originea in lista permisa si expune antetul Cart-Token.
- * Version: 1.0
+ * Plugin Name: UG Vitrina - legatura cu site-ul static
+ * Description: Doua lucruri de care depinde vitrina: deschide Store API catre domeniul ei (origini permise si antetul Cart-Token) si primeste cererile de oferta pentru usile la comanda, pe care le trimite pe e-mail firmei.
+ * Version: 1.1
  * Author: ABBA CONFORT DELIVERY SRL
  *
  * Antetul e scris FARA diacritice dinadins. Restul fisierului le pastreaza:
@@ -156,3 +156,181 @@ add_filter('rest_pre_serve_request', function ($servit, $raspuns, $cerere) {
     }
     return $servit;
 }, 100, 3);
+
+/* ==========================================================================
+   Cererile de ofertă pentru ușile la comandă
+   ==========================================================================
+
+   DE CE STAU AICI, ÎN ACELAȘI FIȘIER
+
+   Ușile la comandă nu pot trece prin coș: WooCommerce adaugă în coș numai
+   produse care există la el, iar un preț venit din browser n-ar fi de crezut —
+   oricine poate schimba cifra înainte s-o trimită. Deci calculatorul nu vinde,
+   ci cere o ofertă, iar cererea ajunge pe e-mail la firmă.
+
+   Vitrina e un site static: nu are server care să trimită e-mail. WordPress-ul
+   are, și a dovedit-o — de acolo pleacă deja confirmările de comandă. Endpointul
+   de mai jos folosește `wp_mail()`, adică exact drumul care merge.
+
+   Stă în acest fișier, deși e altă treabă decât CORS, dintr-un motiv practic:
+   fișierul e deja instalat și funcționează. Un al doilea modul ar însemna încă
+   o instalare, iar aceea a fost costisitoare. */
+
+const UG_CERERI_CATRE = array('office@abbaconfort.ro', 'comenzi@abbaconfort.ro');
+
+/* Cel mult atâtea cereri de la același IP într-o oră. Nu e o apărare serioasă
+   împotriva cuiva hotărât, dar oprește un formular trimis din greșeală de zece
+   ori și un robot leneș. */
+const UG_CERERI_LIMITA = 5;
+
+add_action('rest_api_init', function () {
+    register_rest_route('ug/v1', '/cerere-oferta', array(
+        'methods'             => 'POST',
+        'permission_callback' => '__return_true',
+        'callback'            => 'ug_cerere_oferta',
+    ));
+});
+
+function ug_cerere_text($cerere, $cheie, $lungime = 200) {
+    $v = $cerere->get_param($cheie);
+    if (!is_scalar($v)) {
+        return '';
+    }
+    /* `sanitize_text_field` scoate și marcajul, și rândurile noi — exact ce
+       trebuie ca nimeni să nu strecoare anteturi într-un e-mail. */
+    return mb_substr(sanitize_text_field((string) $v), 0, $lungime);
+}
+
+function ug_cerere_oferta(WP_REST_Request $cerere) {
+    /* Câmpul-capcană: e ascuns în pagină, deci un om nu-l completează niciodată.
+       Roboții care umplu tot ce găsesc se opresc aici, fără să afle de ce. */
+    if (ug_cerere_text($cerere, 'website') !== '') {
+        return new WP_REST_Response(array('ok' => true), 200);
+    }
+
+    $ip    = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '0';
+    $cheie = 'ug_cereri_' . md5($ip);
+    $cate  = (int) get_transient($cheie);
+    if ($cate >= UG_CERERI_LIMITA) {
+        return new WP_Error('ug_prea_multe', 'Prea multe cereri trimise. Încercați peste o oră sau sunați-ne.', array('status' => 429));
+    }
+
+    $nume    = ug_cerere_text($cerere, 'nume', 120);
+    $email   = sanitize_email((string) $cerere->get_param('email'));
+    $telefon = ug_cerere_text($cerere, 'telefon', 40);
+
+    if ($nume === '' || $telefon === '' || !is_email($email)) {
+        return new WP_Error('ug_date_lipsa', 'Completați numele, telefonul și o adresă de e-mail validă.', array('status' => 400));
+    }
+
+    $specificatii = array(
+        'Lamelă'            => ug_cerere_text($cerere, 'lamela', 20),
+        'Lățimea golului'   => ug_cerere_text($cerere, 'latime', 10),
+        'Înălțimea golului' => ug_cerere_text($cerere, 'inaltime', 10),
+        'Culoare'           => ug_cerere_text($cerere, 'culoare', 60),
+        'Bucăți'            => ug_cerere_text($cerere, 'bucati', 5),
+    );
+
+    $adresa = array(
+        ug_cerere_text($cerere, 'adresa', 200),
+        ug_cerere_text($cerere, 'localitate', 80),
+        ug_cerere_text($cerere, 'judet', 60),
+    );
+
+    $estimare = ug_cerere_text($cerere, 'estimare', 40);
+    $mesaj    = ug_cerere_text($cerere, 'mesaj', 1500);
+
+    $corp = ug_cerere_html($nume, $email, $telefon, $specificatii, $adresa, $estimare, $mesaj);
+
+    $anteturi = array(
+        'Content-Type: text/html; charset=UTF-8',
+        /* Răspunsul pleacă direct la client, nu la site. Numele e curățat, deci
+           nu poate purta rânduri noi în antet. */
+        'Reply-To: ' . $nume . ' <' . $email . '>',
+    );
+
+    $trimis = wp_mail(
+        UG_CERERI_CATRE,
+        'Cerere de ofertă - usa la comanda, de la ' . $nume,
+        $corp,
+        $anteturi
+    );
+
+    if (!$trimis) {
+        return new WP_Error('ug_email_esuat', 'Cererea nu a putut fi trimisă. Sunați-ne la 0731 366 613.', array('status' => 500));
+    }
+
+    set_transient($cheie, $cate + 1, HOUR_IN_SECONDS);
+    return new WP_REST_Response(array('ok' => true), 200);
+}
+
+/**
+ * E-mailul, așezat ca cel de comandă nouă din WooCommerce.
+ *
+ * Aceeași bară colorată sus, același tabel, aceleași cutii de date dedesubt.
+ * Motivul nu e estetic: cine deschide căsuța firmei vede zilnic e-mailul de
+ * comandă, iar o cerere de ofertă care arată la fel se citește din prima, fără
+ * să caute unde e informația.
+ *
+ * Totul e scris cu stiluri în linie, nu într-o foaie: clienții de e-mail
+ * ignoră `<style>` sau îl taie.
+ */
+function ug_cerere_html($nume, $email, $telefon, $specificatii, $adresa, $estimare, $mesaj) {
+    $celula = 'padding:12px 14px;border:1px solid #e5e5e5;';
+
+    $randuri = '';
+    foreach ($specificatii as $eticheta => $valoare) {
+        if ($valoare === '') {
+            continue;
+        }
+        $randuri .= '<tr><td style="' . $celula . '">' . esc_html($eticheta) . '</td>'
+            . '<td style="' . $celula . 'text-align:right;"><b>' . esc_html($valoare) . '</b></td></tr>';
+    }
+
+    if ($estimare !== '') {
+        $randuri .= '<tr><td style="' . $celula . '">Estimare de pe site'
+            . '<br><span style="color:#666;font-size:13px;">calculată de vizitator, nu ofertă fermă</span></td>'
+            . '<td style="' . $celula . 'text-align:right;"><b>' . esc_html($estimare) . '</b></td></tr>';
+    }
+
+    $liniiAdresa = '';
+    foreach ($adresa as $linie) {
+        if ($linie !== '') {
+            $liniiAdresa .= esc_html($linie) . '<br>';
+        }
+    }
+
+    $blocMesaj = '';
+    if ($mesaj !== '') {
+        $blocMesaj = '<h3 style="color:#0d5c4e;margin:26px 0 8px;">Ce a scris clientul</h3>'
+            . '<div style="padding:14px;border:1px solid #e5e5e5;white-space:pre-wrap;">'
+            . esc_html($mesaj) . '</div>';
+    }
+
+    return '<div style="font-family:Helvetica,Arial,sans-serif;color:#222;max-width:640px;margin:0 auto;">'
+        . '<div style="background:#0d5c4e;color:#fff;padding:28px 32px;">'
+        . '<h1 style="margin:0;font-size:25px;font-weight:600;">Cerere de ofertă &mdash; ușă la comandă</h1>'
+        . '</div>'
+        . '<div style="padding:28px 32px;background:#fff;">'
+        . '<p>Ați primit o cerere de ofertă de la <b>' . esc_html($nume) . '</b>, '
+        . 'trimisă din vitrină pe ' . esc_html(date_i18n('d/m/Y, H:i')) . '.</p>'
+        . '<table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;">'
+        . '<tr><th style="' . $celula . 'text-align:left;background:#fafafa;">Ușa cerută</th>'
+        . '<th style="' . $celula . 'text-align:right;background:#fafafa;">Valoare</th></tr>'
+        . $randuri
+        . '</table>'
+        . '<h3 style="color:#0d5c4e;margin:26px 0 8px;">Datele clientului</h3>'
+        . '<div style="padding:14px;border:1px solid #e5e5e5;line-height:1.7;">'
+        . '<b>' . esc_html($nume) . '</b><br>'
+        . $liniiAdresa
+        . '<a href="tel:' . esc_attr($telefon) . '">' . esc_html($telefon) . '</a><br>'
+        . '<a href="mailto:' . esc_attr($email) . '">' . esc_html($email) . '</a>'
+        . '</div>'
+        . $blocMesaj
+        . '<p style="margin-top:26px;color:#666;font-size:13px;">'
+        . 'Răspunzând la acest mesaj, răspunsul pleacă direct la client.</p>'
+        . '</div>'
+        . '<div style="padding:16px 32px;background:#fafafa;color:#666;font-size:12px;text-align:center;">'
+        . 'Usa-garaj.ro &mdash; cerere trimisă din vitrină</div>'
+        . '</div>';
+}

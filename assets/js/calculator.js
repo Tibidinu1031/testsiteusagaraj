@@ -215,7 +215,6 @@ window.UG = window.UG || {};
   var iesire   = gazda.querySelector('[data-calc-rezultat]');
   var actiuni  = gazda.querySelector('[data-calc-actiuni]');
   var campBuc  = gazda.querySelector('[data-calc-bucati]');
-  var btnCos   = gazda.querySelector('[data-calc-cos]');
 
   /* Ultimul rezultat valid, ca butonul de coș să nu recalculeze la apăsare —
      ar putea prinde altă cifră decât cea pe care omul tocmai a citit-o. */
@@ -318,53 +317,157 @@ window.UG = window.UG || {};
        rămâne neatins; doar nu se mai arată pas cu pas. */
   }
 
-  /* --- Adăugarea în coș --------------------------------------------------- */
-
-  /**
-   * Se adaugă suma ÎN LEI, nu în euro.
+  /* --- Cererea de ofertă ---------------------------------------------------
    *
-   * Coșul, finalizarea și magazinul lucrează în lei; o linie în euro ar trebui
-   * reconvertită la fiecare afișare și s-ar schimba singură de la o zi la alta.
-   * Clientul ar vedea alt total decât cel pe care l-a acceptat. Cursul folosit
-   * merge odată cu rândul, ca diferența să poată fi explicată la nevoie.
+   * DE CE NU „ADAUGĂ ÎN COȘ”
+   *
+   * O ușă la comandă nu poate trece prin coș. WooCommerce adaugă acolo numai
+   * produse care există la el, iar un preț venit din browser n-ar fi de crezut:
+   * oricine poate schimba cifra înainte s-o trimită și ar cumpăra o ușă de
+   * 6.000 € cu un leu. Prețul se stabilește la firmă, nu în pagină.
+   *
+   * Deci calculatorul dă o estimare, iar butonul trimite o CERERE: cotele,
+   * culoarea și estimarea pleacă pe e-mail, împreună cu datele de contact.
+   * Firma răspunde cu prețul ferm.
+   *
+   * Cererea pleacă prin WordPress-ul magazinului, nu printr-un serviciu străin:
+   * vitrina e statică și n-are cum trimite e-mail singură, iar de acolo pleacă
+   * deja confirmările de comandă — deci drumul e dovedit.
    */
-  if (btnCos) {
-    btnCos.addEventListener('click', function () {
-      if (!ultimul || !UG.cosAdaugăLaComandă) return;
+  var formular = gazda.querySelector('[data-calc-formular]');
+  var btnCere  = gazda.querySelector('[data-calc-cere]');
+  var reusit   = gazda.querySelector('[data-calc-cerere-reusit]');
+  var eroareC  = gazda.querySelector('[data-calc-cerere-eroare]');
 
-      var bucati = Math.max(1, Number(campBuc && campBuc.value) || 1);
-      var inLei = Math.round(ultimul.final * curs.eur);
+  if (btnCere && formular) {
+    btnCere.addEventListener('click', function () {
+      formular.hidden = false;
+      btnCere.hidden = true;
+      var primul = formular.querySelector('input[name="nume"]');
+      if (primul) { primul.focus(); }
+      formular.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    });
+  }
+
+  /* Județele și localitățile, aceleași date ca la finalizarea comenzii. */
+  (function judeteInCerere() {
+    if (!formular) return;
+    var selJudet = formular.querySelector('select[name="judet"]');
+    var campOras = formular.querySelector('input[name="localitate"]');
+    var lista = document.getElementById('lista-localitati-cerere');
+    if (!selJudet || !UG.JUDETE) return;
+
+    Object.keys(UG.JUDETE)
+      .sort(function (a, b) { return UG.JUDETE[a].localeCompare(UG.JUDETE[b], 'ro'); })
+      .forEach(function (cod) {
+        var o = document.createElement('option');
+        o.value = UG.JUDETE[cod];   /* aici pleacă NUMELE, nu codul: e un
+                                       e-mail citit de om, nu o validare WooCommerce */
+        o.textContent = UG.JUDETE[cod];
+        o.dataset.cod = cod;
+        selJudet.appendChild(o);
+      });
+
+    selJudet.addEventListener('change', function () {
+      if (!lista) return;
+      var ales = selJudet.selectedOptions[0];
+      var cod = ales ? ales.dataset.cod : '';
+      lista.innerHTML = '';
+      ((UG.LOCALITATI && UG.LOCALITATI[cod]) || []).forEach(function (n) {
+        var o = document.createElement('option');
+        o.value = n;
+        lista.appendChild(o);
+      });
+      if (campOras) {
+        campOras.placeholder = cod ? 'Scrieți sau alegeți din listă' : 'Alegeți întâi județul';
+      }
+    });
+  }());
+
+  if (formular) {
+    formular.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+      if (!ultimul) return;
+
+      var ia = function (n) {
+        var c = formular.querySelector('[name="' + n + '"]');
+        return c ? (c.value || '').trim() : '';
+      };
+
+      /* Validare minimă, aceeași ca la finalizare: numai ce chiar blochează
+         un răspuns — un nume, un telefon și un e-mail la care se poate scrie. */
+      var probleme = [];
+      if (!ia('nume')) probleme.push('numele');
+      if ((ia('telefon').replace(/[^\d]/g, '')).length < 10) probleme.push('un telefon complet');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(ia('email'))) probleme.push('o adresă de e-mail validă');
+
+      if (probleme.length) {
+        eroareC.textContent = 'Vă rugăm completați ' + probleme.join(', ') + '.';
+        eroareC.hidden = false;
+        return;
+      }
+      eroareC.hidden = true;
 
       var c = culoareAleasa();
-      var nume = 'Ușă de garaj la comandă, lamelă ' + ultimul.lamela + ' mm, ' +
-        ultimul.folosit.l + ' × ' + ultimul.folosit.h + ' mm' +
-        (c ? ', ' + c.nume : '');
+      var bucati = Math.max(1, Number(campBuc && campBuc.value) || 1);
 
-      var detalii = 'Cotele cerute: ' + ultimul.cerut.l + ' × ' + ultimul.cerut.h + ' mm' +
-        (ultimul.rotunjit ? ' (tarifat la ' + ultimul.folosit.l + ' × ' + ultimul.folosit.h + ' mm)' : '') +
-        (c && c.ral ? ' · ' + c.ral : '') +
-        ' · ' + ultimul.final + ' € la cursul ' + String(curs.eur).replace('.', ',') +
-        (curs.data ? ' din ' + dataRo(curs.data) : '');
+      var date = {
+        nume: ia('nume'), telefon: ia('telefon'), email: ia('email'),
+        judet: ia('judet'), localitate: ia('localitate'), adresa: ia('adresa'),
+        mesaj: ia('mesaj'), website: ia('website'),
 
-      btnCos.disabled = true;
-      var textInitial = btnCos.textContent;
+        lamela: ultimul.lamela + ' mm',
+        latime: ultimul.cerut.l + ' mm',
+        inaltime: ultimul.cerut.h + ' mm',
+        culoare: c ? (c.nume + (c.ral ? ' (' + c.ral + ')' : '')) : '',
+        bucati: String(bucati),
+        /* Estimarea merge ca text, ca la firmă să se vadă ce a văzut și
+           clientul. E marcată în e-mail drept estimare, nu ofertă. */
+        estimare: lei(Math.round(ultimul.final * curs.eur)) + ' (' + eur(ultimul.final) + ')'
+      };
 
-      UG.cosAdaugăLaComandă({
-        nume: nume, detaliu: detalii, lei: inLei,
-        eur: ultimul.final, curs: curs.eur, bucati: bucati
+      var btn = formular.querySelector('[data-calc-trimite]');
+      var textInitial = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Se trimite…';
+
+      /* Endpointul stă lângă Store API, în același WordPress. Adresa se
+         derivă din cea a magazinului, ca să nu fie scrisă de două ori. */
+      var store = (window.UG_MAGAZIN && window.UG_MAGAZIN.store) || '';
+      var adresaApi = store.replace('/wc/store/v1', '/ug/v1');
+      if (!adresaApi) {
+        eroareC.textContent = 'Magazinul nu este configurat. Sunați-ne la 0731 366 613.';
+        eroareC.hidden = false;
+        btn.disabled = false;
+        btn.textContent = textInitial;
+        return;
+      }
+
+      fetch(adresaApi + '/cerere-oferta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(date)
+      }).then(function (r) {
+        return r.json().then(function (j) {
+          if (!r.ok) throw new Error(j.message || 'Cererea nu a putut fi trimisă.');
+          return j;
+        });
       }).then(function () {
-        btnCos.textContent = 'Adăugat în coș';
-        btnCos.classList.add('btn--ok');
-        setTimeout(function () {
-          btnCos.textContent = textInitial;
-          btnCos.classList.remove('btn--ok');
-          btnCos.disabled = false;
-        }, 2000);
-      }).catch(function () {
-        btnCos.disabled = false;
+        formular.hidden = true;
+        if (reusit) {
+          reusit.hidden = false;
+          reusit.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      }).catch(function (e) {
+        btn.disabled = false;
+        btn.textContent = textInitial;
+        eroareC.textContent = e.message +
+          ' Ne puteți suna la 0731 366 613 și preluăm cererea la telefon.';
+        eroareC.hidden = false;
       });
     });
   }
+
 
   gazda.addEventListener('input', deseneaza);
   gazda.addEventListener('change', deseneaza);

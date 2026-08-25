@@ -2901,3 +2901,54 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
      aspect, luată în cunoștință de cauză. Butoanele propriu-zise, coșul și
      câmpurile de mai sus rămân la 44 px. */
 }
+
+/* --- Cererea de ofertă din calculator ------------------------------------
+   Formularul stă în aceeași cutie cu calculatorul, deci moștenește cerneala
+   ei. Câmpurile refolosesc `.camp` de la finalizarea comenzii — aceleași
+   reguli, inclusiv cerneala pe fundal propriu și pragul de 16 px pe telefon. */
+.calc-cerere {
+  display: grid;
+  gap: var(--s-4);
+  margin-block-start: var(--s-5);
+  padding-block-start: var(--s-5);
+  border-block-start: 1px solid var(--line);
+}
+
+.calc-cerere__titlu {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--t--2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.calc-cerere textarea {
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--surface);
+  color: var(--ink-pe-surface);
+  font: inherit;
+  font-size: var(--t--1);
+  resize: vertical;
+}
+
+.calc-cerere__eroare {
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  border-radius: var(--r-2);
+  background: color-mix(in oklab, #b91c1c 10%, transparent);
+  color: #b91c1c;
+  font-size: var(--t--1);
+}
+
+.calc-cerere__reusit {
+  margin-block-start: var(--s-5);
+  padding: var(--s-5);
+  border: 1px solid var(--acc);
+  border-radius: var(--r-3);
+  background: color-mix(in oklab, var(--acc) 8%, var(--surface));
+}
+.calc-cerere__reusit p { margin: 0 0 var(--s-2); }
+.calc-cerere__reusit p:last-child { margin: 0; }

@@ -347,6 +347,21 @@ const en = {
   'Căutați alte dimensiuni și design-uri?': 'Looking for other sizes and designs?',
   'Vă vom contacta curând pentru a vă prezenta\n        oferta noastră.':
     'We will contact you shortly with our quote.',
+  'Alegeți județul': 'Choose the county',
+  'Alegeți întâi județul': 'Choose the county first',
+  'Cere ofertă pentru această ușă': 'Request a quote for this door',
+  'Unde vă trimitem oferta': 'Where we should send the quote',
+  'Alte detalii': 'Anything else',
+  'Nu completați acest câmp': 'Do not fill in this field',
+  'Trimite cererea': 'Send the request',
+  'Cererea a plecat.': 'Your request has been sent.',
+  'Vă răspundem cu prețul ferm, de obicei în aceeași zi lucrătoare.':
+    'We will reply with the firm price, usually the same working day.',
+  'Dacă vă grăbiți, sunați la': 'If you are in a hurry, call',
+  'Nume și prenume': 'Full name',
+  'Scrieți sau alegeți din listă': 'Type or choose from the list',
+  'Condiții de montaj, termen dorit, orice altceva ne ajută să vă dăm un preț corect.':
+    'Installation conditions, the timescale you need, anything else that helps us quote accurately.',
   'Solicitați o ofertă': 'Request a quote',
   'calculați singur prețul, mai jos': 'work out the price yourself, below',
 
@@ -892,6 +907,21 @@ const hu = {
   'Căutați alte dimensiuni și design-uri?': 'Más méretet vagy kivitelt keres?',
   'Vă vom contacta curând pentru a vă prezenta\n        oferta noastră.':
     'Hamarosan felvesszük Önnel a kapcsolatot az ajánlatunkkal.',
+  'Alegeți județul': 'Válasszon megyét',
+  'Alegeți întâi județul': 'Előbb válasszon megyét',
+  'Cere ofertă pentru această ușă': 'Kérjen ajánlatot erre a kapura',
+  'Unde vă trimitem oferta': 'Hová küldjük az ajánlatot',
+  'Alte detalii': 'Egyéb tudnivaló',
+  'Nu completați acest câmp': 'Ezt a mezőt ne töltse ki',
+  'Trimite cererea': 'Kérés elküldése',
+  'Cererea a plecat.': 'A kérését elküldtük.',
+  'Vă răspundem cu prețul ferm, de obicei în aceeași zi lucrătoare.':
+    'A kötelező érvényű árral válaszolunk, általában még aznap, munkanapon.',
+  'Dacă vă grăbiți, sunați la': 'Ha sürgős, hívjon:',
+  'Nume și prenume': 'Teljes név',
+  'Scrieți sau alegeți din listă': 'Írja be vagy válasszon a listából',
+  'Condiții de montaj, termen dorit, orice altceva ne ajută să vă dăm un preț corect.':
+    'Beépítési körülmények, kívánt határidő, bármi más, ami segít pontos árat adnunk.',
   'Solicitați o ofertă': 'Kérjen ajánlatot',
   'calculați singur prețul, mai jos': 'számolja ki maga az árat, lentebb',
 
