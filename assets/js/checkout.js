@@ -149,16 +149,32 @@ window.UG = window.UG || {};
       return;
     }
 
+    /* Adresa se strânge DOAR din câmpurile de adresă, nu din tot formularul.
+       `form.querySelectorAll('input[name]')` prindea și butonul radio al
+       metodei de plată, deci `plata: "cod"` pleca spre magazin ca și cum ar fi
+       o parte de adresă. WooCommerce o tolerează astăzi, dar e o proprietate
+       care n-are ce căuta acolo și care s-ar putea lovi de o validare mai
+       strictă la o actualizare. */
     var adresa = {};
-    campuri.forEach(function (c) { adresa[c.name] = (c.value || '').trim(); });
+    Array.prototype.forEach.call(form.querySelectorAll('.camp input[name]'), function (c) {
+      adresa[c.name] = (c.value || '').trim();
+    });
     adresa.country = 'RO';
     salveazaDate(adresa);
 
     var metoda = (form.elements.plata && form.elements.plata.value) || 'cod';
 
+    /* Adresa de livrare NU poartă e-mail: schema Store API pentru livrare n-are
+       câmpul, fiindcă mesajele merg la adresa de facturare. Trimis acolo, e în
+       cel mai bun caz ignorat. */
+    var livrare = {};
+    Object.keys(adresa).forEach(function (k) {
+      if (k !== 'email') livrare[k] = adresa[k];
+    });
+
     var corp = {
       billing_address: adresa,
-      shipping_address: adresa,
+      shipping_address: livrare,
       payment_method: metoda,
       payment_data: []
     };

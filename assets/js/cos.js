@@ -355,6 +355,29 @@ window.UG = window.UG || {};
    * Aruncă un mesaj explicit când site-ul e deschis de pe disc: acolo nicio
    * cerere nu poate reuși, iar „NetworkError” nu spune nimănui de ce.
    */
+  /**
+   * Scoate din răspunsul magazinului mesajul care chiar spune ceva.
+   *
+   * Când Store API respinge datele trimise, `message` e o formulă generică:
+   * „Parametri care nu sunt valizi: billing_address, shipping_address”. Cu ea
+   * în față, nici clientul, nici noi n-avem ce face — s-a întâmplat exact
+   * asta, iar motivul adevărat („The provided email address is not valid”)
+   * stătea ascuns în `data.params`, unde nu se uita nimeni.
+   *
+   * Aici se preferă detaliile, când există, și se cade înapoi pe `message`.
+   */
+  function mesajulErorii(date) {
+    var p = date && date.data && date.data.params;
+    if (p) {
+      var detalii = Object.keys(p).map(function (k) { return p[k]; })
+        .filter(function (v) { return typeof v === 'string' && v; });
+      /* Aceeași frază apare de obicei și la facturare, și la livrare. */
+      var unice = detalii.filter(function (v, i) { return detalii.indexOf(v) === i; });
+      if (unice.length) return unice.join(' ');
+    }
+    return (date && date.message) || 'Cererea către magazin a eșuat.';
+  }
+
   UG.cosCerere = function (cale, optiuni) {
     optiuni = optiuni || {};
 
@@ -400,8 +423,9 @@ window.UG = window.UG || {};
       }
       return r.json().then(function (date) {
         if (!r.ok) {
-          var e = new Error((date && date.message) || 'Cererea către magazin a eșuat.');
+          var e = new Error(mesajulErorii(date));
           e.cod = date && date.code;
+          e.date = date;
           throw e;
         }
         return date;
