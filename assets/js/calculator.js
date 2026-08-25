@@ -396,14 +396,45 @@ window.UG = window.UG || {};
 
       /* Validare minimă, aceeași ca la finalizare: numai ce chiar blochează
          un răspuns — un nume, un telefon și un e-mail la care se poate scrie. */
-      var probleme = [];
-      if (!ia('nume')) probleme.push('numele');
-      if ((ia('telefon').replace(/[^\d]/g, '')).length < 10) probleme.push('un telefon complet');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(ia('email'))) probleme.push('o adresă de e-mail validă');
+      /* Greșeala se arată PE CÂMPUL greșit, nu doar într-un rând jos.
+         Prima variantă spunea „completați un telefon complet” sub formular,
+         fără să marcheze care câmp e de vină — iar cineva care scrisese numele
+         din greșeală în căsuța de telefon nu avea cum să-și dea seama; a și
+         raportat că „nu are câmp de telefon”. Aceeași purtare ca la
+         finalizarea comenzii: chenar roșu și mesaj sub câmp. */
+      var arata = function (nume, mesaj) {
+        var camp = formular.querySelector('[name="' + nume + '"]');
+        var cutie = camp && camp.closest('.camp');
+        if (!cutie) return;
+        var p = cutie.querySelector('.camp__eroare');
+        if (mesaj) {
+          cutie.dataset.eroare = '1';
+          camp.setAttribute('aria-invalid', 'true');
+          if (p) { p.textContent = mesaj; p.hidden = false; }
+        } else {
+          delete cutie.dataset.eroare;
+          camp.removeAttribute('aria-invalid');
+          if (p) { p.hidden = true; }
+        }
+      };
 
-      if (probleme.length) {
-        eroareC.textContent = 'Vă rugăm completați ' + probleme.join(', ') + '.';
+      var gresite = [];
+      [
+        ['nume',    !ia('nume'),                                                    'Scrieți numele.'],
+        ['telefon', ia('telefon').replace(/[^\d]/g, '').length < 10,                'Un număr de telefon complet, cu prefix.'],
+        ['email',   !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(ia('email')),             'Adresă de e-mail invalidă.']
+      ].forEach(function (r) {
+        arata(r[0], r[1] ? r[2] : null);
+        if (r[1]) gresite.push(r[0]);
+      });
+
+      if (gresite.length) {
+        eroareC.textContent = gresite.length === 1
+          ? 'Mai e un câmp de completat, marcat mai sus.'
+          : 'Mai sunt câmpuri de completat, marcate mai sus.';
         eroareC.hidden = false;
+        var primul = formular.querySelector('[name="' + gresite[0] + '"]');
+        if (primul) { primul.focus(); primul.scrollIntoView({ block: 'center', behavior: 'smooth' }); }
         return;
       }
       eroareC.hidden = true;

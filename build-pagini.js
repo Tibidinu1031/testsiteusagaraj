@@ -293,12 +293,14 @@ ${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-c
         <div class="form-grid">
           <div class="camp">
             <label for="co-nume">Nume și prenume</label>
-            <input id="co-nume" name="nume" type="text" autocomplete="name" required>
+            <input id="co-nume" name="nume" type="text" autocomplete="name"
+                   placeholder="Prenume și nume, în același câmp" required>
             <p class="camp__eroare" hidden></p>
           </div>
           <div class="camp">
             <label for="co-telefon">Telefon</label>
-            <input id="co-telefon" name="telefon" type="tel" autocomplete="tel" required>
+            <input id="co-telefon" name="telefon" type="tel" autocomplete="tel" inputmode="tel"
+                   placeholder="07xx xxx xxx" required>
             <p class="camp__eroare" hidden></p>
           </div>
           <div class="camp">
