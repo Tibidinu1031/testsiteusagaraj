@@ -989,11 +989,25 @@ kbd {
 }
 .filter-count b { color: var(--ink); font-weight: 600; }
 
+/* TREI coloane, numărate, nu câte încap.
+   Era `auto-fill` cu o lățime minimă: browserul punea câte cartele intrau, deci
+   3 pe un ecran de 1280 și 4 pe unul de 1366 — pe prima pagină, cele nouă uși
+   ieșeau 4 + 4 + 1, cu un produs singur pe ultimul rând. Numărul de coloane e
+   acum o decizie, nu un rezultat al lățimii ferestrei.
+   `minmax(0, 1fr)`, nu `1fr`: altfel o denumire lungă de produs ar lăți coloana
+   peste partea ei și cele trei n-ar mai fi egale. */
 .grid-products {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(clamp(15rem, 24vw, 19rem), 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--s-5);
 }
+/* Pragul de la trei la două coloane stă la 820 px, nu mai sus. Cu nouă uși pe
+   prima pagină, două coloane înseamnă patru rânduri pline și una singură pe
+   ultimul — exact ce trebuia evitat. Sub 820 px cartela ar coborî sub 250 px
+   lățime, unde desenul și cele două butoane nu mai încap cinstit, deci acolo
+   se trece la două, iar orfana e prețul plătit pentru cartele lizibile. */
+@media (max-width: 820px) { .grid-products { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { .grid-products { grid-template-columns: minmax(0, 1fr); } }
 
 .card {
   position: relative;
@@ -2338,6 +2352,24 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
   border-block-start: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
   inline-size: 100%;
 }
+
+/* A doua ieșire din cartela de ofertă: către calculatorul de dedesubt.
+   Legătură, nu buton — un al doilea buton de aceeași greutate lângă
+   „Solicitați o ofertă” ar pune cititorul să aleagă între două îndemnuri la
+   fel de tari, iar cel care aduce o comandă e primul. Centrată, ca să stea
+   sub buton, nu lângă el. */
+.oferta__calc {
+  justify-self: center;
+  margin: 0;
+  font-size: var(--t--2);
+}
+.oferta__calc a {
+  font-weight: 600;
+  color: inherit;
+  text-decoration-color: currentColor;
+  white-space: nowrap;
+}
+.oferta__calc a:hover { text-decoration-thickness: 2px; }
 
 /* ==========================================================================
    Prima pagină: text centrat, pe toată lățimea

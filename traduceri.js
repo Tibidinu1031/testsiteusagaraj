@@ -348,6 +348,7 @@ const en = {
   'Vă vom contacta curând pentru a vă prezenta\n        oferta noastră.':
     'We will contact you shortly with our quote.',
   'Solicitați o ofertă': 'Request a quote',
+  'calculați singur prețul, mai jos': 'work out the price yourself, below',
 
   /* pagini juridice, titluri interioare */
   'Confidentialitate': 'Privacy',
@@ -893,6 +894,7 @@ const hu = {
   'Vă vom contacta curând pentru a vă prezenta\n        oferta noastră.':
     'Hamarosan felvesszük Önnel a kapcsolatot az ajánlatunkkal.',
   'Solicitați o ofertă': 'Kérjen ajánlatot',
+  'calculați singur prețul, mai jos': 'számolja ki maga az árat, lentebb',
 
   /* pagini juridice, titluri interioare */
   'Confidentialitate': 'Adatvédelem',

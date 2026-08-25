@@ -213,7 +213,6 @@ window.UG = window.UG || {};
   var campL    = gazda.querySelector('[data-calc-latime]');
   var campH    = gazda.querySelector('[data-calc-inaltime]');
   var iesire   = gazda.querySelector('[data-calc-rezultat]');
-  var detaliu  = gazda.querySelector('[data-calc-detaliu]');
   var actiuni  = gazda.querySelector('[data-calc-actiuni]');
   var campBuc  = gazda.querySelector('[data-calc-bucati]');
   var btnCos   = gazda.querySelector('[data-calc-cos]');
@@ -278,18 +277,11 @@ window.UG = window.UG || {};
     });
   }
 
-  function randDetaliu(eticheta, valoare, clasa) {
-    return '<div class="calc-pas' + (clasa ? ' ' + clasa : '') + '">' +
-      '<span>' + eticheta + '</span><b>' + valoare + '</b></div>';
-  }
-
   function deseneaza() {
     var l = Number(campL.value), h = Number(campH.value);
 
     if (!l || !h) {
       iesire.innerHTML = '<p class="calc-gol">Introduceți lățimea și înălțimea golului.</p>';
-      detaliu.innerHTML = '';
-      detaliu.hidden = true;
       actiuni.hidden = true;
       ultimul = null;
       return;
@@ -300,8 +292,6 @@ window.UG = window.UG || {};
     if (!r.ok) {
       iesire.innerHTML = '<p class="calc-nu"><b>Nu putem estima automat.</b> ' + esc(r.motiv) +
         ' Sunați-ne la <a href="tel:+40731366613">0731 366 613</a> și facem oferta împreună.</p>';
-      detaliu.innerHTML = '';
-      detaliu.hidden = true;
       actiuni.hidden = true;
       ultimul = null;
       return;
@@ -322,24 +312,10 @@ window.UG = window.UG || {};
           '</b> — lista furnizorului rotunjește în sus la cotele din tabel.</p>'
         : '<p class="calc-nota">Cotă exactă din tabel: ' + mm(r.folosit.l) + ' × ' + mm(r.folosit.h) + '.</p>');
 
-    detaliu.hidden = false;
-    detaliu.innerHTML =
-      '<p class="calc-detaliu__titlu">Cum a ieșit cifra</p>' +
-      randDetaliu('Ușă ' + r.lamela + ' mm, ' + mm(r.folosit.l) + ' × ' + mm(r.folosit.h) +
-                  ' <small>(preț de listă, fără acționare)</small>', eur(r.dinTabel)) +
-      (function () {
-        var c = culoareAleasa();
-        return c ? randDetaliu('Culoare <small>' + esc(c.ral) + '</small>', esc(c.nume)) : '';
-      })() +
-      randDetaliu('Acționare <small>' + esc(r.actionareNume) + '</small>', '+ ' + eur(r.actionare)) +
-      r.accesorii.map(function (a) {
-        return randDetaliu(esc(a.nume), '+ ' + eur(a.pret));
-      }).join('') +
-      randDetaliu('Subtotal', eur(r.subtotal), 'calc-pas--total') +
-      randDetaliu('Reducere ' + r.procentReducere + ' %', '− ' + eur(r.valoareReducere), 'calc-pas--minus') +
-      randDetaliu('După reducere', eur(r.dupaReducere), 'calc-pas--total') +
-      randDetaliu('Montaj și transport', '+ ' + eur(r.adaos)) +
-      randDetaliu('Preț final', eur(r.final), 'calc-pas--final');
+    /* Aici a stat desfășurarea „Cum a ieșit cifra”: preț de listă, culoare,
+       acționare, accesorii, subtotal, reducere, montaj, preț final — fiecare pe
+       rândul lui. A fost scoasă la cerere. Calculul din `UG.calculeazaPret`
+       rămâne neatins; doar nu se mai arată pas cu pas. */
   }
 
   /* --- Adăugarea în coș --------------------------------------------------- */

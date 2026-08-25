@@ -282,7 +282,9 @@ ${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-c
         <button type="button" class="btn btn--primary btn--lg" data-calc-cos>Adaugă în coș</button>
       </div>
 
-      <div class="calc__detaliu" data-calc-detaliu hidden></div>
+      <!-- Aici a stat cutia „Cum a ieșit cifra”, cu desfășurarea pe rânduri a
+           calculului. Scoasă la cerere. Mențiunea de mai jos rămâne: fără ea,
+           o cifră afișată devine, în mintea cumpărătorului, o promisiune. -->
 
       <p class="calc__disclaimer">
         <b>Estimare, nu ofertă fermă.</b> Cifrele pornesc din lista de prețuri a
@@ -477,54 +479,9 @@ ${COMUTATOR}
   </div>
 </section>
 
-<section class="section" id="tehnic">
-  <div class="wrap">
-    ${rubrica('03', 'De ce ne poți contacta?', 'Uși de garaj de tip rulou, acționate prin telecomandă',
-      'Dacă aveți nevoie de o ușă de garaj nouă, fie că este prima alegere, fie că o înlocuiți pe cea veche, noi suntem soluția. Producem și montăm uși de garaj cu design personalizat și în dimensiuni diverse.')}
-    <div class="stack-lg">
-      <div class="proza reveal">
-        <p>Ușile de garaj sunt mai mult decât un portal de acces spre garaj. Sunt
-        asigurarea dumneavoastră că bunurile vă sunt protejate. Iar noi le
-        proiectăm și montăm pe cele potrivite, atât pentru spații rezidențiale,
-        cât și comerciale.</p>
-
-        <p>Realizate din aluminiu, astfel de uși de garaj sunt soluția pentru un
-        plus de siguranță și intimitate. Sunt durabile și au marele avantaj de a
-        putea fi montate chiar și în spații înguste. Datorită sistemului de
-        închidere, respectiv deschidere, nu vor ocupa spațiu inutil ca în cazul
-        ușilor clasice.</p>
-      </div>
-      ${NOTA_COTE}
-      <p><a class="btn btn--ghost" href="tehnic.html">Toate detaliile tehnice</a></p>
-    </div>
-  </div>
-</section>
-
-<section class="section section--alt" id="servicii">
-  <div class="wrap">
-    ${rubrica('04', 'Ce facem, de la măsurătoare la mentenanță', 'Serviciile noastre', '')}
-    ${svcHTML()}
-
-    <div class="proza reveal" style="margin-block-start:var(--s-6)">
-      <p>Cu noi veți câștiga un partener pe termen lung. Proiectăm și montăm uși
-      de garaj de tip rulou, acționate prin telecomandă sau cu deschidere
-      clasică, manuală. Serviciile noastre sunt extinse și includ mentenanța,
-      service-ul, precum și proiecte personalizate de uși de garaj.</p>
-
-      <p>Pentru ușile de garaj standard, în stoc disponibil, puteți comanda
-      imediat în funcție de dimensiuni și culoare.</p>
-    </div>
-  </div>
-</section>
-
-<!-- ==========================================================================
-     05 — Unde se potrivesc. Secțiune nouă, cerută după „Serviciile noastre”.
-     Se încheie cu chemarea la ofertă personalizată, fiindcă ultimul paragraf
-     duce exact acolo: „proiectăm personalizat, în culoarea dorită”.
-     ========================================================================== -->
 <section class="section" id="unde">
   <div class="wrap">
-    ${rubrica('05', 'Unde se potrivesc', 'Despre ușile noastre', '')}
+    ${rubrica('03', 'Unde se potrivesc', 'Despre ușile noastre', '')}
 
     <div class="unde">
       <div class="proza reveal">
@@ -558,13 +515,71 @@ ${COMUTATOR}
         noi va fi o provocare pe care o acceptăm numaidecât!</p>
         <p class="oferta__nota">Vă vom contacta curând pentru a vă prezenta
         oferta noastră.</p>
+
+        <!-- Două ieșiri, nu una, fiindcă sunt două feluri de oameni în punctul
+             ăsta: cine vrea să vorbească cu noi și cine vrea întâi o cifră, pe
+             loc, fără să lase datele lui. Butonul rămâne cel principal; a doua
+             ieșire e o legătură, nu un al doilea buton, tocmai ca să nu se
+             bată cap în cap două îndemnuri de aceeași greutate.
+             Calculatorul e chiar dedesubt, în aceeași secțiune, deci săgeata
+             în jos spune adevărul. -->
         <a class="btn btn--orange btn--lg" href="contact.html">Solicitați o ofertă</a>
+        <p class="oferta__calc">
+          sau <a href="#calculator">calculați singur prețul, mai jos
+          <span aria-hidden="true">↓</span></a>
+        </p>
       </aside>
     </div>
 ${CALCULATOR ? CALCULATOR_HTML : ''}
   </div>
 </section>
 
+
+<section class="section" id="tehnic">
+  <div class="wrap">
+    ${rubrica('04', 'De ce ne poți contacta?', 'Uși de garaj de tip rulou, acționate prin telecomandă',
+      'Dacă aveți nevoie de o ușă de garaj nouă, fie că este prima alegere, fie că o înlocuiți pe cea veche, noi suntem soluția. Producem și montăm uși de garaj cu design personalizat și în dimensiuni diverse.')}
+    <div class="stack-lg">
+      <div class="proza reveal">
+        <p>Ușile de garaj sunt mai mult decât un portal de acces spre garaj. Sunt
+        asigurarea dumneavoastră că bunurile vă sunt protejate. Iar noi le
+        proiectăm și montăm pe cele potrivite, atât pentru spații rezidențiale,
+        cât și comerciale.</p>
+
+        <p>Realizate din aluminiu, astfel de uși de garaj sunt soluția pentru un
+        plus de siguranță și intimitate. Sunt durabile și au marele avantaj de a
+        putea fi montate chiar și în spații înguste. Datorită sistemului de
+        închidere, respectiv deschidere, nu vor ocupa spațiu inutil ca în cazul
+        ușilor clasice.</p>
+      </div>
+      ${NOTA_COTE}
+      <p><a class="btn btn--ghost" href="tehnic.html">Toate detaliile tehnice</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--alt" id="servicii">
+  <div class="wrap">
+    ${rubrica('05', 'Ce facem, de la măsurătoare la mentenanță', 'Serviciile noastre', '')}
+    ${svcHTML()}
+
+    <div class="proza reveal" style="margin-block-start:var(--s-6)">
+      <p>Cu noi veți câștiga un partener pe termen lung. Proiectăm și montăm uși
+      de garaj de tip rulou, acționate prin telecomandă sau cu deschidere
+      clasică, manuală. Serviciile noastre sunt extinse și includ mentenanța,
+      service-ul, precum și proiecte personalizate de uși de garaj.</p>
+
+      <p>Pentru ușile de garaj standard, în stoc disponibil, puteți comanda
+      imediat în funcție de dimensiuni și culoare.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     05 — Unde se potrivesc. Secțiune nouă, cerută după „Serviciile noastre”.
+     Se încheie cu chemarea la ofertă personalizată, fiindcă ultimul paragraf
+     duce exact acolo: „proiectăm personalizat, în culoarea dorită”.
+     ========================================================================== -->
 <section class="section section--alt" id="intrebari">
   <div class="wrap">
     ${rubrica('06', 'Înainte să comandați', 'Întrebări frecvente', '')}
