@@ -282,17 +282,20 @@ ${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-c
         <button type="button" class="btn btn--primary btn--lg" data-calc-cos>Adaugă în coș</button>
       </div>
 
-      <!-- Aici a stat cutia „Cum a ieșit cifra”, cu desfășurarea pe rânduri a
-           calculului. Scoasă la cerere. Mențiunea de mai jos rămâne: fără ea,
-           o cifră afișată devine, în mintea cumpărătorului, o promisiune. -->
-
-      <p class="calc__disclaimer">
-        <b>Estimare, nu ofertă fermă.</b> Cifrele pornesc din lista de prețuri a
-        producătorului și sunt în euro. Prețul final depinde de culoare, de
-        condițiile de montaj și de cursul valutar din ziua comenzii. Pentru o
-        ofertă fermă, <a href="contact.html">scrieți-ne cotele exacte</a>.
-      </p>
     </div>`;
+
+/* Sub rezultatul calculatorului au stat două blocuri, amândouă scoase la
+   cerere: desfășurarea pas cu pas a calculului și mențiunea că cifra e o
+   estimare, nu o ofertă fermă.
+
+   Explicația stă aici, în sursă, nu într-un comentariu din șablon: un
+   comentariu HTML ajunge în pagina livrată, iar acolo ar fi reprodus tocmai
+   textul care trebuia să dispară — cine ar fi căutat fraza în fișiere ar fi
+   găsit-o și ar fi crezut că n-a fost ștearsă.
+
+   Calculul din `UG.calculeazaPret` e neatins; se arată doar rezultatul. Data
+   cursului BNR rămâne scrisă lângă preț, deci cifra spune în continuare la ce
+   curs a fost făcută. */
 
 const HERO = `<section class="hero">
   <div class="wrap wrap--wide hero__grid">

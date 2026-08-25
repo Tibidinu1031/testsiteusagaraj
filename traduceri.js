@@ -422,7 +422,6 @@ const en = {
 
   /* calculator, magazin, plată */
   'Înălțimea golului': 'Opening height',
-  'Estimare, nu ofertă fermă.': 'An estimate, not a firm quote.',
   'scrieți-ne cotele exacte': 'send us the exact dimensions',
   'Catalog complet': 'Full catalogue',
   'Toate cele 21 de uși': 'All 21 doors',
@@ -967,7 +966,6 @@ const hu = {
 
   /* calculator, magazin, plată */
   'Înălțimea golului': 'A nyílás magassága',
-  'Estimare, nu ofertă fermă.': 'Becslés, nem kötelező érvényű ajánlat.',
   'scrieți-ne cotele exacte': 'írja meg nekünk a pontos méreteket',
   'Catalog complet': 'Teljes katalógus',
   'Toate cele 21 de uși': 'Mind a 21 kapu',
