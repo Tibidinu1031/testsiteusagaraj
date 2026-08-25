@@ -3,7 +3,7 @@
  * Plugin Name: Vitrină statică — acces la Store API
  * Description: Permite vitrinei găzduite pe alt domeniu să vorbească cu Store API: adaugă originea în lista permisă și expune antetul „Cart-Token”. Fără el, comanda eșuează cu „NetworkError”.
  * Version: 1.0
- * Author: ABBA CONFORT SOLUTIONS HOMES S.R.L.
+ * Author: ABBA CONFORT DELIVERY SRL
  *
  * ---------------------------------------------------------------------------
  * DE CE EXISTĂ
@@ -49,7 +49,7 @@
  * Verificare, după urcare:
  *
  *   curl -s -D - -o /dev/null https://usa-garaj.ro/wp-json/wc/store/v1/cart \
- *        -H "Origin: https://tibidinu1031.github.io" \
+ *        -H "Origin: https://usa-garaj.pages.dev" \
  *        | grep -i "access-control-allow-origin\|expose"
  *
  * Trebuie să apară AMBELE: originea vitrinei și `Cart-Token` în lista expusă.
@@ -77,7 +77,8 @@ if (!defined('ABSPATH')) {
  * magazinul către orice site.
  */
 const UG_VITRINA_ORIGINI = [
-    'https://tibidinu1031.github.io',
+    'https://usa-garaj.pages.dev',      // vitrina, gazduita pe Cloudflare Pages
+    'https://tibidinu1031.github.io',   // versiunea de proba, pe GitHub Pages
     'https://usa-garaj.ro',
     'https://www.usa-garaj.ro',
 ];
