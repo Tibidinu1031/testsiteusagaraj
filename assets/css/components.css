@@ -2251,7 +2251,10 @@ table.spec tbody tr:hover { background: color-mix(in oklab, var(--acc) 5%, trans
 }
 .lupa__nav:hover,
 .lupa__inchide:hover { background: var(--surface); border-color: var(--acc); }
-.lupa__nav[hidden] { visibility: hidden; display: grid; }
+/* Excepție de la regula globală din base.css: navigația lupei nu dispare, ci
+   devine doar invizibilă — ca să nu sară restul controalelor pe poziție când
+   apare și dispare. Are nevoie de `!important` ca să bată regula aceea. */
+.lupa__nav[hidden] { visibility: hidden; display: grid !important; }
 
 .lupa__inchide {
   position: absolute;

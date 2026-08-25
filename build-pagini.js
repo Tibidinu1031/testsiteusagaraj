@@ -284,11 +284,11 @@ ${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-c
           <label class="sr-only" for="calc-buc">Cantitate</label>
           <input id="calc-buc" type="number" min="1" max="99" value="1" inputmode="numeric" data-calc-bucati>
         </div>
-        <button type="button" class="btn btn--primary btn--lg" data-calc-cere>Cere ofertă pentru această ușă</button>
+        <button type="button" class="btn btn--primary btn--lg" data-calc-cere>Comandă această ușă</button>
       </div>
 
       <form class="calc-cerere" data-calc-formular hidden novalidate>
-        <p class="calc-cerere__titlu">Unde vă trimitem oferta</p>
+        <p class="calc-cerere__titlu">Datele pentru comandă</p>
 
         <div class="form-grid">
           <div class="camp">
@@ -307,20 +307,20 @@ ${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-c
             <p class="camp__eroare" hidden></p>
           </div>
           <div class="camp">
-            <label for="co-judet">Județ <span style="opacity:.6">(opțional)</span></label>
+            <label for="co-judet">Județ</label>
             <select id="co-judet" name="judet" autocomplete="address-level1">
               <option value="">Alegeți județul</option>
             </select>
             <p class="camp__eroare" hidden></p>
           </div>
           <div class="camp">
-            <label for="co-localitate">Localitate <span style="opacity:.6">(opțional)</span></label>
+            <label for="co-localitate">Localitate</label>
             <input id="co-localitate" name="localitate" type="text" autocomplete="address-level2"
                    list="lista-localitati-cerere" placeholder="Alegeți întâi județul">
             <p class="camp__eroare" hidden></p>
           </div>
           <div class="camp">
-            <label for="co-adresa">Adresă <span style="opacity:.6">(opțional)</span></label>
+            <label for="co-adresa">Adresă</label>
             <input id="co-adresa" name="adresa" type="text" autocomplete="street-address">
             <p class="camp__eroare" hidden></p>
           </div>
@@ -344,11 +344,12 @@ ${CULORI_CALC.map((c, i) => `            <label><input type="radio" name="calc-c
 
         <p class="calc-cerere__eroare" data-calc-cerere-eroare hidden></p>
 
-        <button type="submit" class="btn btn--primary btn--lg" data-calc-trimite>Trimite cererea</button>
+        <button type="submit" class="btn btn--primary btn--lg" data-calc-trimite>Trimite comanda</button>
       </form>
 
       <div class="calc-cerere__reusit" data-calc-cerere-reusit hidden>
-        <p><b>Cererea a plecat.</b> Vă răspundem cu prețul ferm, de obicei în aceeași zi lucrătoare.</p>
+        <p><b>Comanda a plecat.</b> Vă contactăm telefonic pentru confirmare și pentru
+        stabilirea montajului, de obicei în aceeași zi lucrătoare.</p>
         <p>Dacă vă grăbiți, sunați la <a href="tel:${FIRMA.telHref}">${FIRMA.tel}</a>.</p>
       </div>
 

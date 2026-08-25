@@ -60,6 +60,20 @@ body {
 
 body.is-locked { overflow: hidden; }
 
+/* `hidden` chiar ascunde.
+   Browserul îi dă `display: none`, dar din foaia LUI implicită — deci orice
+   regulă de-a noastră care pune `display` pe acel element câștigă, iar
+   elementul rămâne la vedere. S-a întâmplat: formularul de cerere avea
+   `display: grid`, butonul `display: inline-flex`, iar rândul cu cantitatea
+   `display: flex` — toate trei se vedeau tot timpul, inclusiv înainte de a fi
+   cerute. Regula de aici o pune la loc, pentru toate deodată.
+
+   `!important` e felul în care o cere și specificația HTML pentru randarea
+   implicită. Excepțiile care vor ALTCEVA decât dispariția — cum e navigația
+   lupei, care rămâne în pagină doar invizibilă — câștigă prin specificitate
+   mai mare, cu `!important` la rândul lor. */
+[hidden] { display: none !important; }
+
 img, svg, video, canvas { display: block; max-width: 100%; }
 img { height: auto; }
 

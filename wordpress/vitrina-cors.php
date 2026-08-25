@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: UG Vitrina - legatura cu site-ul static
- * Description: Doua lucruri de care depinde vitrina: deschide Store API catre domeniul ei (origini permise si antetul Cart-Token) si primeste cererile de oferta pentru usile la comanda, pe care le trimite pe e-mail firmei.
+ * Description: Doua lucruri de care depinde vitrina: deschide Store API catre domeniul ei (origini permise si antetul Cart-Token) si primeste comenzile pentru usile la comanda, pe care le trimite pe e-mail firmei.
  * Version: 1.1
  * Author: ABBA CONFORT DELIVERY SRL
  *
@@ -158,15 +158,16 @@ add_filter('rest_pre_serve_request', function ($servit, $raspuns, $cerere) {
 }, 100, 3);
 
 /* ==========================================================================
-   Cererile de ofertă pentru ușile la comandă
+   Comenzile pentru ușile la comandă
    ==========================================================================
 
    DE CE STAU AICI, ÎN ACELAȘI FIȘIER
 
    Ușile la comandă nu pot trece prin coș: WooCommerce adaugă în coș numai
    produse care există la el, iar un preț venit din browser n-ar fi de crezut —
-   oricine poate schimba cifra înainte s-o trimită. Deci calculatorul nu vinde,
-   ci cere o ofertă, iar cererea ajunge pe e-mail la firmă.
+   oricine poate schimba cifra înainte s-o trimită. Deci comanda nu se
+   înregistrează în WooCommerce, ci ajunge pe e-mail la firmă, care o confirmă
+   telefonic. Prețul din e-mail e cel calculat de site, marcat ca atare.
 
    Vitrina e un site static: nu are server care să trimită e-mail. WordPress-ul
    are, și a dovedit-o — de acolo pleacă deja confirmările de comandă. Endpointul
@@ -251,7 +252,7 @@ function ug_cerere_oferta(WP_REST_Request $cerere) {
 
     $trimis = wp_mail(
         UG_CERERI_CATRE,
-        'Cerere de ofertă - usa la comanda, de la ' . $nume,
+        'Comanda noua - usa la comanda, de la ' . $nume,
         $corp,
         $anteturi
     );
@@ -269,8 +270,8 @@ function ug_cerere_oferta(WP_REST_Request $cerere) {
  *
  * Aceeași bară colorată sus, același tabel, aceleași cutii de date dedesubt.
  * Motivul nu e estetic: cine deschide căsuța firmei vede zilnic e-mailul de
- * comandă, iar o cerere de ofertă care arată la fel se citește din prima, fără
- * să caute unde e informația.
+ * comandă din magazin, iar una venită din calculator, care arată la fel, se
+ * citește din prima, fără să caute unde e informația.
  *
  * Totul e scris cu stiluri în linie, nu într-o foaie: clienții de e-mail
  * ignoră `<style>` sau îl taie.
@@ -288,8 +289,8 @@ function ug_cerere_html($nume, $email, $telefon, $specificatii, $adresa, $estima
     }
 
     if ($estimare !== '') {
-        $randuri .= '<tr><td style="' . $celula . '">Estimare de pe site'
-            . '<br><span style="color:#666;font-size:13px;">calculată de vizitator, nu ofertă fermă</span></td>'
+        $randuri .= '<tr><td style="' . $celula . '">Preț calculat pe site'
+            . '<br><span style="color:#666;font-size:13px;">calculată de calculatorul de pe site</span></td>'
             . '<td style="' . $celula . 'text-align:right;"><b>' . esc_html($estimare) . '</b></td></tr>';
     }
 
@@ -309,10 +310,10 @@ function ug_cerere_html($nume, $email, $telefon, $specificatii, $adresa, $estima
 
     return '<div style="font-family:Helvetica,Arial,sans-serif;color:#222;max-width:640px;margin:0 auto;">'
         . '<div style="background:#0d5c4e;color:#fff;padding:28px 32px;">'
-        . '<h1 style="margin:0;font-size:25px;font-weight:600;">Cerere de ofertă &mdash; ușă la comandă</h1>'
+        . '<h1 style="margin:0;font-size:25px;font-weight:600;">Comandă nouă &mdash; ușă la comandă</h1>'
         . '</div>'
         . '<div style="padding:28px 32px;background:#fff;">'
-        . '<p>Ați primit o cerere de ofertă de la <b>' . esc_html($nume) . '</b>, '
+        . '<p>Ați primit o comandă de la <b>' . esc_html($nume) . '</b>, '
         . 'trimisă din vitrină pe ' . esc_html(date_i18n('d/m/Y, H:i')) . '.</p>'
         . '<table style="width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;">'
         . '<tr><th style="' . $celula . 'text-align:left;background:#fafafa;">Ușa cerută</th>'
@@ -331,6 +332,6 @@ function ug_cerere_html($nume, $email, $telefon, $specificatii, $adresa, $estima
         . 'Răspunzând la acest mesaj, răspunsul pleacă direct la client.</p>'
         . '</div>'
         . '<div style="padding:16px 32px;background:#fafafa;color:#666;font-size:12px;text-align:center;">'
-        . 'Usa-garaj.ro &mdash; cerere trimisă din vitrină</div>'
+        . 'Usa-garaj.ro &mdash; comandă trimisă din vitrină</div>'
         . '</div>';
 }
