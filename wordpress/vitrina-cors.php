@@ -83,7 +83,8 @@ if (!defined('ABSPATH')) {
  */
 const UG_VITRINA_ORIGINI = [
     'https://usa-garaj.pages.dev',      // vitrina, gazduita pe Cloudflare Pages
-    'https://tibidinu1031.github.io',   // versiunea de proba, pe GitHub Pages
+    'https://andreeaalmaagnes.github.io', // depozitul curent, pe GitHub Pages
+    'https://tibidinu1031.github.io',   // depozitul dinainte de mutare
     'https://usa-garaj.ro',
     'https://www.usa-garaj.ro',
 ];
