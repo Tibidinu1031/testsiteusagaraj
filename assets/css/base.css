@@ -21,14 +21,16 @@ html {
   }
 }
 
-/* Fundalul are trei straturi, de sus în jos:
+/* Fundalul are două straturi, de sus în jos:
      1. tablier de rulou văzut de aproape — linii orizontale la pasul real al
         lamelei (55 mm), cu rostul mai închis între ele;
-     2. unelte de construcții, desenate în contur și răsucite diferit, ca o
-        hârtie de ambalaj dintr-un magazin de scule;
-     3. o aură verde care coboară din antet.
-   Primele două sunt derivate din culoarea cernelii sau dintr-un gri neutru,
-   deci funcționează la fel pe temă întunecată și pe cea luminoasă. */
+     2. o aură verde care coboară din antet.
+   Între ele a stat, ca filigran, emblema firmei — camionul din dala
+   `fundal-emblema.png`, repetată la 560 px. A fost scoasă la cerere pe
+   21.09.2026; dala și scriptul care o produce (`build-fundal.js`) rămân în
+   depozit, dacă se întoarce.
+   Primul strat e derivat din culoarea cernelii, deci funcționează la fel pe
+   temă întunecată și pe cea luminoasă. */
 body {
   background-color: var(--bg);
   background-image:
@@ -38,14 +40,12 @@ body {
       color-mix(in oklab, var(--ink) 2%, transparent) 1px 2px,
       transparent 2px 55px
     ),
-    var(--unelte),
     linear-gradient(
       180deg,
       color-mix(in oklab, var(--acc) 6%, transparent),
       transparent 46rem
     );
-  background-repeat: repeat, repeat, no-repeat;
-  background-size: auto, 560px 560px, auto;
+  background-repeat: repeat, no-repeat;
   background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-sans);

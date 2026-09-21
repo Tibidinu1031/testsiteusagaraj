@@ -118,6 +118,11 @@ const FIRMA = {
   cui: '49968876',
   j: 'J2024000637154',
   adresa: 'Strada Radu de la Afumați 17, Sc G, 130150 Târgoviște',
+  /* Legătura de partajare a fișei din Google Maps, primită de la client, pentru
+     pinul de pe pagina de contact. Înainte, pinul căuta `adresa` la fiecare
+     deschidere (maps.google.com/?q=…); aceasta duce direct la fișa firmei, cu
+     program și recenzii. Harta încorporată de sub chenare rămâne pe adresă. */
+  harta: 'https://maps.app.goo.gl/6LsgAhzYNR7dU7gA7',
   tel: '0731 366 613',
   telHref: '+40731366613',
 

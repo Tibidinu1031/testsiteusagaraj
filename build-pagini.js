@@ -478,12 +478,13 @@ ${FIRMA.emailuri.map((e) => `      <a class="contact-line" href="mailto:${e.adre
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6 8.5-6"/></svg>
         <div><small>${e.rol}</small><b>${e.adresa}</b></div>
       </a>`).join('\n')}
-      <!-- Adresa e o legătură către hartă, nu text mort. Interogarea folosește
-           chiar adresa din datele firmei, deci o mutare a sediului schimbă și
-           pinul, nu doar rândul scris. Forma maps.google.com/?q= merge pe orice
-           dispozitiv: pe telefon deschide aplicația instalată, pe desktop
-           pagina web. -->
-      <a class="contact-line" href="https://maps.google.com/?q=${encodeURIComponent(FIRMA.adresa)}"
+      <!-- Adresa e o legătură către hartă, nu text mort. Legătura e cea de
+           partajare a fișei din Google Maps (FIRMA.harta), nu o căutare după
+           adresă: duce fix la pinul firmei, cu program și recenzii, și merge pe
+           orice dispozitiv — pe telefon deschide aplicația instalată, pe desktop
+           pagina web. O mutare a sediului cere deci schimbarea ei în build.js,
+           odată cu adresa. -->
+      <a class="contact-line" href="${FIRMA.harta}"
          target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
         <div><small>Sediu · vezi în Google Maps</small><b>${FIRMA.adresa}</b></div>
