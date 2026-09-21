@@ -504,17 +504,19 @@ ${FIRMA.emailuri.map((e) => `      <a class="contact-line" href="mailto:${e.adre
        de coloana cu legături mai mult decât de cartea de identitate, iar lată
        se citește ca o hartă, nu ca o miniatură.
 
-       Harta e ÎNCĂRCATĂ, nu doar un buton. Forma de mai jos nu cere cheie de
-       API, deci nu depinde de un cont Google al firmei și nu poate expira.
-       E adresa CANONICĂ: varianta scurtă, maps.google.com/…&output=embed,
-       răspunde cu o redirectare 301 către exact aceasta.
+       Harta e ÎNCĂRCATĂ, nu doar un buton, și arată FIȘA firmei (nume,
+       program, recenzii), nu o căutare după adresă — aceea punea pinul pe
+       stradă, iar click-ul pe el ducea la adresă, nu la firmă. Adresa de
+       încorporare stă în build.js (FIRMA.hartaEmbed), lângă legătura de
+       partajare; nu cere cheie de API, deci nu depinde de un cont Google al
+       firmei și nu poate expira.
 
        „loading=lazy”: e un cadru străin, cu scripturile și cookie-urile lui.
        Așa nu se încarcă până nu ajunge omul cu privirea la el, iar pagina de
        contact pornește la fel de repede ca înainte. -->
   <div class="harta reveal">
     <iframe
-      src="https://www.google.com/maps/embed?origin=mfe&pb=!1m2!2m1!1s${encodeURIComponent(FIRMA.adresa)}"
+      src="${FIRMA.hartaEmbed}"
       title="Harta către sediul ${esc(FIRMA.nume)}"
       loading="lazy" referrerpolicy="no-referrer-when-downgrade"
       allowfullscreen></iframe>

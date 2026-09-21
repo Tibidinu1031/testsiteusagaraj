@@ -121,8 +121,18 @@ const FIRMA = {
   /* Legătura de partajare a fișei din Google Maps, primită de la client, pentru
      pinul de pe pagina de contact. Înainte, pinul căuta `adresa` la fiecare
      deschidere (maps.google.com/?q=…); aceasta duce direct la fișa firmei, cu
-     program și recenzii. Harta încorporată de sub chenare rămâne pe adresă. */
+     program și recenzii. */
   harta: 'https://maps.app.goo.gl/6LsgAhzYNR7dU7gA7',
+  /* Harta încorporată de pe pagina de contact — tot pe fișa firmei, nu pe
+     adresă: căutarea după adresă punea pinul pe stradă, fără nume, program și
+     recenzii, iar click-ul pe el ducea la adresă, nu la firmă. E forma pe care
+     o dă Google la „Distribuie → Încorporează o hartă”: ID-ul de loc (după
+     `!1s`) și coordonatele (`!2d` longitudine, `!3d` latitudine) sunt cele
+     din legătura de mai sus, iar numele de după `!2s` e cel de pe fișa Google
+     (încă cel vechi al firmei). Nu cere cheie de API. Dacă fișa se mută: link
+     nou de partajare la `harta`, iar aici URL-ul nou din „Încorporează o
+     hartă”, fără `!4v…` de la coadă (e doar o ștampilă de timp). */
+  hartaEmbed: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1500!2d25.4721157!3d44.9168683!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40b2e73d5f9c0d79:0x5f467a6af5b876b2!2sABBA%20CONFORT%20SOLUTIONS%20HOMES%20SRL!5e0',
   tel: '0731 366 613',
   telHref: '+40731366613',
 
